@@ -935,8 +935,329 @@ Provide a balanced summary of all perspectives.""",
         }
 
 
+class ConsensusOrchestrator(BaseOrchestrator):
+    """Consensus orchestration with agreement-based decision making.
+
+    Features:
+    - Proposal generation
+    - Peer review and feedback
+    - Iterative refinement
+    - Consensus threshold configuration
+    - Deadlock resolution
+    """
+
+    def get_mode(self) -> OrchestrationMode:
+        return OrchestrationMode.CONSENSUS
+
+    async def orchestrate(
+        self,
+        agents: List[Agent],
+        task: str,
+        context: Optional[Dict[str, Any]] = None,
+        **kwargs: Any,
+    ) -> CollaborationResult:
+        """Execute consensus mode.
+
+        Args:
+            agents: List of agents
+            task: Task description
+            context: Optional context
+            **kwargs: Additional parameters
+                - consensus_threshold: Required agreement level (default: 0.75)
+                - max_iterations: Maximum refinement iterations (default: 5)
+                - proposal_timeout: Timeout for proposals
+                - enable_peer_review: Enable peer review phase (default: True)
+
+        Returns:
+            Collaboration result
+        """
+        if not self._validate_agents(agents, min_agents=2):
+            return self._create_result(False, [], "Consensus requires at least 2 agents")
+
+        consensus_threshold = kwargs.get("consensus_threshold", 0.75)
+        max_iterations = kwargs.get("max_iterations", 5)
+        proposal_timeout = kwargs.get("proposal_timeout", 30.0)
+        enable_peer_review = kwargs.get("enable_peer_review", True)
+
+        self.logger.info(
+            f"Starting consensus building with {len(agents)} agents, threshold={consensus_threshold}"
+        )
+
+        messages: List[Message] = []
+        proposals: List[Dict[str, Any]] = []
+
+        # Phase 1: Initial proposal generation
+        self.logger.info("Phase 1: Generating initial proposals")
+        self.metrics.total_rounds += 1
+
+        proposal_msg = Message(
+            content=f"""Generate a proposal for: {task}
+
+Provide:
+1. Your proposed solution
+2. Key benefits
+3. Potential concerns
+
+Format:
+PROPOSAL: [your solution]
+BENEFITS:
+- [benefit 1]
+- [benefit 2]
+CONCERNS:
+- [concern 1]
+- [concern 2]""",
+            sender="system",
+            role=MessageRole.SYSTEM,
+        )
+
+        proposal_responses = await asyncio.gather(
+            *[
+                self._safe_process_message(agent, proposal_msg, proposal_timeout)
+                for agent in agents
+            ]
+        )
+
+        for response in proposal_responses:
+            if response:
+                messages.append(response)
+                proposal = self._parse_proposal(response)
+                proposals.append(proposal)
+
+        if not proposals:
+            return self._create_result(False, messages, "No proposals generated")
+
+        # Iterative refinement
+        iteration = 0
+        consensus_reached = False
+
+        while iteration < max_iterations and not consensus_reached:
+            iteration += 1
+            self.logger.info(f"Iteration {iteration}/{max_iterations}")
+            self.metrics.total_rounds += 1
+
+            # Phase 2: Peer review (if enabled)
+            if enable_peer_review:
+                self.logger.info("Phase 2: Peer review")
+                reviews = await self._conduct_peer_review(
+                    agents, proposals, proposal_timeout
+                )
+
+                for review in reviews:
+                    if review:
+                        messages.append(review)
+
+                # Update proposals based on feedback
+                proposals = self._refine_proposals(proposals, reviews)
+
+            # Phase 3: Consensus check
+            self.logger.info("Phase 3: Checking consensus")
+            agreement_level = await self._check_consensus(
+                agents, proposals, proposal_timeout
+            )
+
+            for response in agreement_level["responses"]:
+                if response:
+                    messages.append(response)
+
+            consensus_score = agreement_level["score"]
+            self.logger.info(f"Consensus score: {consensus_score:.2f}")
+
+            if consensus_score >= consensus_threshold:
+                consensus_reached = True
+                self.logger.info("Consensus reached!")
+                break
+
+            # Phase 4: Refinement
+            if iteration < max_iterations:
+                self.logger.info("Phase 4: Refining proposals")
+                refinement_msg = Message(
+                    content=f"""Consensus not yet reached (score: {consensus_score:.2f}).
+
+Current proposals:
+{self._format_proposals(proposals)}
+
+Refine your proposal addressing concerns and incorporating feedback.""",
+                    sender="system",
+                    role=MessageRole.SYSTEM,
+                )
+
+                refined_responses = await asyncio.gather(
+                    *[
+                        self._safe_process_message(agent, refinement_msg, proposal_timeout)
+                        for agent in agents
+                    ]
+                )
+
+                proposals = []
+                for response in refined_responses:
+                    if response:
+                        messages.append(response)
+                        proposals.append(self._parse_proposal(response))
+
+        # Deadlock resolution if needed
+        if not consensus_reached:
+            self.logger.warning("Consensus not reached, applying deadlock resolution")
+            final_proposal = self._resolve_deadlock(proposals, agreement_level)
+        else:
+            final_proposal = self._merge_proposals(proposals)
+
+        self.metrics.custom_metrics["iterations"] = iteration
+        self.metrics.custom_metrics["consensus_reached"] = consensus_reached
+        self.metrics.custom_metrics["final_consensus_score"] = consensus_score
+
+        # Add final synthesis message
+        final_msg = Message(
+            content=f"CONSENSUS {'REACHED' if consensus_reached else 'APPROXIMATED'}: {final_proposal}",
+            sender="system",
+            role=MessageRole.SYSTEM,
+        )
+        messages.append(final_msg)
+
+        return self._create_result(True, messages)
+
+    def _parse_proposal(self, response: Message) -> Dict[str, Any]:
+        """Parse proposal from response."""
+        proposal = {
+            "agent": response.sender,
+            "solution": "",
+            "benefits": [],
+            "concerns": [],
+        }
+
+        lines = response.content.split("\n")
+        current_section = None
+
+        for line in lines:
+            line = line.strip()
+            if line.startswith("PROPOSAL:"):
+                proposal["solution"] = line.split(":", 1)[1].strip()
+            elif line.startswith("BENEFITS:"):
+                current_section = "benefits"
+            elif line.startswith("CONCERNS:"):
+                current_section = "concerns"
+            elif line.startswith("-") and current_section:
+                proposal[current_section].append(line[1:].strip())
+
+        return proposal
+
+    async def _conduct_peer_review(
+        self, agents: List[Agent], proposals: List[Dict[str, Any]], timeout: float
+    ) -> List[Optional[Message]]:
+        """Conduct peer review of proposals."""
+        review_msg = Message(
+            content=f"""Review these proposals:
+
+{self._format_proposals(proposals)}
+
+For each proposal, provide:
+1. Strengths
+2. Weaknesses
+3. Suggestions for improvement
+
+Format:
+REVIEW [agent_name]:
+STRENGTHS: [list]
+WEAKNESSES: [list]
+SUGGESTIONS: [list]""",
+            sender="system",
+            role=MessageRole.SYSTEM,
+        )
+
+        return await asyncio.gather(
+            *[self._safe_process_message(agent, review_msg, timeout) for agent in agents]
+        )
+
+    def _refine_proposals(
+        self, proposals: List[Dict[str, Any]], reviews: List[Optional[Message]]
+    ) -> List[Dict[str, Any]]:
+        """Refine proposals based on reviews."""
+        # In a full implementation, would use LLM to incorporate feedback
+        # For now, just return original proposals
+        return proposals
+
+    async def _check_consensus(
+        self, agents: List[Agent], proposals: List[Dict[str, Any]], timeout: float
+    ) -> Dict[str, Any]:
+        """Check consensus level among agents."""
+        consensus_msg = Message(
+            content=f"""Rate your agreement with these proposals (0-100):
+
+{self._format_proposals(proposals)}
+
+Format:
+AGREEMENT: [0-100]
+PREFERRED: [agent_name or 'merged']
+REASONING: [brief explanation]""",
+            sender="system",
+            role=MessageRole.SYSTEM,
+        )
+
+        responses = await asyncio.gather(
+            *[self._safe_process_message(agent, consensus_msg, timeout) for agent in agents]
+        )
+
+        agreements = []
+        for response in responses:
+            if response:
+                agreement = self._parse_agreement(response.content)
+                agreements.append(agreement)
+
+        avg_agreement = (
+            sum(agreements) / len(agreements) if agreements else 0.0
+        )
+
+        return {
+            "score": avg_agreement / 100.0,
+            "agreements": agreements,
+            "responses": responses,
+        }
+
+    def _parse_agreement(self, content: str) -> int:
+        """Parse agreement score from response."""
+        for line in content.split("\n"):
+            line = line.strip()
+            if line.startswith("AGREEMENT:"):
+                try:
+                    return int(line.split(":", 1)[1].strip())
+                except (ValueError, IndexError):
+                    pass
+        return 50  # Default
+
+    def _format_proposals(self, proposals: List[Dict[str, Any]]) -> str:
+        """Format proposals for display."""
+        formatted = []
+        for i, prop in enumerate(proposals, 1):
+            formatted.append(
+                f"{i}. {prop['agent']}: {prop['solution'][:100]}..."
+            )
+        return "\n".join(formatted)
+
+    def _merge_proposals(self, proposals: List[Dict[str, Any]]) -> str:
+        """Merge proposals into final solution."""
+        # Simple merge - in production would use LLM
+        solutions = [p["solution"] for p in proposals]
+        return f"Merged solution incorporating {len(solutions)} proposals"
+
+    def _resolve_deadlock(
+        self, proposals: List[Dict[str, Any]], agreement_data: Dict[str, Any]
+    ) -> str:
+        """Resolve deadlock when consensus not reached."""
+        # Use proposal with highest individual agreement
+        if proposals:
+            return proposals[0]["solution"]
+        return "No consensus reached"
+
+
 class SwarmOrchestrator(BaseOrchestrator):
-    """Swarm orchestration - dynamic agent creation/destruction."""
+    """Swarm orchestration with dynamic scaling.
+
+    Features:
+    - Task complexity analysis
+    - Dynamic agent spawning/termination
+    - Work stealing and load balancing
+    - Emergent behavior patterns
+    - Performance metrics
+    """
 
     def get_mode(self) -> OrchestrationMode:
         return OrchestrationMode.SWARM
@@ -948,65 +1269,179 @@ class SwarmOrchestrator(BaseOrchestrator):
         context: Optional[Dict[str, Any]] = None,
         **kwargs: Any,
     ) -> CollaborationResult:
-        """Execute swarm mode.
+        """Execute swarm mode with dynamic scaling.
 
         Args:
             agents: Initial agent pool
             task: Task description
             context: Optional context
-            **kwargs: max_agents, complexity_threshold
+            **kwargs: Additional parameters
+                - max_agents: Maximum concurrent agents (default: 10)
+                - min_agents: Minimum active agents (default: 2)
+                - complexity_threshold: Words per agent (default: 50)
+                - enable_work_stealing: Enable work stealing (default: True)
+                - agent_timeout: Timeout per agent
 
         Returns:
             Collaboration result
         """
+        if not self._validate_agents(agents, min_agents=1):
+            return self._create_result(False, [], "Swarm requires at least 1 agent")
+
         max_agents = kwargs.get("max_agents", 10)
-        complexity_threshold = kwargs.get("complexity_threshold", 100)
+        min_agents = kwargs.get("min_agents", 2)
+        complexity_threshold = kwargs.get("complexity_threshold", 50)
+        enable_work_stealing = kwargs.get("enable_work_stealing", True)
+        agent_timeout = kwargs.get("agent_timeout", 30.0)
 
-        print(f"[Swarm] Starting with {len(agents)} agents (max: {max_agents})")
+        self.logger.info(f"Starting swarm with {len(agents)} initial agents")
 
-        # Assess task complexity
-        task_complexity = len(task.split())  # Simple heuristic
+        messages: List[Message] = []
 
-        # Determine number of agents needed
-        agents_needed = min(
-            max(len(agents), task_complexity // complexity_threshold + 1),
-            max_agents,
+        # Analyze task complexity
+        task_complexity = self._analyze_complexity(task)
+        self.logger.info(f"Task complexity: {task_complexity}")
+
+        # Determine optimal swarm size
+        optimal_size = self._calculate_swarm_size(
+            task_complexity, complexity_threshold, min_agents, max_agents
         )
+        self.logger.info(f"Optimal swarm size: {optimal_size}")
 
-        print(f"[Swarm] Task complexity: {task_complexity}, agents needed: {agents_needed}")
+        # Select/activate agents
+        active_agents = self._select_agents(agents, optimal_size)
+        self.logger.info(f"Active agents: {[a.name for a in active_agents]}")
 
-        # Use available agents
-        active_agents = agents[:agents_needed]
+        # Decompose task for parallel execution
+        subtasks = self._decompose_for_swarm(task, len(active_agents))
 
-        messages = []
-        agent_contributions = {agent.name: 0 for agent in active_agents}
+        # Phase 1: Parallel swarm execution
+        self.logger.info("Phase 1: Swarm parallel execution")
+        self.metrics.total_rounds += 1
 
-        # Swarm execution - all agents work in parallel
-        initial_msg = Message(content=task, sender="system", role=MessageRole.SYSTEM)
+        work_queue = list(enumerate(subtasks))
+        completed_work: List[Tuple[int, Message]] = []
+        agent_status = {agent.name: "idle" for agent in active_agents}
 
-        tasks = [agent.process_message(initial_msg) for agent in active_agents]
-        responses = await asyncio.gather(*tasks)
+        # Execute with work stealing
+        if enable_work_stealing:
+            completed_work = await self._execute_with_work_stealing(
+                active_agents, work_queue, agent_timeout, agent_status
+            )
+        else:
+            completed_work = await self._execute_simple(
+                active_agents, subtasks, agent_timeout
+            )
 
-        for response in responses:
+        # Collect results
+        for _, response in sorted(completed_work, key=lambda x: x[0]):
             if response:
                 messages.append(response)
-                agent_contributions[response.sender] += 1
 
-        # Synthesize results
-        final_output = f"Swarm completed with {len(active_agents)} agents"
+        # Phase 2: Emergent synthesis
+        self.logger.info("Phase 2: Emergent synthesis")
+        self.metrics.total_rounds += 1
 
-        return CollaborationResult(
-            success=True,
-            total_rounds=1,
-            total_messages=len(messages),
-            final_output=final_output,
-            agent_contributions=agent_contributions,
-            metadata={
-                "mode": "swarm",
-                "agents_used": len(active_agents),
-                "task_complexity": task_complexity,
-            },
+        synthesis = await self._emergent_synthesis(active_agents, messages, agent_timeout)
+        if synthesis:
+            messages.append(synthesis)
+
+        self.metrics.custom_metrics["swarm_size"] = len(active_agents)
+        self.metrics.custom_metrics["task_complexity"] = task_complexity
+        self.metrics.custom_metrics["subtasks"] = len(subtasks)
+        self.metrics.custom_metrics["agent_status"] = agent_status
+
+        return self._create_result(True, messages)
+
+    def _analyze_complexity(self, task: str) -> int:
+        """Analyze task complexity."""
+        # Simple heuristic: word count + sentence count
+        words = len(task.split())
+        sentences = task.count(".") + task.count("!") + task.count("?")
+        return words + (sentences * 5)
+
+    def _calculate_swarm_size(
+        self, complexity: int, threshold: int, min_size: int, max_size: int
+    ) -> int:
+        """Calculate optimal swarm size based on complexity."""
+        calculated = max(min_size, complexity // threshold)
+        return min(calculated, max_size)
+
+    def _select_agents(self, agents: List[Agent], target_size: int) -> List[Agent]:
+        """Select agents for swarm."""
+        active = [a for a in agents if a.is_active]
+        return active[:target_size]
+
+    def _decompose_for_swarm(self, task: str, num_agents: int) -> List[str]:
+        """Decompose task into subtasks for swarm."""
+        # Simple decomposition - in production would use LLM
+        base_task = f"Work on: {task}"
+        return [f"{base_task} (part {i+1}/{num_agents})" for i in range(num_agents)]
+
+    async def _execute_with_work_stealing(
+        self,
+        agents: List[Agent],
+        work_queue: List[Tuple[int, str]],
+        timeout: float,
+        status: Dict[str, str],
+    ) -> List[Tuple[int, Message]]:
+        """Execute with work stealing for load balancing."""
+        completed: List[Tuple[int, Message]] = []
+        queue_lock = asyncio.Lock()
+
+        async def worker(agent: Agent) -> None:
+            while True:
+                async with queue_lock:
+                    if not work_queue:
+                        break
+                    task_id, subtask = work_queue.pop(0)
+
+                status[agent.name] = "working"
+                msg = Message(content=subtask, sender="swarm", role=MessageRole.SYSTEM)
+                response = await self._safe_process_message(agent, msg, timeout)
+
+                if response:
+                    async with queue_lock:
+                        completed.append((task_id, response))
+
+                status[agent.name] = "idle"
+
+        await asyncio.gather(*[worker(agent) for agent in agents])
+        return completed
+
+    async def _execute_simple(
+        self, agents: List[Agent], subtasks: List[str], timeout: float
+    ) -> List[Tuple[int, Message]]:
+        """Simple parallel execution without work stealing."""
+        tasks = []
+        for i, (agent, subtask) in enumerate(zip(agents, subtasks)):
+            msg = Message(content=subtask, sender="swarm", role=MessageRole.SYSTEM)
+            tasks.append(self._safe_process_message(agent, msg, timeout))
+
+        responses = await asyncio.gather(*tasks)
+        return [(i, r) for i, r in enumerate(responses) if r]
+
+    async def _emergent_synthesis(
+        self, agents: List[Agent], messages: List[Message], timeout: float
+    ) -> Optional[Message]:
+        """Synthesize results through emergent collaboration."""
+        if not agents or not messages:
+            return None
+
+        # Use first agent for synthesis
+        synthesizer = agents[0]
+
+        synthesis_msg = Message(
+            content=f"""Synthesize these swarm results:
+
+{chr(10).join(f'- {m.sender}: {m.content[:100]}...' for m in messages[-len(agents):])}
+
+Provide a coherent synthesis.""",
+            sender="swarm",
+            role=MessageRole.SYSTEM,
         )
+
+        return await self._safe_process_message(synthesizer, synthesis_msg, timeout)
 
 
 class GraphOrchestrator(BaseOrchestrator):

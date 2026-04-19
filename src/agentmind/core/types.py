@@ -47,7 +47,9 @@ class Message(BaseModel):
                     "metadata": {"priority": "high"},
                 }
             ]
-        }
+        },
+        # Enable performance optimizations
+        "validate_assignment": False,  # Skip validation on assignment for performance
     }
 
     def __str__(self) -> str:

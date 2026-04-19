@@ -156,12 +156,12 @@ class Agent:
         Returns:
             List of available tool names
         """
-        available = []
-        for tool_name in self.config.tools:
-            tool = self.tool_registry.get(tool_name)
-            if tool:
-                available.append(tool_name)
-        return available
+        # Optimized: use list comprehension for better performance
+        return [
+            tool_name
+            for tool_name in self.config.tools
+            if self.tool_registry.get(tool_name) is not None
+        ]
 
     async def execute_tool(self, tool_name: str, **kwargs) -> Dict[str, Any]:
         """Execute a tool by name.
@@ -206,10 +206,10 @@ class Agent:
         recent_messages = self.get_recent_memory(limit=5)
         memory_context = None
         if recent_messages:
-            memory_lines = []
-            for msg in recent_messages:
-                memory_lines.append(f"{msg.sender}: {msg.content}")
-            memory_context = "\n".join(memory_lines)
+            # Optimized: use list comprehension and join in one step
+            memory_context = "\n".join(
+                f"{msg.sender}: {msg.content}" for msg in recent_messages
+            )
 
         return get_system_prompt(
             role=self.role,
@@ -365,7 +365,11 @@ class Agent:
             >>> for msg in recent:
             ...     print(f"{msg.sender}: {msg.content}")
         """
-        return self.memory[-limit:] if self.memory else []
+        # Optimized: avoid creating new list if memory is empty
+        if not self.memory:
+            return []
+        # Use negative indexing for efficient slicing
+        return self.memory[-limit:] if len(self.memory) > limit else self.memory
 
     def clear_memory(self) -> None:
         """Clear all messages from the agent's memory.

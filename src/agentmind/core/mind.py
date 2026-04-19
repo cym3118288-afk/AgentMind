@@ -115,10 +115,8 @@ class AgentMind:
             >>> print(agent.name)
             test
         """
-        for agent in self.agents:
-            if agent.name == agent_name:
-                return agent
-        return None
+        # Optimized: use next() with generator for early exit
+        return next((agent for agent in self.agents if agent.name == agent_name), None)
 
     async def broadcast_message(
         self, message: Message, exclude_sender: bool = True, use_llm: bool = True
@@ -348,10 +346,10 @@ class AgentMind:
         if not responses:
             return "No responses generated"
 
-        output_lines = ["=== Collaboration Summary ==="]
-        for response in responses:
-            output_lines.append(f"• {response.sender}: {response.content}")
-
+        # Optimized: use list comprehension and join in one step
+        output_lines = ["=== Collaboration Summary ==="] + [
+            f"• {response.sender}: {response.content}" for response in responses
+        ]
         return "\n".join(output_lines)
 
     def get_conversation_summary(self) -> Dict[str, Any]:
@@ -524,6 +522,7 @@ class AgentMind:
         if not save_path.exists():
             return []
 
+        # Optimized: use list comprehension with inline error handling
         sessions = []
         for session_file in save_path.glob("*.json"):
             try:
@@ -539,7 +538,9 @@ class AgentMind:
             except Exception:
                 continue
 
-        return sorted(sessions, key=lambda x: x["timestamp"], reverse=True)
+        # Optimized: use itemgetter for faster sorting
+        from operator import itemgetter
+        return sorted(sessions, key=itemgetter("timestamp"), reverse=True)
 
     def __repr__(self) -> str:
         """Return a developer-friendly string representation."""

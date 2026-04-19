@@ -1,4 +1,27 @@
-"""Example: Advanced orchestration patterns."""
+"""Example: Advanced orchestration patterns.
+
+Demonstrates sophisticated multi-agent coordination techniques including
+consensus mechanisms, parallel task decomposition, dynamic agent spawning,
+and skill-based agent matching.
+
+Difficulty: ADVANCED
+Prerequisites: Strong understanding of multi-agent systems, async programming
+Estimated time: 30-45 minutes
+
+What you'll learn:
+- Implementing consensus mechanisms (majority, unanimous, weighted voting)
+- Parallel task decomposition for complex workflows
+- Dynamic agent spawning based on workload
+- Skill-based agent matching and specialization
+- Advanced orchestration patterns for production systems
+
+Expected Output:
+- Consensus demo: Agents vote on proposals with different mechanisms
+- Parallel decomposition: Complex tasks split into concurrent subtasks
+- Dynamic spawning: Agents created on-demand for workload
+- Skill matching: Agents selected based on capabilities
+- Demonstrates enterprise-grade orchestration patterns
+"""
 
 import asyncio
 

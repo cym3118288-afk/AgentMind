@@ -2,6 +2,23 @@
 
 This example demonstrates how agents with different perspectives can debate
 a topic and reach conclusions through collaboration using real LLM reasoning.
+
+Difficulty: BEGINNER
+Prerequisites: Optional - Ollama installed with llama3.2 model for LLM responses
+Estimated time: 10 minutes
+
+What you'll learn:
+- Configuring LLM providers (Ollama or LiteLLM)
+- Creating agents with contrasting perspectives
+- Running multi-round debates
+- Analyzing debate outcomes and statistics
+
+Expected Output:
+- Optimist presents positive perspectives on AI investment
+- Pessimist provides critical analysis and risk assessment
+- Moderator synthesizes viewpoints and facilitates discussion
+- Final summary includes balanced conclusion from all perspectives
+- Works with or without LLM (falls back to template responses)
 """
 
 import asyncio

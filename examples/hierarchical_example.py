@@ -2,6 +2,24 @@
 
 This example demonstrates hierarchical collaboration where a supervisor
 coordinates multiple specialized agents to reach a consensus.
+
+Difficulty: INTERMEDIATE
+Prerequisites: Understanding of basic collaboration patterns
+Estimated time: 15 minutes
+
+What you'll learn:
+- Implementing hierarchical collaboration strategies
+- Creating supervisor-subordinate agent relationships
+- Coordinating specialized agents for decision-making
+- Using different collaboration strategies
+
+Expected Output:
+- Supervisor (CEO) coordinates the decision-making process
+- DataAnalyst provides quantitative insights
+- MarketResearcher offers market intelligence
+- RiskManager identifies potential risks
+- Final decision synthesizes all expert inputs
+- Demonstrates hierarchical message flow and coordination
 """
 
 import asyncio

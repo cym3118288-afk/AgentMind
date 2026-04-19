@@ -3,11 +3,23 @@
 Demonstrates how to create and use custom tools with AgentMind agents.
 Tools allow agents to interact with external systems, APIs, and data sources.
 
-This example shows:
-1. Creating simple tools with the @tool decorator
-2. Creating tools that call external APIs
-3. Registering tools with agents
-4. Using tools in agent collaboration
+Difficulty: INTERMEDIATE
+Prerequisites: Understanding of basic agent collaboration
+Estimated time: 20 minutes
+
+What you'll learn:
+- Creating simple tools with the @tool decorator
+- Creating tools that call external APIs
+- Registering tools with agents
+- Using tools in agent collaboration
+- Tool parameter validation and error handling
+
+Expected Output:
+- Agents use calculator tool for mathematical operations
+- Weather tool provides city weather information (mock data)
+- Database tool performs data queries
+- Time tool provides current timestamp
+- Demonstrates tool integration in multi-agent workflows
 """
 
 import asyncio

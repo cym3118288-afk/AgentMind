@@ -41,3 +41,12 @@ python-docx>=1.0.0
 # Plugin integrations (optional)
 slack-sdk>=3.23.0
 discord.py>=2.3.0
+
+# Benchmarking and visualization
+matplotlib>=3.7.0
+psutil>=5.9.0
+
+# Distributed execution (optional)
+celery>=5.3.0
+redis>=5.0.0
+ray>=2.9.0

@@ -24,7 +24,7 @@ class MemoryManager:
         self,
         backend: Optional[MemoryBackend] = None,
         short_term_limit: int = 10,
-        summarization_interval: int = 5
+        summarization_interval: int = 5,
     ):
         """Initialize memory manager.
 
@@ -46,10 +46,7 @@ class MemoryManager:
             message: The message to store
             importance: Importance score (0.0-1.0)
         """
-        entry = MemoryEntry(
-            message=message,
-            importance=importance
-        )
+        entry = MemoryEntry(message=message, importance=importance)
         await self.backend.add(entry)
         self._round_counter += 1
 
@@ -71,7 +68,9 @@ class MemoryManager:
         entries = await self.backend.get_all()
         return [entry.message for entry in entries]
 
-    async def get_important_messages(self, min_importance: float = 0.7, limit: int = 10) -> List[Message]:
+    async def get_important_messages(
+        self, min_importance: float = 0.7, limit: int = 10
+    ) -> List[Message]:
         """Get important messages from memory.
 
         Args:
@@ -108,9 +107,7 @@ class MemoryManager:
 
         if llm_provider:
             # Use LLM to create intelligent summary
-            conversation_text = "\n".join([
-                f"{msg.sender}: {msg.content}" for msg in messages
-            ])
+            conversation_text = "\n".join([f"{msg.sender}: {msg.content}" for msg in messages])
 
             summary_prompt = f"""Summarize the following conversation concisely, capturing key points and decisions:
 
@@ -122,7 +119,7 @@ Provide a brief summary (2-3 sentences):"""
                 response = await llm_provider.generate(
                     messages=[{"role": "user", "content": summary_prompt}],
                     temperature=0.3,
-                    max_tokens=200
+                    max_tokens=200,
                 )
                 self._summary = response.content
                 self._round_counter = 0  # Reset counter after summarization
@@ -164,10 +161,11 @@ Provide a brief summary (2-3 sentences):"""
         # If we have a summary and should include it, prepend as system message
         if include_summary and self._summary:
             from ..core.types import MessageRole
+
             summary_msg = Message(
                 content=f"[Previous conversation summary: {self._summary}]",
                 sender="system",
-                role=MessageRole.SYSTEM
+                role=MessageRole.SYSTEM,
             )
             messages = [summary_msg] + messages
 

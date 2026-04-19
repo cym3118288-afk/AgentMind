@@ -30,7 +30,7 @@ class MockLLMProvider(LLMProvider):
             content="Mock response",
             model=self.model,
             usage={"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
-            metadata={"mock": True}
+            metadata={"mock": True},
         )
 
     async def generate_stream(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -74,10 +74,7 @@ class TestLLMProviderBase:
     def test_build_messages_history_only(self) -> None:
         """Test building messages with history only."""
         provider = MockLLMProvider(model="test")
-        history = [
-            {"role": "user", "content": "Hi"},
-            {"role": "assistant", "content": "Hello"}
-        ]
+        history = [{"role": "user", "content": "Hi"}, {"role": "assistant", "content": "Hello"}]
         messages = provider.build_messages(history=history)
         assert len(messages) == 2
         assert messages[0]["content"] == "Hi"
@@ -87,9 +84,7 @@ class TestLLMProviderBase:
         provider = MockLLMProvider(model="test")
         history = [{"role": "user", "content": "Previous"}]
         messages = provider.build_messages(
-            system_prompt="System",
-            user_message="Current",
-            history=history
+            system_prompt="System", user_message="Current", history=history
         )
         assert len(messages) == 3
         assert messages[0]["role"] == "system"
@@ -98,11 +93,7 @@ class TestLLMProviderBase:
 
     def test_extra_params_storage(self) -> None:
         """Test that extra parameters are stored."""
-        provider = MockLLMProvider(
-            model="test",
-            custom_param="value",
-            another_param=123
-        )
+        provider = MockLLMProvider(model="test", custom_param="value", another_param=123)
         assert provider.extra_params["custom_param"] == "value"
         assert provider.extra_params["another_param"] == 123
 
@@ -130,7 +121,7 @@ class TestOllamaProvider:
         }
         mock_response.raise_for_status = MagicMock()
 
-        with patch.object(provider.client, 'post', return_value=mock_response):
+        with patch.object(provider.client, "post", return_value=mock_response):
             response = await provider.generate([{"role": "user", "content": "Test"}])
 
         assert response.content == "Test response"
@@ -144,7 +135,9 @@ class TestOllamaProvider:
         """Test generation handles HTTP errors."""
         provider = OllamaProvider(model="llama3.2")
 
-        with patch.object(provider.client, 'post', side_effect=httpx.HTTPError("Connection failed")):
+        with patch.object(
+            provider.client, "post", side_effect=httpx.HTTPError("Connection failed")
+        ):
             with pytest.raises(Exception) as exc_info:
                 await provider.generate([{"role": "user", "content": "Test"}])
 
@@ -156,17 +149,12 @@ class TestOllamaProvider:
         provider = OllamaProvider(model="llama3.2", temperature=0.7, max_tokens=1000)
 
         mock_response = MagicMock()
-        mock_response.json.return_value = {
-            "message": {"content": "Response"},
-            "done": True
-        }
+        mock_response.json.return_value = {"message": {"content": "Response"}, "done": True}
         mock_response.raise_for_status = MagicMock()
 
-        with patch.object(provider.client, 'post', return_value=mock_response) as mock_post:
+        with patch.object(provider.client, "post", return_value=mock_response) as mock_post:
             await provider.generate(
-                [{"role": "user", "content": "Test"}],
-                temperature=0.9,
-                max_tokens=500
+                [{"role": "user", "content": "Test"}], temperature=0.9, max_tokens=500
             )
 
             # Check that overridden values were used
@@ -192,7 +180,7 @@ class TestOllamaProvider:
         mock_stream.raise_for_status = MagicMock()
         mock_stream.aiter_lines = mock_aiter_lines
 
-        with patch.object(provider.client, 'stream', return_value=mock_stream):
+        with patch.object(provider.client, "stream", return_value=mock_stream):
             chunks = []
             async for chunk in provider.generate_stream([{"role": "user", "content": "Test"}]):
                 chunks.append(chunk)
@@ -206,7 +194,7 @@ class TestOllamaProvider:
 
         async def mock_aiter_lines():
             yield '{"message": {"content": "Valid"}}'
-            yield 'invalid json'
+            yield "invalid json"
             yield '{"message": {"content": "Also valid"}}'
 
         mock_stream = MagicMock()
@@ -215,7 +203,7 @@ class TestOllamaProvider:
         mock_stream.raise_for_status = MagicMock()
         mock_stream.aiter_lines = mock_aiter_lines
 
-        with patch.object(provider.client, 'stream', return_value=mock_stream):
+        with patch.object(provider.client, "stream", return_value=mock_stream):
             chunks = []
             async for chunk in provider.generate_stream([{"role": "user", "content": "Test"}]):
                 chunks.append(chunk)
@@ -232,7 +220,7 @@ class TestOllamaProvider:
         mock_stream.__aenter__ = AsyncMock(side_effect=httpx.HTTPError("Connection failed"))
         mock_stream.__aexit__ = AsyncMock()
 
-        with patch.object(provider.client, 'stream', return_value=mock_stream):
+        with patch.object(provider.client, "stream", return_value=mock_stream):
             with pytest.raises(Exception) as exc_info:
                 async for _ in provider.generate_stream([{"role": "user", "content": "Test"}]):
                     pass
@@ -245,15 +233,10 @@ class TestOllamaProvider:
         provider = OllamaProvider(model="llama3.2")
 
         mock_response = MagicMock()
-        mock_response.json.return_value = {
-            "models": [
-                {"name": "llama3.2"},
-                {"name": "mistral"}
-            ]
-        }
+        mock_response.json.return_value = {"models": [{"name": "llama3.2"}, {"name": "mistral"}]}
         mock_response.raise_for_status = MagicMock()
 
-        with patch.object(provider.client, 'get', return_value=mock_response):
+        with patch.object(provider.client, "get", return_value=mock_response):
             available = await provider.check_model_available()
 
         assert available is True
@@ -264,15 +247,10 @@ class TestOllamaProvider:
         provider = OllamaProvider(model="nonexistent")
 
         mock_response = MagicMock()
-        mock_response.json.return_value = {
-            "models": [
-                {"name": "llama3.2"},
-                {"name": "mistral"}
-            ]
-        }
+        mock_response.json.return_value = {"models": [{"name": "llama3.2"}, {"name": "mistral"}]}
         mock_response.raise_for_status = MagicMock()
 
-        with patch.object(provider.client, 'get', return_value=mock_response):
+        with patch.object(provider.client, "get", return_value=mock_response):
             available = await provider.check_model_available()
 
         assert available is False
@@ -282,7 +260,7 @@ class TestOllamaProvider:
         """Test checking model availability handles errors."""
         provider = OllamaProvider(model="llama3.2")
 
-        with patch.object(provider.client, 'get', side_effect=httpx.HTTPError("Connection failed")):
+        with patch.object(provider.client, "get", side_effect=httpx.HTTPError("Connection failed")):
             available = await provider.check_model_available()
 
         assert available is False
@@ -292,7 +270,7 @@ class TestOllamaProvider:
         """Test closing the HTTP client."""
         provider = OllamaProvider(model="llama3.2")
 
-        with patch.object(provider.client, 'aclose') as mock_close:
+        with patch.object(provider.client, "aclose") as mock_close:
             await provider.close()
             mock_close.assert_called_once()
 
@@ -302,18 +280,11 @@ class TestOllamaProvider:
         provider = OllamaProvider(model="llama3.2")
 
         mock_response = MagicMock()
-        mock_response.json.return_value = {
-            "message": {"content": "Response"},
-            "done": True
-        }
+        mock_response.json.return_value = {"message": {"content": "Response"}, "done": True}
         mock_response.raise_for_status = MagicMock()
 
-        with patch.object(provider.client, 'post', return_value=mock_response) as mock_post:
-            await provider.generate(
-                [{"role": "user", "content": "Test"}],
-                top_p=0.9,
-                top_k=40
-            )
+        with patch.object(provider.client, "post", return_value=mock_response) as mock_post:
+            await provider.generate([{"role": "user", "content": "Test"}], top_p=0.9, top_k=40)
 
             # Check that extra options were passed
             call_args = mock_post.call_args
@@ -327,19 +298,22 @@ class TestLiteLLMProvider:
 
     def test_litellm_import_error(self) -> None:
         """Test that ImportError is raised when litellm is not available."""
-        with patch.dict('sys.modules', {'litellm': None}):
+        with patch.dict("sys.modules", {"litellm": None}):
             # Force reimport to trigger the import check
             from agentmind.llm.litellm_provider import LITELLM_AVAILABLE
+
             if not LITELLM_AVAILABLE:
                 from agentmind.llm import LiteLLMProvider
+
                 with pytest.raises(ImportError) as exc_info:
                     LiteLLMProvider(model="gpt-4")
                 assert "litellm is not installed" in str(exc_info.value)
 
     def test_list_models_without_litellm(self) -> None:
         """Test list_models returns empty list when litellm unavailable."""
-        with patch('agentmind.llm.litellm_provider.LITELLM_AVAILABLE', False):
+        with patch("agentmind.llm.litellm_provider.LITELLM_AVAILABLE", False):
             from agentmind.llm import LiteLLMProvider
+
             models = LiteLLMProvider.list_models()
             assert models == []
 
@@ -361,7 +335,7 @@ class TestLLMResponse:
             content="Test content",
             model="test-model",
             usage={"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30},
-            metadata={"id": "123", "created": 1234567890}
+            metadata={"id": "123", "created": 1234567890},
         )
         assert response.content == "Test content"
         assert response.usage["total_tokens"] == 30
@@ -369,11 +343,7 @@ class TestLLMResponse:
 
     def test_response_serialization(self) -> None:
         """Test LLMResponse can be serialized."""
-        response = LLMResponse(
-            content="Test",
-            model="test-model",
-            usage={"total_tokens": 100}
-        )
+        response = LLMResponse(content="Test", model="test-model", usage={"total_tokens": 100})
         data = response.model_dump()
         assert data["content"] == "Test"
         assert data["model"] == "test-model"
@@ -388,7 +358,7 @@ class TestErrorHandling:
         """Test handling of timeout errors."""
         provider = OllamaProvider(model="llama3.2")
 
-        with patch.object(provider.client, 'post', side_effect=httpx.TimeoutException("Timeout")):
+        with patch.object(provider.client, "post", side_effect=httpx.TimeoutException("Timeout")):
             with pytest.raises(Exception) as exc_info:
                 await provider.generate([{"role": "user", "content": "Test"}])
 
@@ -399,7 +369,9 @@ class TestErrorHandling:
         """Test handling of connection errors."""
         provider = OllamaProvider(model="llama3.2")
 
-        with patch.object(provider.client, 'post', side_effect=httpx.ConnectError("Connection refused")):
+        with patch.object(
+            provider.client, "post", side_effect=httpx.ConnectError("Connection refused")
+        ):
             with pytest.raises(Exception) as exc_info:
                 await provider.generate([{"role": "user", "content": "Test"}])
 
@@ -414,7 +386,7 @@ class TestErrorHandling:
         mock_response.json.return_value = {}  # Missing expected fields
         mock_response.raise_for_status = MagicMock()
 
-        with patch.object(provider.client, 'post', return_value=mock_response):
+        with patch.object(provider.client, "post", return_value=mock_response):
             response = await provider.generate([{"role": "user", "content": "Test"}])
 
         # Should handle missing fields gracefully

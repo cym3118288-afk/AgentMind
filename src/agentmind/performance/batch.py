@@ -9,8 +9,8 @@ from typing import Any, Callable, Dict, List, Optional, TypeVar
 from dataclasses import dataclass
 from datetime import datetime
 
-T = TypeVar('T')
-R = TypeVar('R')
+T = TypeVar("T")
+R = TypeVar("R")
 
 
 @dataclass
@@ -53,33 +53,19 @@ class BatchProcessor:
         self.max_retries = max_retries
         self._semaphore = asyncio.Semaphore(max_concurrent)
 
-    async def _process_single(
-        self,
-        task_id: str,
-        func: Callable,
-        *args,
-        **kwargs
-    ) -> BatchResult:
+    async def _process_single(self, task_id: str, func: Callable, *args, **kwargs) -> BatchResult:
         """Process a single task with error handling."""
         start_time = asyncio.get_event_loop().time()
 
         async with self._semaphore:
             try:
                 if self.timeout:
-                    result = await asyncio.wait_for(
-                        func(*args, **kwargs),
-                        timeout=self.timeout
-                    )
+                    result = await asyncio.wait_for(func(*args, **kwargs), timeout=self.timeout)
                 else:
                     result = await func(*args, **kwargs)
 
                 duration = asyncio.get_event_loop().time() - start_time
-                return BatchResult(
-                    task_id=task_id,
-                    success=True,
-                    result=result,
-                    duration=duration
-                )
+                return BatchResult(task_id=task_id, success=True, result=result, duration=duration)
 
             except asyncio.TimeoutError:
                 duration = asyncio.get_event_loop().time() - start_time
@@ -87,17 +73,12 @@ class BatchProcessor:
                     task_id=task_id,
                     success=False,
                     error=f"Task timed out after {self.timeout}s",
-                    duration=duration
+                    duration=duration,
                 )
 
             except Exception as e:
                 duration = asyncio.get_event_loop().time() - start_time
-                return BatchResult(
-                    task_id=task_id,
-                    success=False,
-                    error=str(e),
-                    duration=duration
-                )
+                return BatchResult(task_id=task_id, success=False, error=str(e), duration=duration)
 
     async def process_batch(
         self,
@@ -153,15 +134,16 @@ class BatchProcessor:
             if not failed_indices:
                 break
 
-            # Retry failed tasks
-            retry_tasks = [tasks[i] for i in failed_indices]
+            # Retry failed tasks (stored for potential future use)
+            _ = [tasks[i] for i in failed_indices]
             retry_results = await asyncio.gather(
-                *[self._process_single(
-                    f"{tasks[i].get('id', i)}_retry{retry_num}",
-                    func,
-                    **tasks[i]
-                ) for i in failed_indices],
-                return_exceptions=False
+                *[
+                    self._process_single(
+                        f"{tasks[i].get('id', i)}_retry{retry_num}", func, **tasks[i]
+                    )
+                    for i in failed_indices
+                ],
+                return_exceptions=False,
             )
 
             # Update results
@@ -189,6 +171,7 @@ class BatchProcessor:
             func: Async function to call for each task
             result_callback: Optional callback for each result
         """
+
         async def worker():
             while True:
                 try:

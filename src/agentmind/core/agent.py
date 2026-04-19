@@ -4,7 +4,6 @@ This module provides the Agent class which represents an individual agent
 in the multi-agent system with memory, role-based behavior, and message processing.
 """
 
-import asyncio
 import json
 from typing import Any, Dict, List, Optional
 
@@ -174,10 +173,7 @@ class Agent:
             Dict with tool result
         """
         if tool_name not in self._available_tools:
-            return {
-                "success": False,
-                "error": f"Tool '{tool_name}' not available to this agent"
-            }
+            return {"success": False, "error": f"Tool '{tool_name}' not available to this agent"}
 
         result = await self.tool_registry.execute(tool_name, **kwargs)
         return result.model_dump()
@@ -207,23 +203,17 @@ class Agent:
         memory_context = None
         if recent_messages:
             # Optimized: use list comprehension and join in one step
-            memory_context = "\n".join(
-                f"{msg.sender}: {msg.content}" for msg in recent_messages
-            )
+            memory_context = "\n".join(f"{msg.sender}: {msg.content}" for msg in recent_messages)
 
         return get_system_prompt(
             role=self.role,
             backstory=self.config.backstory,
             custom_prompt=self.config.system_prompt,
             memory_context=memory_context,
-            tools=self.config.tools if self.config.tools else None
+            tools=self.config.tools if self.config.tools else None,
         )
 
-    async def think_and_respond(
-        self,
-        incoming_message: Message,
-        mode: str = "simple"
-    ) -> Message:
+    async def think_and_respond(self, incoming_message: Message, mode: str = "simple") -> Message:
         """Think about a message and generate an intelligent response using LLM.
 
         This implements a ReAct-style reasoning pattern:
@@ -250,20 +240,19 @@ class Agent:
 
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": incoming_message.content}
+            {"role": "user", "content": incoming_message.content},
         ]
 
         # Add tool definitions if in tool_use mode
-        tool_definitions = None
         if mode == "tool_use" and self._available_tools:
-            tool_definitions = self.get_tool_definitions()
+            _ = self.get_tool_definitions()  # Tool definitions prepared for future use
 
         try:
             # Generate response using LLM
             llm_response = await self.llm_provider.generate(
                 messages=messages,
                 temperature=self.config.temperature,
-                max_tokens=self.config.max_tokens
+                max_tokens=self.config.max_tokens,
             )
 
             response_content = llm_response.content
@@ -271,7 +260,7 @@ class Agent:
                 "agent_role": self.role,
                 "model": llm_response.model,
                 "usage": llm_response.usage,
-                "mode": mode
+                "mode": mode,
             }
 
             # Check if LLM wants to use tools (simple pattern matching for now)
@@ -287,7 +276,7 @@ class Agent:
                 content=response_content,
                 sender=self.name,
                 role=MessageRole.AGENT,
-                metadata=metadata
+                metadata=metadata,
             )
 
             # Store in memory
@@ -296,7 +285,7 @@ class Agent:
 
             # Trim memory if needed
             if len(self.memory) > self.config.memory_limit:
-                self.memory = self.memory[-self.config.memory_limit:]
+                self.memory = self.memory[-self.config.memory_limit :]
 
             return response
 
@@ -322,7 +311,8 @@ class Agent:
         # Simple pattern: look for tool calls in format: TOOL[tool_name](param=value)
         # This is a placeholder - real implementation would use LLM function calling
         import re
-        pattern = r'TOOL\[(\w+)\]\((.*?)\)'
+
+        pattern = r"TOOL\[(\w+)\]\((.*?)\)"
         matches = re.findall(pattern, llm_output)
 
         for tool_name, params_str in matches:
@@ -330,23 +320,16 @@ class Agent:
                 # Parse parameters (simple key=value format)
                 params = {}
                 if params_str:
-                    for param in params_str.split(','):
-                        if '=' in param:
-                            key, value = param.split('=', 1)
-                            params[key.strip()] = value.strip().strip('"\'')
+                    for param in params_str.split(","):
+                        if "=" in param:
+                            key, value = param.split("=", 1)
+                            params[key.strip()] = value.strip().strip("\"'")
 
                 # Execute tool
                 result = await self.execute_tool(tool_name, **params)
-                results.append({
-                    "tool": tool_name,
-                    "params": params,
-                    "result": result
-                })
+                results.append({"tool": tool_name, "params": params, "result": result})
             except Exception as e:
-                results.append({
-                    "tool": tool_name,
-                    "error": str(e)
-                })
+                results.append({"tool": tool_name, "error": str(e)})
 
         return results
 

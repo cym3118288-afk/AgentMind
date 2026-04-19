@@ -193,10 +193,7 @@ class MemoryVisualizer:
             "total_agents": len(self.agent_memories),
             "total_messages": total_messages,
             "avg_memory_size": avg_memory_size,
-            "agents": {
-                name: len(memory)
-                for name, memory in self.agent_memories.items()
-            },
+            "agents": {name: len(memory) for name, memory in self.agent_memories.items()},
         }
 
     def clear(self) -> None:

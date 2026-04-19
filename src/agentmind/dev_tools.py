@@ -3,7 +3,6 @@
 Provides interactive debugging, profiling utilities, and development helpers.
 """
 
-import asyncio
 import json
 import time
 from typing import Any, Dict, List, Optional, Callable
@@ -28,7 +27,7 @@ class DebugEvent:
     def to_dict(self) -> dict:
         """Convert to dictionary."""
         result = asdict(self)
-        result['timestamp'] = self.timestamp.isoformat()
+        result["timestamp"] = self.timestamp.isoformat()
         return result
 
 
@@ -116,7 +115,7 @@ class DebugMode:
         Args:
             filepath: Path to output file
         """
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump([e.to_dict() for e in self.events], f, indent=2)
 
     def clear(self) -> None:
@@ -156,7 +155,7 @@ class DebugMode:
         if timed_events:
             total_duration = sum(e.duration for e in timed_events)
             avg_duration = total_duration / len(timed_events)
-            print(f"\nTiming:")
+            print("\nTiming:")
             print(f"  Total duration: {total_duration:.3f}s")
             print(f"  Average duration: {avg_duration:.3f}s")
 
@@ -202,7 +201,7 @@ class InteractiveDebugger:
             task: Task to collaborate on
             max_rounds: Maximum collaboration rounds
         """
-        print(f"\n=== Interactive Debug Session ===")
+        print("\n=== Interactive Debug Session ===")
         print(f"Task: {task}")
         print(f"Agents: {[a.name for a in self.mind.agents]}")
         print("Commands: (c)ontinue, (s)tep, (i)nspect, (q)uit\n")
@@ -214,13 +213,13 @@ class InteractiveDebugger:
             # Get user input
             command = input("Debug> ").strip().lower()
 
-            if command == 'q':
+            if command == "q":
                 print("Exiting debug session.")
                 break
-            elif command == 'i':
+            elif command == "i":
                 self._inspect_state()
                 continue
-            elif command == 's' or command == 'c':
+            elif command == "s" or command == "c":
                 # Execute one round
                 # Note: This is simplified - actual implementation would need
                 # to integrate with AgentMind's collaboration loop
@@ -313,6 +312,8 @@ class BenchmarkRunner:
             start_time = time.time()
 
             result = await mind.collaborate(task, max_rounds=max_rounds)
+            # Use result to avoid unused variable warning
+            _ = result
 
             duration = time.time() - start_time
             durations.append(duration)
@@ -356,7 +357,7 @@ class BenchmarkRunner:
         Args:
             filepath: Path to output file
         """
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             json.dump(self.results, f, indent=2)
 
 
@@ -385,9 +386,7 @@ class MemoryLeakDetector:
         for agent in agents:
             snapshot["agents"][agent.name] = {
                 "memory_size": len(agent.memory),
-                "memory_bytes": sum(
-                    sys.getsizeof(m.content) for m in agent.memory
-                ),
+                "memory_bytes": sum(sys.getsizeof(m.content) for m in agent.memory),
                 "is_active": agent.is_active,
             }
 

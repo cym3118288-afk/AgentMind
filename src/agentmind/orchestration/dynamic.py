@@ -64,12 +64,14 @@ class DynamicAgentSpawner:
             self.spawned_agents.append(agent)
 
         # Record spawn event
-        self.spawn_history.append({
-            "task": task,
-            "requirements": requirements,
-            "spawned_count": len(new_agents),
-            "roles": [a.role for a in new_agents],
-        })
+        self.spawn_history.append(
+            {
+                "task": task,
+                "requirements": requirements,
+                "spawned_count": len(new_agents),
+                "roles": [a.role for a in new_agents],
+            }
+        )
 
         return new_agents
 
@@ -197,20 +199,24 @@ SUBTASKS: [subtask1, subtask2, subtask3]"""
         for skill in skills[:num_agents]:
             role = skill_to_role.get(skill.lower(), "implementation")
             if role not in assigned_roles:
-                roles.append({
-                    "name": f"{role}_{len(roles)+1}",
-                    "role": role,
-                    "system_prompt": role_templates.get(role, "You are a helpful assistant."),
-                })
+                roles.append(
+                    {
+                        "name": f"{role}_{len(roles) + 1}",
+                        "role": role,
+                        "system_prompt": role_templates.get(role, "You are a helpful assistant."),
+                    }
+                )
                 assigned_roles.add(role)
 
         # Ensure minimum roles
         if not roles:
-            roles.append({
-                "name": "agent_1",
-                "role": "assistant",
-                "system_prompt": "You are a helpful assistant.",
-            })
+            roles.append(
+                {
+                    "name": "agent_1",
+                    "role": "assistant",
+                    "system_prompt": "You are a helpful assistant.",
+                }
+            )
 
         return roles[:max_agents]
 
@@ -229,10 +235,7 @@ SUBTASKS: [subtask1, subtask2, subtask3]"""
             Filtered list of role specs
         """
         existing_roles = {agent.role for agent in existing_agents}
-        return [
-            role_spec for role_spec in needed_roles
-            if role_spec["role"] not in existing_roles
-        ]
+        return [role_spec for role_spec in needed_roles if role_spec["role"] not in existing_roles]
 
     def _create_agent(self, role_spec: Dict[str, str]) -> Agent:
         """Create an agent from a role specification.

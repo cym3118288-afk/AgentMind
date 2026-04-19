@@ -3,7 +3,6 @@
 Agents can debate and refine outputs through structured argumentation.
 """
 
-import asyncio
 from typing import Any, Dict, List, Optional
 
 from ..core.agent import Agent
@@ -70,21 +69,21 @@ class DebateImprover:
             response = await agent.process_message(message)
             if response:
                 positions[agent.name] = response.content
-                debate_transcript.append({
-                    "round": 0,
-                    "agent": agent.name,
-                    "type": "initial_position",
-                    "content": response.content,
-                })
+                debate_transcript.append(
+                    {
+                        "round": 0,
+                        "agent": agent.name,
+                        "type": "initial_position",
+                        "content": response.content,
+                    }
+                )
 
         # Debate rounds
         for round_num in range(1, rounds + 1):
             for i, agent in enumerate(agents):
                 # Get other agents' positions
                 other_positions = [
-                    f"{name}: {pos}"
-                    for name, pos in positions.items()
-                    if name != agent.name
+                    f"{name}: {pos}" for name, pos in positions.items() if name != agent.name
                 ]
 
                 critique_prompt = f"""Round {round_num} of debate on: {topic}
@@ -105,12 +104,14 @@ Critique the other positions and refine your own. Be constructive and specific."
 
                 if response:
                     positions[agent.name] = response.content
-                    debate_transcript.append({
-                        "round": round_num,
-                        "agent": agent.name,
-                        "type": "critique",
-                        "content": response.content,
-                    })
+                    debate_transcript.append(
+                        {
+                            "round": round_num,
+                            "agent": agent.name,
+                            "type": "critique",
+                            "content": response.content,
+                        }
+                    )
 
         # Generate consensus
         consensus = await self._generate_consensus(topic, positions, judge_agent or agents[0])
@@ -143,10 +144,9 @@ Critique the other positions and refine your own. Be constructive and specific."
         Returns:
             Consensus statement
         """
-        positions_text = "\n\n".join([
-            f"{name}'s position:\n{pos}"
-            for name, pos in positions.items()
-        ])
+        positions_text = "\n\n".join(
+            [f"{name}'s position:\n{pos}" for name, pos in positions.items()]
+        )
 
         consensus_prompt = f"""As a judge, synthesize a consensus from this debate.
 
@@ -210,10 +210,12 @@ Provide actionable suggestions."""
                 )
                 response = await agent.process_message(message)
                 if response:
-                    critiques.append({
-                        "agent": agent.name,
-                        "critique": response.content,
-                    })
+                    critiques.append(
+                        {
+                            "agent": agent.name,
+                            "critique": response.content,
+                        }
+                    )
 
             # Generate improved version
             if critiques:
@@ -238,11 +240,13 @@ Critiques:
 
                 if response:
                     current_output = response.content
-                    improvement_history.append({
-                        "round": round_num,
-                        "critiques": critiques,
-                        "output": current_output,
-                    })
+                    improvement_history.append(
+                        {
+                            "round": round_num,
+                            "critiques": critiques,
+                            "output": current_output,
+                        }
+                    )
 
         return {
             "original": original_output,

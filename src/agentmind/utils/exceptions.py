@@ -6,6 +6,7 @@ This module provides clear, actionable error messages for common issues.
 
 class AgentMindError(Exception):
     """Base exception for all AgentMind errors."""
+
     pass
 
 
@@ -88,6 +89,7 @@ class ValidationError(AgentMindError):
 
 # Helper functions for common validation scenarios
 
+
 def validate_agent_name(name: str) -> None:
     """Validate agent name.
 
@@ -98,25 +100,13 @@ def validate_agent_name(name: str) -> None:
         ValidationError: If name is invalid
     """
     if not name or not isinstance(name, str):
-        raise ValidationError(
-            "Agent name must be a non-empty string",
-            field="name",
-            value=name
-        )
+        raise ValidationError("Agent name must be a non-empty string", field="name", value=name)
 
     if not name.strip():
-        raise ValidationError(
-            "Agent name cannot be only whitespace",
-            field="name",
-            value=name
-        )
+        raise ValidationError("Agent name cannot be only whitespace", field="name", value=name)
 
     if len(name) > 100:
-        raise ValidationError(
-            "Agent name too long (max 100 characters)",
-            field="name",
-            value=name
-        )
+        raise ValidationError("Agent name too long (max 100 characters)", field="name", value=name)
 
 
 def validate_max_rounds(max_rounds: int) -> None:
@@ -129,24 +119,16 @@ def validate_max_rounds(max_rounds: int) -> None:
         ValidationError: If max_rounds is invalid
     """
     if not isinstance(max_rounds, int):
-        raise ValidationError(
-            "max_rounds must be an integer",
-            field="max_rounds",
-            value=max_rounds
-        )
+        raise ValidationError("max_rounds must be an integer", field="max_rounds", value=max_rounds)
 
     if max_rounds < 1:
-        raise ValidationError(
-            "max_rounds must be at least 1",
-            field="max_rounds",
-            value=max_rounds
-        )
+        raise ValidationError("max_rounds must be at least 1", field="max_rounds", value=max_rounds)
 
     if max_rounds > 100:
         raise ValidationError(
             "max_rounds too high (max 100). Consider using a stop condition instead.",
             field="max_rounds",
-            value=max_rounds
+            value=max_rounds,
         )
 
 
@@ -160,15 +142,7 @@ def validate_model_name(model: str) -> None:
         ValidationError: If model name is invalid
     """
     if not model or not isinstance(model, str):
-        raise ValidationError(
-            "Model name must be a non-empty string",
-            field="model",
-            value=model
-        )
+        raise ValidationError("Model name must be a non-empty string", field="model", value=model)
 
     if not model.strip():
-        raise ValidationError(
-            "Model name cannot be only whitespace",
-            field="model",
-            value=model
-        )
+        raise ValidationError("Model name cannot be only whitespace", field="model", value=model)

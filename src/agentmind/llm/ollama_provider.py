@@ -31,7 +31,7 @@ class OllamaProvider(LLMProvider):
         max_tokens: int = 1000,
         base_url: str = "http://localhost:11434",
         timeout: float = 120.0,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Initialize Ollama provider.
 
@@ -50,6 +50,7 @@ class OllamaProvider(LLMProvider):
         # Try to enable HTTP/2 if available, fall back to HTTP/1.1
         try:
             import h2  # noqa
+
             http2_enabled = True
         except ImportError:
             http2_enabled = False
@@ -57,7 +58,7 @@ class OllamaProvider(LLMProvider):
         self.client = httpx.AsyncClient(
             timeout=timeout,
             limits=httpx.Limits(max_keepalive_connections=5, max_connections=10),
-            http2=http2_enabled
+            http2=http2_enabled,
         )
 
     async def generate(
@@ -65,7 +66,7 @@ class OllamaProvider(LLMProvider):
         messages: List[Dict[str, str]],
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> LLMResponse:
         """Generate a response using Ollama.
 
@@ -93,15 +94,12 @@ class OllamaProvider(LLMProvider):
             "options": {
                 "temperature": temp,
                 "num_predict": max_tok,
-                **kwargs  # Merge extra parameters directly
-            }
+                **kwargs,  # Merge extra parameters directly
+            },
         }
 
         try:
-            response = await self.client.post(
-                f"{self.base_url}/api/chat",
-                json=payload
-            )
+            response = await self.client.post(f"{self.base_url}/api/chat", json=payload)
             response.raise_for_status()
             data = response.json()
 
@@ -118,7 +116,9 @@ class OllamaProvider(LLMProvider):
             if completion_tokens is not None:
                 usage["completion_tokens"] = completion_tokens
             if usage:
-                usage["total_tokens"] = usage.get("prompt_tokens", 0) + usage.get("completion_tokens", 0)
+                usage["total_tokens"] = usage.get("prompt_tokens", 0) + usage.get(
+                    "completion_tokens", 0
+                )
 
             return LLMResponse(
                 content=content,
@@ -129,7 +129,7 @@ class OllamaProvider(LLMProvider):
                     "total_duration": data.get("total_duration"),
                     "load_duration": data.get("load_duration"),
                     "eval_duration": data.get("eval_duration"),
-                }
+                },
             )
 
         except httpx.HTTPError as e:
@@ -140,7 +140,7 @@ class OllamaProvider(LLMProvider):
         messages: List[Dict[str, str]],
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> AsyncIterator[str]:
         """Generate a streaming response using Ollama.
 
@@ -164,15 +164,13 @@ class OllamaProvider(LLMProvider):
             "options": {
                 "temperature": temp,
                 "num_predict": max_tok,
-                **kwargs  # Merge extra parameters directly
-            }
+                **kwargs,  # Merge extra parameters directly
+            },
         }
 
         try:
             async with self.client.stream(
-                "POST",
-                f"{self.base_url}/api/chat",
-                json=payload
+                "POST", f"{self.base_url}/api/chat", json=payload
             ) as response:
                 response.raise_for_status()
                 async for line in response.aiter_lines():
@@ -213,6 +211,7 @@ class OllamaProvider(LLMProvider):
         """Cleanup on deletion."""
         try:
             import asyncio
+
             loop = asyncio.get_event_loop()
             if loop.is_running():
                 loop.create_task(self.client.aclose())

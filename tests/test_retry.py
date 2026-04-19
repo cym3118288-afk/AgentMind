@@ -33,11 +33,7 @@ class TestRetryConfig:
     def test_custom_config(self) -> None:
         """Test custom retry configuration."""
         config = RetryConfig(
-            max_retries=5,
-            initial_delay=0.5,
-            max_delay=30.0,
-            exponential_base=3.0,
-            jitter=False
+            max_retries=5, initial_delay=0.5, max_delay=30.0, exponential_base=3.0, jitter=False
         )
         assert config.max_retries == 5
         assert config.initial_delay == 0.5
@@ -95,6 +91,7 @@ class TestShouldRetry:
 
     def test_subclass_exception(self) -> None:
         """Test that exception subclasses are handled correctly."""
+
         class CustomConnectionError(ConnectionError):
             pass
 
@@ -160,10 +157,7 @@ class TestRetryDecorator:
         """Test that non-retryable exceptions are not retried."""
         call_count = 0
 
-        @retry_async(
-            config=RetryConfig(max_retries=3),
-            retryable_exceptions=(ConnectionError,)
-        )
+        @retry_async(config=RetryConfig(max_retries=3), retryable_exceptions=(ConnectionError,))
         async def func_with_value_error():
             nonlocal call_count
             call_count += 1
@@ -208,8 +202,7 @@ class TestRetryWithBackoff:
             return "success"
 
         result = await retry_with_backoff(
-            test_func,
-            config=RetryConfig(max_retries=3, initial_delay=0.01, jitter=False)
+            test_func, config=RetryConfig(max_retries=3, initial_delay=0.01, jitter=False)
         )
 
         assert result == "success"
@@ -228,10 +221,7 @@ class TestRetryWithBackoff:
             return x * y
 
         result = await retry_with_backoff(
-            test_func,
-            config=RetryConfig(max_retries=3, initial_delay=0.01, jitter=False),
-            x=5,
-            y=3
+            test_func, config=RetryConfig(max_retries=3, initial_delay=0.01, jitter=False), x=5, y=3
         )
 
         assert result == 15
@@ -249,8 +239,7 @@ class TestRetryWithBackoff:
 
         with pytest.raises(ConnectionError):
             await retry_with_backoff(
-                failing_func,
-                config=RetryConfig(max_retries=2, initial_delay=0.01, jitter=False)
+                failing_func, config=RetryConfig(max_retries=2, initial_delay=0.01, jitter=False)
             )
 
         assert call_count == 3

@@ -170,6 +170,7 @@ class TestBatchProcessor:
     @pytest.mark.asyncio
     async def test_basic_batch_processing(self):
         """Test basic batch processing."""
+
         async def process_task(value: int) -> int:
             await asyncio.sleep(0.01)
             return value * 2
@@ -186,6 +187,7 @@ class TestBatchProcessor:
     @pytest.mark.asyncio
     async def test_batch_with_failures(self):
         """Test batch processing with failures."""
+
         async def process_task(value: int) -> int:
             if value == 5:
                 raise ValueError("Test error")
@@ -207,6 +209,7 @@ class TestBatchProcessor:
     @pytest.mark.asyncio
     async def test_batch_timeout(self):
         """Test batch processing with timeout."""
+
         async def slow_task(value: int) -> int:
             await asyncio.sleep(2)
             return value
@@ -223,6 +226,7 @@ class TestBatchProcessor:
     @pytest.mark.asyncio
     async def test_batch_stats(self):
         """Test batch statistics."""
+
         async def process_task(value: int) -> int:
             await asyncio.sleep(0.01)
             if value == 5:
@@ -251,10 +255,7 @@ class TestMemoryOptimizer:
         optimizer = MemoryOptimizer(max_messages=10, sliding_window=5)
 
         # Create messages
-        messages = [
-            Message(role="user", content=f"Message {i}", sender="user")
-            for i in range(20)
-        ]
+        messages = [Message(role="user", content=f"Message {i}", sender="user") for i in range(20)]
 
         optimized = await optimizer.optimize(messages, strategy="sliding_window")
 
@@ -267,10 +268,7 @@ class TestMemoryOptimizer:
         """Test when no optimization is needed."""
         optimizer = MemoryOptimizer(max_messages=100)
 
-        messages = [
-            Message(role="user", content=f"Message {i}", sender="user")
-            for i in range(10)
-        ]
+        messages = [Message(role="user", content=f"Message {i}", sender="user") for i in range(10)]
 
         optimized = await optimizer.optimize(messages, strategy="sliding_window")
 
@@ -284,10 +282,7 @@ class TestMemoryOptimizer:
 
         messages = [
             Message(role="system", content="System prompt", sender="system"),
-        ] + [
-            Message(role="user", content=f"Message {i}", sender="user")
-            for i in range(20)
-        ]
+        ] + [Message(role="user", content=f"Message {i}", sender="user") for i in range(20)]
 
         optimized = await optimizer.optimize(messages, strategy="sliding_window")
 
@@ -301,10 +296,7 @@ class TestMemoryOptimizer:
         """Test optimizer statistics."""
         optimizer = MemoryOptimizer(max_messages=10, sliding_window=5)
 
-        messages = [
-            Message(role="user", content=f"Message {i}", sender="user")
-            for i in range(20)
-        ]
+        messages = [Message(role="user", content=f"Message {i}", sender="user") for i in range(20)]
 
         await optimizer.optimize(messages, strategy="sliding_window")
 
@@ -322,15 +314,9 @@ class TestConversationCompressor:
         """Test simple compression without LLM."""
         compressor = ConversationCompressor()
 
-        messages = [
-            Message(role="user", content=f"Message {i}", sender="user")
-            for i in range(20)
-        ]
+        messages = [Message(role="user", content=f"Message {i}", sender="user") for i in range(20)]
 
-        compressed, stats = await compressor.compress_messages(
-            messages,
-            preserve_recent=5
-        )
+        compressed, stats = await compressor.compress_messages(messages, preserve_recent=5)
 
         # Should have summary + recent messages
         assert len(compressed) < len(messages)
@@ -348,15 +334,9 @@ class TestConversationCompressor:
 
         compressor = ConversationCompressor(llm_provider=mock_llm)
 
-        messages = [
-            Message(role="user", content=f"Message {i}", sender="user")
-            for i in range(20)
-        ]
+        messages = [Message(role="user", content=f"Message {i}", sender="user") for i in range(20)]
 
-        compressed, stats = await compressor.compress_messages(
-            messages,
-            preserve_recent=5
-        )
+        compressed, stats = await compressor.compress_messages(messages, preserve_recent=5)
 
         # Should use LLM for summarization
         assert mock_llm.generate.called

@@ -1,6 +1,6 @@
 """Agent specialization and skill matching."""
 
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 from ..core.agent import Agent
 
@@ -135,10 +135,7 @@ class SpecializationEngine:
 
         return {
             "agent": agent.name,
-            "skills": [
-                {"name": s.name, "proficiency": s.proficiency}
-                for s in skills
-            ],
+            "skills": [{"name": s.name, "proficiency": s.proficiency} for s in skills],
             "specialization": primary_skill.name,
             "primary_proficiency": primary_skill.proficiency,
         }
@@ -276,10 +273,12 @@ class SkillMatcher:
             for agent in agents:
                 proficiency = self.engine.get_skill_proficiency(agent, skill)
                 if proficiency is not None and proficiency > 0:
-                    agents_with_skill.append({
-                        "agent": agent.name,
-                        "proficiency": proficiency,
-                    })
+                    agents_with_skill.append(
+                        {
+                            "agent": agent.name,
+                            "proficiency": proficiency,
+                        }
+                    )
 
             coverage[skill] = {
                 "covered": len(agents_with_skill) > 0,
@@ -311,18 +310,22 @@ class SkillMatcher:
 
         for skill, info in coverage.items():
             if not info["covered"]:
-                recommendations.append({
-                    "skill": skill,
-                    "priority": "high",
-                    "reason": "No agents have this skill",
-                    "suggested_agents": [a.name for a in agents[:2]],
-                })
+                recommendations.append(
+                    {
+                        "skill": skill,
+                        "priority": "high",
+                        "reason": "No agents have this skill",
+                        "suggested_agents": [a.name for a in agents[:2]],
+                    }
+                )
             elif info["max_proficiency"] < 0.7:
-                recommendations.append({
-                    "skill": skill,
-                    "priority": "medium",
-                    "reason": f"Low proficiency (max: {info['max_proficiency']:.2f})",
-                    "suggested_agents": [a["agent"] for a in info["agents"]],
-                })
+                recommendations.append(
+                    {
+                        "skill": skill,
+                        "priority": "medium",
+                        "reason": f"Low proficiency (max: {info['max_proficiency']:.2f})",
+                        "suggested_agents": [a["agent"] for a in info["agents"]],
+                    }
+                )
 
         return recommendations

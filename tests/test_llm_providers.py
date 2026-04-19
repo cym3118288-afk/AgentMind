@@ -13,7 +13,7 @@ class MockLLMProvider(LLMProvider):
             content="Mock response",
             model=self.model,
             usage={"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
-            metadata={"mock": True}
+            metadata={"mock": True},
         )
 
     async def generate_stream(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -37,8 +37,7 @@ def test_llm_provider_build_messages():
 
     # Test with system prompt and user message
     messages = provider.build_messages(
-        system_prompt="You are a helpful assistant",
-        user_message="Hello"
+        system_prompt="You are a helpful assistant", user_message="Hello"
     )
     assert len(messages) == 2
     assert messages[0]["role"] == "system"
@@ -47,12 +46,10 @@ def test_llm_provider_build_messages():
     # Test with history
     history = [
         {"role": "user", "content": "Previous message"},
-        {"role": "assistant", "content": "Previous response"}
+        {"role": "assistant", "content": "Previous response"},
     ]
     messages = provider.build_messages(
-        system_prompt="System",
-        user_message="New message",
-        history=history
+        system_prompt="System", user_message="New message", history=history
     )
     assert len(messages) == 4
     assert messages[1]["content"] == "Previous message"
@@ -95,10 +92,7 @@ def test_ollama_provider_initialization():
 
 def test_ollama_provider_custom_url():
     """Test Ollama provider with custom URL."""
-    provider = OllamaProvider(
-        model="llama3.2",
-        base_url="http://custom-host:8080"
-    )
+    provider = OllamaProvider(model="llama3.2", base_url="http://custom-host:8080")
     assert provider.base_url == "http://custom-host:8080"
 
 
@@ -122,7 +116,7 @@ def test_llm_response_model():
         content="Test content",
         model="test-model",
         usage={"total_tokens": 100},
-        metadata={"test": True}
+        metadata={"test": True},
     )
     assert response.content == "Test content"
     assert response.model == "test-model"
@@ -137,8 +131,6 @@ async def test_provider_parameter_override():
 
     # Override should work (though mock doesn't use them)
     response = await provider.generate(
-        messages=[{"role": "user", "content": "Test"}],
-        temperature=0.9,
-        max_tokens=500
+        messages=[{"role": "user", "content": "Test"}], temperature=0.9, max_tokens=500
     )
     assert isinstance(response, LLMResponse)

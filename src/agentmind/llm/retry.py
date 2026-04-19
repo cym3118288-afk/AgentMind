@@ -28,7 +28,7 @@ class RetryConfig:
         initial_delay: float = 1.0,
         max_delay: float = 60.0,
         exponential_base: float = 2.0,
-        jitter: bool = True
+        jitter: bool = True,
     ) -> None:
         self.max_retries = max_retries
         self.initial_delay = initial_delay
@@ -37,10 +37,7 @@ class RetryConfig:
         self.jitter = jitter
 
 
-def calculate_backoff_delay(
-    attempt: int,
-    config: RetryConfig
-) -> float:
+def calculate_backoff_delay(attempt: int, config: RetryConfig) -> float:
     """Calculate delay for exponential backoff.
 
     Args:
@@ -50,23 +47,18 @@ def calculate_backoff_delay(
     Returns:
         Delay in seconds
     """
-    delay = min(
-        config.initial_delay * (config.exponential_base ** attempt),
-        config.max_delay
-    )
+    delay = min(config.initial_delay * (config.exponential_base**attempt), config.max_delay)
 
     if config.jitter:
         import random
+
         # Add jitter: random value between 0 and delay
         delay = delay * (0.5 + random.random() * 0.5)
 
     return delay
 
 
-def should_retry(
-    exception: Exception,
-    retryable_exceptions: Tuple[Type[Exception], ...]
-) -> bool:
+def should_retry(exception: Exception, retryable_exceptions: Tuple[Type[Exception], ...]) -> bool:
     """Determine if an exception should trigger a retry.
 
     Args:
@@ -81,7 +73,7 @@ def should_retry(
 
 def retry_async(
     config: Optional[RetryConfig] = None,
-    retryable_exceptions: Optional[Tuple[Type[Exception], ...]] = None
+    retryable_exceptions: Optional[Tuple[Type[Exception], ...]] = None,
 ) -> Callable:
     """Decorator for adding retry logic to async functions.
 
@@ -105,6 +97,7 @@ def retry_async(
         # Default retryable exceptions for HTTP/network errors
         try:
             import httpx
+
             retryable_exceptions = (
                 httpx.TimeoutException,
                 httpx.ConnectError,
@@ -149,6 +142,7 @@ def retry_async(
             raise last_exception
 
         return wrapper
+
     return decorator
 
 
@@ -157,7 +151,7 @@ async def retry_with_backoff(
     config: Optional[RetryConfig] = None,
     retryable_exceptions: Optional[Tuple[Type[Exception], ...]] = None,
     *args: Any,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> Any:
     """Execute an async function with retry logic.
 
@@ -186,6 +180,7 @@ async def retry_with_backoff(
     if retryable_exceptions is None:
         try:
             import httpx
+
             retryable_exceptions = (
                 httpx.TimeoutException,
                 httpx.ConnectError,
@@ -217,7 +212,5 @@ async def retry_with_backoff(
             )
             await asyncio.sleep(delay)
 
-    logger.error(
-        f"All {config.max_retries + 1} attempts failed. Last error: {str(last_exception)}"
-    )
+    logger.error(f"All {config.max_retries + 1} attempts failed. Last error: {str(last_exception)}")
     raise last_exception

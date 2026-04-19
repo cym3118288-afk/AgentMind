@@ -93,19 +93,13 @@ class AgentConfig(BaseModel):
     backstory: Optional[str] = Field(
         default=None, description="Background description for the agent"
     )
-    temperature: float = Field(
-        default=0.7, description="LLM temperature", ge=0.0, le=2.0
-    )
+    temperature: float = Field(default=0.7, description="LLM temperature", ge=0.0, le=2.0)
     max_tokens: int = Field(
         default=1000, description="Maximum tokens for responses", gt=0, le=100000
     )
     tools: List[str] = Field(default_factory=list, description="Available tool names")
-    system_prompt: Optional[str] = Field(
-        default=None, description="Custom system prompt override"
-    )
-    memory_limit: int = Field(
-        default=50, description="Maximum messages in memory", gt=0, le=1000
-    )
+    system_prompt: Optional[str] = Field(default=None, description="Custom system prompt override")
+    memory_limit: int = Field(default=50, description="Maximum messages in memory", gt=0, le=1000)
 
     @field_validator("name")
     @classmethod

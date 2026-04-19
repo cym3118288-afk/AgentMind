@@ -83,7 +83,7 @@ class TestAgentToolSystem:
         assert result == []
 
         # Test with tool call pattern (even though tool doesn't exist)
-        result = await agent._process_tool_calls('TOOL[calculator](x=5,y=10)')
+        result = await agent._process_tool_calls("TOOL[calculator](x=5,y=10)")
         assert isinstance(result, list)
 
 
@@ -212,9 +212,7 @@ class TestAgentMindStrategies:
             return len(messages) > 0
 
         result = await mind.start_collaboration(
-            "Test task",
-            max_rounds=5,
-            stop_condition=stop_condition
+            "Test task", max_rounds=5, stop_condition=stop_condition
         )
         assert result.success is True
 
@@ -267,10 +265,7 @@ class TestAgentMindStrategies:
         def stop_condition(messages):
             return len(messages) >= 1
 
-        result = await mind.start_collaboration(
-            "Test task",
-            stop_condition=stop_condition
-        )
+        result = await mind.start_collaboration("Test task", stop_condition=stop_condition)
         assert result.success is True
 
     @pytest.mark.asyncio
@@ -304,7 +299,7 @@ class TestAgentMindSessionManagement:
         assert Path(session_path).exists()
 
         # Verify session file content
-        with open(session_path, 'r') as f:
+        with open(session_path, "r") as f:
             data = json.load(f)
             assert data["session_id"] == "test_session"
             assert len(data["agents"]) == 1

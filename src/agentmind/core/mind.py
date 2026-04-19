@@ -218,10 +218,14 @@ class AgentMind:
         try:
             if self.strategy == CollaborationStrategy.BROADCAST:
                 # Broadcast strategy: all agents respond to initial message
-                responses = await self.broadcast_message(init_msg, exclude_sender=False, use_llm=use_llm)
+                responses = await self.broadcast_message(
+                    init_msg, exclude_sender=False, use_llm=use_llm
+                )
 
                 for response in responses:
-                    agent_contributions[response.sender] = agent_contributions.get(response.sender, 0) + 1
+                    agent_contributions[response.sender] = (
+                        agent_contributions.get(response.sender, 0) + 1
+                    )
 
                 print(f"[>] Round 1: Received {len(responses)} responses")
                 rounds_completed = 1
@@ -266,7 +270,9 @@ class AgentMind:
 
                 if not supervisor:
                     # Fall back to broadcast if no supervisor
-                    responses = await self.broadcast_message(init_msg, exclude_sender=False, use_llm=use_llm)
+                    responses = await self.broadcast_message(
+                        init_msg, exclude_sender=False, use_llm=use_llm
+                    )
                 else:
                     # Supervisor delegates to sub-agents
                     responses = []
@@ -301,7 +307,9 @@ class AgentMind:
 
             else:
                 # Default to broadcast for other strategies
-                responses = await self.broadcast_message(init_msg, exclude_sender=False, use_llm=use_llm)
+                responses = await self.broadcast_message(
+                    init_msg, exclude_sender=False, use_llm=use_llm
+                )
                 rounds_completed = 1
 
             # Check stop condition
@@ -319,7 +327,7 @@ class AgentMind:
                 agent_contributions=agent_contributions,
             )
 
-            print(f"[*] Collaboration completed successfully")
+            print("[*] Collaboration completed successfully")
             return result
 
         except Exception as e:
@@ -414,7 +422,7 @@ class AgentMind:
             "timestamp": datetime.now().isoformat(),
             "strategy": self.strategy.value,
             "agents": [],
-            "conversation_history": []
+            "conversation_history": [],
         }
 
         # Serialize agents
@@ -423,17 +431,17 @@ class AgentMind:
                 "name": agent.name,
                 "role": agent.role,
                 "config": agent.config.model_dump(),
-                "memory": [msg.model_dump(mode='json') for msg in agent.memory],
-                "is_active": agent.is_active
+                "memory": [msg.model_dump(mode="json") for msg in agent.memory],
+                "is_active": agent.is_active,
             }
             session_data["agents"].append(agent_data)
 
         # Serialize conversation history
         for msg in self.conversation_history:
-            session_data["conversation_history"].append(msg.model_dump(mode='json'))
+            session_data["conversation_history"].append(msg.model_dump(mode="json"))
 
         # Write to file
-        with open(session_file, 'w', encoding='utf-8') as f:
+        with open(session_file, "w", encoding="utf-8") as f:
             json.dump(session_data, f, indent=2, ensure_ascii=False, default=str)
 
         print(f"[*] Session saved: {session_file}")
@@ -462,7 +470,7 @@ class AgentMind:
             return False
 
         try:
-            with open(session_file, 'r', encoding='utf-8') as f:
+            with open(session_file, "r", encoding="utf-8") as f:
                 session_data = json.load(f)
 
             # Clear current state
@@ -480,7 +488,7 @@ class AgentMind:
                     name=agent_data["name"],
                     role=agent_data["role"],
                     config=config,
-                    llm_provider=self.llm_provider
+                    llm_provider=self.llm_provider,
                 )
 
                 # Restore agent memory
@@ -526,20 +534,23 @@ class AgentMind:
         sessions = []
         for session_file in save_path.glob("*.json"):
             try:
-                with open(session_file, 'r', encoding='utf-8') as f:
+                with open(session_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
-                    sessions.append({
-                        "session_id": data.get("session_id"),
-                        "timestamp": data.get("timestamp"),
-                        "num_agents": len(data.get("agents", [])),
-                        "num_messages": len(data.get("conversation_history", [])),
-                        "file_path": str(session_file)
-                    })
+                    sessions.append(
+                        {
+                            "session_id": data.get("session_id"),
+                            "timestamp": data.get("timestamp"),
+                            "num_agents": len(data.get("agents", [])),
+                            "num_messages": len(data.get("conversation_history", [])),
+                            "file_path": str(session_file),
+                        }
+                    )
             except Exception:
                 continue
 
         # Optimized: use itemgetter for faster sorting
         from operator import itemgetter
+
         return sorted(sessions, key=itemgetter("timestamp"), reverse=True)
 
     def __repr__(self) -> str:

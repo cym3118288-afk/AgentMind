@@ -1,6 +1,5 @@
 """Evaluator for running benchmarks and collecting results."""
 
-import asyncio
 from typing import Any, Dict, List, Optional
 
 from ..core.mind import AgentMind
@@ -101,14 +100,14 @@ class Evaluator:
             print(f"\n{suite_name}:")
             print(f"  Benchmarks: {len(results)}")
             print(f"  Successful: {successful}")
-            print(f"  Success rate: {successful/len(results):.1%}")
+            print(f"  Success rate: {successful / len(results):.1%}")
             print(f"  Total time: {suite_time:.2f}s")
-            print(f"  Avg time: {suite_time/len(results):.2f}s")
+            print(f"  Avg time: {suite_time / len(results):.2f}s")
 
-        print(f"\nOVERALL:")
+        print("\nOVERALL:")
         print(f"  Total benchmarks: {total_benchmarks}")
         print(f"  Total successful: {total_successful}")
-        print(f"  Overall success rate: {total_successful/total_benchmarks:.1%}")
+        print(f"  Overall success rate: {total_successful / total_benchmarks:.1%}")
         print(f"  Total time: {total_time:.2f}s")
         print("=" * 60)
 

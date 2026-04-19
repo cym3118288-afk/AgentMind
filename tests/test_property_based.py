@@ -9,6 +9,7 @@ import pytest
 try:
     from hypothesis import given, strategies as st, settings, assume
     from hypothesis.stateful import RuleBasedStateMachine, rule, invariant
+
     HYPOTHESIS_AVAILABLE = True
 except ImportError:
     HYPOTHESIS_AVAILABLE = False
@@ -176,10 +177,7 @@ class TestMemoryOptimizerProperties:
         """Test that optimizer always reduces memory when needed."""
         assume(sliding_window <= max_messages)
 
-        optimizer = MemoryOptimizer(
-            max_messages=max_messages,
-            sliding_window=sliding_window
-        )
+        optimizer = MemoryOptimizer(max_messages=max_messages, sliding_window=sliding_window)
 
         optimized = await optimizer.optimize(messages, strategy="sliding_window")
 
@@ -217,6 +215,7 @@ class TestBatchProcessorProperties:
     @settings(max_examples=20, deadline=2000)
     async def test_batch_processes_all_tasks(self, task_count, max_concurrent):
         """Test that batch processor handles all tasks."""
+
         async def simple_task(value: int) -> int:
             return value * 2
 
@@ -241,6 +240,7 @@ class TestBatchProcessorProperties:
     @settings(max_examples=20, deadline=2000)
     async def test_batch_stats_consistency(self, task_count):
         """Test that batch statistics are consistent."""
+
         async def simple_task(value: int) -> int:
             return value
 

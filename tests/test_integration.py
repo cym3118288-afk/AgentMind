@@ -23,16 +23,24 @@ class MockLLMProvider(LLMProvider):
         self.call_count = 0
 
     async def generate(self, messages, **kwargs):
-        response = self.responses[self.call_count % len(self.responses)] if self.responses else "Mock response"
+        response = (
+            self.responses[self.call_count % len(self.responses)]
+            if self.responses
+            else "Mock response"
+        )
         self.call_count += 1
         return LLMResponse(
             content=response,
             model=self.model,
-            usage={"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30}
+            usage={"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30},
         )
 
     async def generate_stream(self, messages, **kwargs):
-        response = self.responses[self.call_count % len(self.responses)] if self.responses else "Mock response"
+        response = (
+            self.responses[self.call_count % len(self.responses)]
+            if self.responses
+            else "Mock response"
+        )
         self.call_count += 1
         for char in response:
             yield char
@@ -74,7 +82,7 @@ class TestAgentIntegration:
             role="assistant",
             config=config,
             llm_provider=llm,
-            tool_registry=registry
+            tool_registry=registry,
         )
 
         # Agent should have access to tools
@@ -104,11 +112,13 @@ class TestAgentMindIntegration:
     @pytest.mark.asyncio
     async def test_multi_agent_collaboration(self):
         """Test multi-agent collaboration."""
-        llm = MockLLMProvider(responses=[
-            "I'll analyze this task.",
-            "Based on the analysis, here's my creative solution.",
-            "The task is complete."
-        ])
+        llm = MockLLMProvider(
+            responses=[
+                "I'll analyze this task.",
+                "Based on the analysis, here's my creative solution.",
+                "The task is complete.",
+            ]
+        )
 
         mind = AgentMind(llm_provider=llm)
 
@@ -222,10 +232,7 @@ class TestPerformanceIntegration:
 
         processor = BatchProcessor(max_concurrent=5)
 
-        tasks = [
-            {"id": str(i), "content": f"Task_{i}"}
-            for i in range(10)
-        ]
+        tasks = [{"id": str(i), "content": f"Task_{i}"} for i in range(10)]
 
         results = await processor.process_batch(tasks, process_agent_task)
 
@@ -282,7 +289,7 @@ class TestToolIntegration:
             role="assistant",
             config=config,
             llm_provider=llm,
-            tool_registry=registry
+            tool_registry=registry,
         )
 
         # Agent should have both tools
@@ -312,7 +319,7 @@ class TestToolIntegration:
             role="assistant",
             config=config,
             llm_provider=llm,
-            tool_registry=registry
+            tool_registry=registry,
         )
         mind.add_agent(agent)
 
@@ -326,6 +333,7 @@ class TestErrorHandling:
     @pytest.mark.asyncio
     async def test_agent_handles_llm_errors(self):
         """Test agent handles LLM errors gracefully."""
+
         class ErrorLLMProvider(LLMProvider):
             async def generate(self, messages, **kwargs):
                 raise Exception("LLM Error")
@@ -347,6 +355,7 @@ class TestErrorHandling:
     @pytest.mark.asyncio
     async def test_batch_processor_handles_failures(self):
         """Test batch processor handles task failures."""
+
         async def failing_task(should_fail: bool):
             if should_fail:
                 raise ValueError("Task failed")
@@ -375,11 +384,13 @@ class TestEndToEnd:
     async def test_complete_workflow(self):
         """Test complete workflow from task to result."""
         # Setup
-        llm = MockLLMProvider(responses=[
-            "I'll research this topic.",
-            "Based on research, here's the analysis.",
-            "Final summary of findings."
-        ])
+        llm = MockLLMProvider(
+            responses=[
+                "I'll research this topic.",
+                "Based on research, here's the analysis.",
+                "Final summary of findings.",
+            ]
+        )
 
         cache = CacheManager()
         mind = AgentMind(llm_provider=llm)
@@ -390,10 +401,8 @@ class TestEndToEnd:
             role="research",
             llm_provider=llm,
             config=AgentConfig(
-                name="researcher",
-                role="research",
-                system_prompt="You are a thorough researcher."
-            )
+                name="researcher", role="research", system_prompt="You are a thorough researcher."
+            ),
         )
 
         analyst = Agent(
@@ -401,10 +410,8 @@ class TestEndToEnd:
             role="analyst",
             llm_provider=llm,
             config=AgentConfig(
-                name="analyst",
-                role="analyst",
-                system_prompt="You analyze information critically."
-            )
+                name="analyst", role="analyst", system_prompt="You analyze information critically."
+            ),
         )
 
         mind.add_agent(researcher)
@@ -412,8 +419,7 @@ class TestEndToEnd:
 
         # Execute workflow
         result = await mind.start_collaboration(
-            "Research and analyze quantum computing",
-            max_rounds=3
+            "Research and analyze quantum computing", max_rounds=3
         )
 
         # Verify results

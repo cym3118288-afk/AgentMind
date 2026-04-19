@@ -106,7 +106,7 @@ class Tracer:
         session_id: str,
         metadata: Optional[Dict[str, Any]] = None,
         auto_save: bool = False,
-        save_path: Optional[Path] = None
+        save_path: Optional[Path] = None,
     ):
         """Initialize tracer.
 
@@ -116,10 +116,7 @@ class Tracer:
             auto_save: Whether to auto-save after each event
             save_path: Path to save traces (if auto_save is True)
         """
-        self.trace = CollaborationTrace(
-            session_id=session_id,
-            metadata=metadata or {}
-        )
+        self.trace = CollaborationTrace(session_id=session_id, metadata=metadata or {})
         self.auto_save = auto_save
         self.save_path = save_path
         self._start_time: Optional[float] = None
@@ -145,7 +142,7 @@ class Tracer:
         agent_name: Optional[str] = None,
         data: Optional[Dict[str, Any]] = None,
         duration_ms: Optional[float] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Log a trace event.
 
@@ -161,7 +158,7 @@ class Tracer:
             agent_name=agent_name,
             data=data or {},
             duration_ms=duration_ms,
-            metadata=metadata or {}
+            metadata=metadata or {},
         )
         self.trace.events.append(event)
 
@@ -175,7 +172,7 @@ class Tracer:
         prompt_tokens: int,
         completion_tokens: int,
         duration_ms: float,
-        cost: Optional[float] = None
+        cost: Optional[float] = None,
     ) -> None:
         """Log an LLM call with token usage.
 
@@ -190,7 +187,7 @@ class Tracer:
         # Update aggregated token usage
         self.trace.token_usage.prompt_tokens += prompt_tokens
         self.trace.token_usage.completion_tokens += completion_tokens
-        self.trace.token_usage.total_tokens += (prompt_tokens + completion_tokens)
+        self.trace.token_usage.total_tokens += prompt_tokens + completion_tokens
 
         # Update cost estimate
         if cost:
@@ -204,9 +201,9 @@ class Tracer:
                 "model": model,
                 "prompt_tokens": prompt_tokens,
                 "completion_tokens": completion_tokens,
-                "cost": cost
+                "cost": cost,
             },
-            duration_ms=duration_ms
+            duration_ms=duration_ms,
         )
 
     def log_tool_call(
@@ -216,7 +213,7 @@ class Tracer:
         params: Dict[str, Any],
         result: Any,
         duration_ms: float,
-        success: bool = True
+        success: bool = True,
     ) -> None:
         """Log a tool execution.
 
@@ -231,13 +228,8 @@ class Tracer:
         self.log_event(
             event_type="tool_call",
             agent_name=agent_name,
-            data={
-                "tool_name": tool_name,
-                "params": params,
-                "result": result,
-                "success": success
-            },
-            duration_ms=duration_ms
+            data={"tool_name": tool_name, "params": params, "result": result, "success": success},
+            duration_ms=duration_ms,
         )
 
     def save_jsonl(self, path: Union[str, Path]) -> None:
@@ -258,7 +250,7 @@ class Tracer:
                 "total_duration_ms": self.trace.total_duration_ms,
                 "token_usage": self.trace.token_usage.model_dump(),
                 "cost_estimate": self.trace.cost_estimate.model_dump(),
-                "metadata": self.trace.metadata
+                "metadata": self.trace.metadata,
             }
             f.write(json.dumps({"type": "header", "data": header}) + "\n")
 
@@ -323,7 +315,7 @@ class Tracer:
             "events_by_agent": agent_events,
             "events_by_type": event_types,
             "start_time": self.trace.start_time,
-            "end_time": self.trace.end_time
+            "end_time": self.trace.end_time,
         }
 
     def generate_mermaid_diagram(self) -> str:
@@ -391,12 +383,7 @@ class CostTracker:
     }
 
     @classmethod
-    def estimate_cost(
-        cls,
-        model: str,
-        prompt_tokens: int,
-        completion_tokens: int
-    ) -> CostEstimate:
+    def estimate_cost(cls, model: str, prompt_tokens: int, completion_tokens: int) -> CostEstimate:
         """Estimate cost for an LLM call.
 
         Args:
@@ -426,7 +413,7 @@ class CostTracker:
             prompt_cost=prompt_cost,
             completion_cost=completion_cost,
             total_cost=prompt_cost + completion_cost,
-            model=model
+            model=model,
         )
 
     @classmethod

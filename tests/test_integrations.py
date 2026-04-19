@@ -18,10 +18,7 @@ class MockLLMProvider(LLMProvider):
     async def generate(self, messages, temperature=None, max_tokens=None, **kwargs):
         """Generate a mock response."""
         return LLMResponse(
-            content="Mock response",
-            model=self.model,
-            usage={"total_tokens": 10},
-            metadata={}
+            content="Mock response", model=self.model, usage={"total_tokens": 10}, metadata={}
         )
 
     async def generate_stream(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -37,6 +34,7 @@ class TestToolWrapperPattern:
 
         class ExternalTool:
             """Mock external tool (e.g., from LangChain)."""
+
             name = "external_search"
             description = "Search the web"
 
@@ -114,9 +112,7 @@ class TestChainCompatibility:
             async def arun(self, input_text: str) -> str:
                 """Async run."""
                 result = await self.mind.start_collaboration(
-                    input_text,
-                    max_rounds=self.max_rounds,
-                    use_llm=True
+                    input_text, max_rounds=self.max_rounds, use_llm=True
                 )
                 return result.final_output or "No output"
 
@@ -165,9 +161,15 @@ class TestChainCompatibility:
         # Execute sequential pipeline
         input_text = "Test topic"
 
-        result1 = await mind1.start_collaboration(f"Research: {input_text}", max_rounds=1, use_llm=True)
-        result2 = await mind2.start_collaboration(f"Analyze: {result1.final_output}", max_rounds=1, use_llm=True)
-        result3 = await mind3.start_collaboration(f"Write: {result2.final_output}", max_rounds=1, use_llm=True)
+        result1 = await mind1.start_collaboration(
+            f"Research: {input_text}", max_rounds=1, use_llm=True
+        )
+        result2 = await mind2.start_collaboration(
+            f"Analyze: {result1.final_output}", max_rounds=1, use_llm=True
+        )
+        result3 = await mind3.start_collaboration(
+            f"Write: {result2.final_output}", max_rounds=1, use_llm=True
+        )
 
         assert result1.success is True
         assert result2.success is True
@@ -199,9 +201,7 @@ class TestRAGIntegration:
                 """Execute document retrieval."""
                 query_lower = query.lower()
                 relevant = [
-                    doc.page_content
-                    for doc in self.docs
-                    if query_lower in doc.page_content.lower()
+                    doc.page_content for doc in self.docs if query_lower in doc.page_content.lower()
                 ]
                 output = "\n".join(relevant) if relevant else "No documents found"
                 return ToolResult(success=True, output=output)
@@ -241,7 +241,9 @@ class TestRAGIntegration:
             async def execute(self, query: str = "") -> ToolResult:
                 """Execute retrieval."""
                 query_lower = query.lower()
-                relevant = [d.page_content for d in self.docs if query_lower in d.page_content.lower()]
+                relevant = [
+                    d.page_content for d in self.docs if query_lower in d.page_content.lower()
+                ]
                 return ToolResult(success=True, output="\n".join(relevant))
 
         # Create RAG setup
@@ -254,18 +256,12 @@ class TestRAGIntegration:
         mind = AgentMind(llm_provider=provider)
 
         retriever = DocumentRetriever(docs)
-        rag_agent = Agent(
-            name="rag_agent",
-            role="rag_specialist",
-            llm_provider=provider
-        )
+        rag_agent = Agent(name="rag_agent", role="rag_specialist", llm_provider=provider)
 
         mind.add_agent(rag_agent)
 
         result = await mind.start_collaboration(
-            "What providers does AgentMind support?",
-            max_rounds=1,
-            use_llm=True
+            "What providers does AgentMind support?", max_rounds=1, use_llm=True
         )
 
         assert result.success is True
@@ -337,7 +333,7 @@ class TestStreamingCompatibility:
                     content="Full response",
                     model=self.model,
                     usage={"total_tokens": 10},
-                    metadata={}
+                    metadata={},
                 )
 
             async def generate_stream(self, messages, **kwargs):
@@ -402,26 +398,17 @@ class TestDataFormatCompatibility:
         from agentmind.core import Message, MessageRole
 
         # AgentMind message
-        am_message = Message(
-            content="Hello",
-            sender="agent1",
-            role=MessageRole.AGENT
-        )
+        am_message = Message(content="Hello", sender="agent1", role=MessageRole.AGENT)
 
         # Convert to external format (e.g., OpenAI format)
-        external_format = {
-            "role": "assistant",
-            "content": am_message.content
-        }
+        external_format = {"role": "assistant", "content": am_message.content}
 
         assert external_format["content"] == "Hello"
         assert external_format["role"] == "assistant"
 
         # Convert back
         converted_back = Message(
-            content=external_format["content"],
-            sender="converted",
-            role=MessageRole.ASSISTANT
+            content=external_format["content"], sender="converted", role=MessageRole.ASSISTANT
         )
 
         assert converted_back.content == am_message.content
@@ -430,17 +417,13 @@ class TestDataFormatCompatibility:
         """Test converting tool results between formats."""
 
         # AgentMind tool result
-        am_result = ToolResult(
-            success=True,
-            output="Result data",
-            metadata={"source": "tool"}
-        )
+        am_result = ToolResult(success=True, output="Result data", metadata={"source": "tool"})
 
         # Convert to external format
         external_format = {
             "status": "success" if am_result.success else "error",
             "data": am_result.output,
-            "metadata": am_result.metadata
+            "metadata": am_result.metadata,
         }
 
         assert external_format["status"] == "success"
@@ -454,17 +437,13 @@ class TestConfigurationCompatibility:
         """Test mapping configurations between frameworks."""
 
         # AgentMind config
-        am_config = {
-            "model": "gpt-4",
-            "temperature": 0.7,
-            "max_tokens": 1000
-        }
+        am_config = {"model": "gpt-4", "temperature": 0.7, "max_tokens": 1000}
 
         # Map to external format (e.g., OpenAI)
         external_config = {
             "model": am_config["model"],
             "temperature": am_config["temperature"],
-            "max_tokens": am_config["max_tokens"]
+            "max_tokens": am_config["max_tokens"],
         }
 
         assert external_config["model"] == "gpt-4"
@@ -474,11 +453,7 @@ class TestConfigurationCompatibility:
         """Test exporting agent configuration."""
 
         provider = MockLLMProvider()
-        agent = Agent(
-            name="test_agent",
-            role="assistant",
-            llm_provider=provider
-        )
+        agent = Agent(name="test_agent", role="assistant", llm_provider=provider)
 
         # Export config
         config = {
@@ -504,10 +479,7 @@ class TestPerformanceIntegration:
         # Process multiple inputs
         inputs = [f"Input {i}" for i in range(5)]
 
-        tasks = [
-            mind.start_collaboration(inp, max_rounds=1, use_llm=True)
-            for inp in inputs
-        ]
+        tasks = [mind.start_collaboration(inp, max_rounds=1, use_llm=True) for inp in inputs]
 
         results = await asyncio.gather(*tasks)
 

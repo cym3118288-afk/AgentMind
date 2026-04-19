@@ -204,39 +204,49 @@ def create_gaia_subset() -> BenchmarkSuite:
     )
 
     # Reasoning tasks
-    suite.add_benchmark(Benchmark(
-        name="logical_reasoning",
-        task="If all roses are flowers and some flowers fade quickly, can we conclude that some roses fade quickly? Explain your reasoning.",
-        expected_output="cannot conclude logic reasoning",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="logical_reasoning",
+            task="If all roses are flowers and some flowers fade quickly, can we conclude that some roses fade quickly? Explain your reasoning.",
+            expected_output="cannot conclude logic reasoning",
+        )
+    )
 
     # Math tasks
-    suite.add_benchmark(Benchmark(
-        name="math_problem",
-        task="A train travels 120 km in 2 hours. If it maintains the same speed, how far will it travel in 5 hours?",
-        expected_output="300 km speed distance",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="math_problem",
+            task="A train travels 120 km in 2 hours. If it maintains the same speed, how far will it travel in 5 hours?",
+            expected_output="300 km speed distance",
+        )
+    )
 
     # Information retrieval
-    suite.add_benchmark(Benchmark(
-        name="information_synthesis",
-        task="Explain the difference between machine learning and deep learning in simple terms.",
-        expected_output="neural networks layers data learning",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="information_synthesis",
+            task="Explain the difference between machine learning and deep learning in simple terms.",
+            expected_output="neural networks layers data learning",
+        )
+    )
 
     # Multi-step reasoning
-    suite.add_benchmark(Benchmark(
-        name="multi_step_reasoning",
-        task="If a store offers 20% off on all items and then an additional 10% off the discounted price, what is the total discount percentage?",
-        expected_output="28% discount calculation",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="multi_step_reasoning",
+            task="If a store offers 20% off on all items and then an additional 10% off the discounted price, what is the total discount percentage?",
+            expected_output="28% discount calculation",
+        )
+    )
 
     # Creative problem solving
-    suite.add_benchmark(Benchmark(
-        name="creative_problem",
-        task="Design a simple system to help elderly people remember to take their medication on time.",
-        expected_output="reminder notification schedule medication",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="creative_problem",
+            task="Design a simple system to help elderly people remember to take their medication on time.",
+            expected_output="reminder notification schedule medication",
+        )
+    )
 
     return suite
 
@@ -253,39 +263,49 @@ def create_agent_bench_subset() -> BenchmarkSuite:
     )
 
     # Code generation
-    suite.add_benchmark(Benchmark(
-        name="code_generation",
-        task="Write a Python function that finds the longest common subsequence of two strings.",
-        expected_output="def function string subsequence",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="code_generation",
+            task="Write a Python function that finds the longest common subsequence of two strings.",
+            expected_output="def function string subsequence",
+        )
+    )
 
     # Planning
-    suite.add_benchmark(Benchmark(
-        name="planning_task",
-        task="Create a step-by-step plan to organize a small team hackathon event.",
-        expected_output="plan steps team venue schedule",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="planning_task",
+            task="Create a step-by-step plan to organize a small team hackathon event.",
+            expected_output="plan steps team venue schedule",
+        )
+    )
 
     # Decision making
-    suite.add_benchmark(Benchmark(
-        name="decision_making",
-        task="You have $10,000 to invest. Compare the pros and cons of investing in stocks vs. bonds vs. real estate.",
-        expected_output="risk return liquidity investment",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="decision_making",
+            task="You have $10,000 to invest. Compare the pros and cons of investing in stocks vs. bonds vs. real estate.",
+            expected_output="risk return liquidity investment",
+        )
+    )
 
     # Tool use simulation
-    suite.add_benchmark(Benchmark(
-        name="tool_use",
-        task="Describe the steps you would take to analyze a CSV file containing sales data and create a summary report.",
-        expected_output="read data analyze calculate report",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="tool_use",
+            task="Describe the steps you would take to analyze a CSV file containing sales data and create a summary report.",
+            expected_output="read data analyze calculate report",
+        )
+    )
 
     # Collaboration
-    suite.add_benchmark(Benchmark(
-        name="collaboration",
-        task="How would you coordinate a team of 3 people to research, write, and edit a technical blog post?",
-        expected_output="assign roles coordinate review workflow",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="collaboration",
+            task="How would you coordinate a team of 3 people to research, write, and edit a technical blog post?",
+            expected_output="assign roles coordinate review workflow",
+        )
+    )
 
     return suite
 
@@ -302,38 +322,48 @@ def create_custom_suite() -> BenchmarkSuite:
     )
 
     # Multi-agent collaboration
-    suite.add_benchmark(Benchmark(
-        name="multi_agent_synthesis",
-        task="Analyze the pros and cons of remote work from multiple perspectives: employee, employer, and society.",
-        expected_output="perspective advantages disadvantages balance",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="multi_agent_synthesis",
+            task="Analyze the pros and cons of remote work from multiple perspectives: employee, employer, and society.",
+            expected_output="perspective advantages disadvantages balance",
+        )
+    )
 
     # Debate and consensus
-    suite.add_benchmark(Benchmark(
-        name="debate_consensus",
-        task="Should AI development be regulated? Present arguments for and against, then reach a balanced conclusion.",
-        expected_output="regulation safety innovation balance conclusion",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="debate_consensus",
+            task="Should AI development be regulated? Present arguments for and against, then reach a balanced conclusion.",
+            expected_output="regulation safety innovation balance conclusion",
+        )
+    )
 
     # Complex reasoning
-    suite.add_benchmark(Benchmark(
-        name="complex_reasoning",
-        task="A company's revenue increased by 50% but profits decreased by 10%. What could explain this situation?",
-        expected_output="costs expenses margins efficiency",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="complex_reasoning",
+            task="A company's revenue increased by 50% but profits decreased by 10%. What could explain this situation?",
+            expected_output="costs expenses margins efficiency",
+        )
+    )
 
     # Creative synthesis
-    suite.add_benchmark(Benchmark(
-        name="creative_synthesis",
-        task="Combine concepts from biology and computer science to propose an innovative solution for data storage.",
-        expected_output="DNA biological storage innovation",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="creative_synthesis",
+            task="Combine concepts from biology and computer science to propose an innovative solution for data storage.",
+            expected_output="DNA biological storage innovation",
+        )
+    )
 
     # Iterative improvement
-    suite.add_benchmark(Benchmark(
-        name="iterative_improvement",
-        task="Write a product description for a smart water bottle, then critique it and provide an improved version.",
-        expected_output="features benefits improved version",
-    ))
+    suite.add_benchmark(
+        Benchmark(
+            name="iterative_improvement",
+            task="Write a product description for a smart water bottle, then critique it and provide an improved version.",
+            expected_output="features benefits improved version",
+        )
+    )
 
     return suite

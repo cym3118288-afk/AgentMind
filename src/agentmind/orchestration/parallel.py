@@ -80,11 +80,13 @@ Ensure subtasks are as independent as possible for parallel execution."""
         subtasks = self._parse_subtasks(response.content)
 
         # Store in history
-        self.decomposition_history.append({
-            "original_task": task,
-            "subtasks": subtasks,
-            "count": len(subtasks),
-        })
+        self.decomposition_history.append(
+            {
+                "original_task": task,
+                "subtasks": subtasks,
+                "count": len(subtasks),
+            }
+        )
 
         return subtasks
 
@@ -115,9 +117,7 @@ Ensure subtasks are as independent as possible for parallel execution."""
             elif line.startswith("DEPENDENCIES:"):
                 deps_text = line.replace("DEPENDENCIES:", "").strip().lower()
                 if deps_text != "none":
-                    current_subtask["dependencies"] = [
-                        d.strip() for d in deps_text.split(",")
-                    ]
+                    current_subtask["dependencies"] = [d.strip() for d in deps_text.split(",")]
             elif line.startswith("COMPLEXITY:"):
                 current_subtask["complexity"] = line.replace("COMPLEXITY:", "").strip().lower()
 
@@ -166,12 +166,14 @@ Ensure subtasks are as independent as possible for parallel execution."""
 
         for i, (agent, subtask) in enumerate(assignments):
             result = results[i]
-            execution_results["results"].append({
-                "agent": agent.name,
-                "subtask": subtask["description"],
-                "success": not isinstance(result, Exception),
-                "result": str(result) if isinstance(result, Exception) else result,
-            })
+            execution_results["results"].append(
+                {
+                    "agent": agent.name,
+                    "subtask": subtask["description"],
+                    "success": not isinstance(result, Exception),
+                    "result": str(result) if isinstance(result, Exception) else result,
+                }
+            )
 
         return execution_results
 

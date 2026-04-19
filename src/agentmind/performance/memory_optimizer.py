@@ -57,7 +57,7 @@ class ConversationCompressor:
                 original_messages=len(messages),
                 compressed_messages=len(messages),
                 compression_ratio=1.0,
-                tokens_saved=0
+                tokens_saved=0,
             )
 
         # Split into compressible and recent
@@ -75,9 +75,7 @@ class ConversationCompressor:
 
         # Create summary message
         summary_msg = Message(
-            role="system",
-            content=f"[Conversation Summary]: {summary}",
-            sender="system"
+            role="system", content=f"[Conversation Summary]: {summary}", sender="system"
         )
 
         compressed = [summary_msg] + recent
@@ -87,19 +85,19 @@ class ConversationCompressor:
             original_messages=len(messages),
             compressed_messages=len(compressed),
             compression_ratio=len(compressed) / len(messages),
-            tokens_saved=original_tokens - compressed_tokens
+            tokens_saved=original_tokens - compressed_tokens,
         )
 
     async def _summarize_with_llm(self, messages: List[Message]) -> str:
         """Summarize messages using LLM."""
-        conversation = "\n".join([
-            f"{m.sender} ({m.role}): {m.content}"
-            for m in messages
-        ])
+        conversation = "\n".join([f"{m.sender} ({m.role}): {m.content}" for m in messages])
 
         prompt = [
-            {"role": "system", "content": "Summarize the following conversation concisely, preserving key information and decisions."},
-            {"role": "user", "content": conversation}
+            {
+                "role": "system",
+                "content": "Summarize the following conversation concisely, preserving key information and decisions.",
+            },
+            {"role": "user", "content": conversation},
         ]
 
         response = await self.llm_provider.generate(prompt, max_tokens=500)
@@ -174,16 +172,14 @@ class MemoryOptimizer:
             optimized = self._sliding_window_optimize(messages)
         elif strategy == "compress":
             optimized, _ = await self.compressor.compress_messages(
-                messages,
-                preserve_recent=self.sliding_window
+                messages, preserve_recent=self.sliding_window
             )
         elif strategy == "hybrid":
             # Use sliding window first, then compress if still too large
             optimized = self._sliding_window_optimize(messages)
             if len(optimized) > self.compression_threshold:
                 optimized, _ = await self.compressor.compress_messages(
-                    optimized,
-                    preserve_recent=self.sliding_window // 2
+                    optimized, preserve_recent=self.sliding_window // 2
                 )
         else:
             raise ValueError(f"Unknown strategy: {strategy}")
@@ -198,7 +194,7 @@ class MemoryOptimizer:
 
         # Keep system messages and recent messages
         system_messages = [m for m in messages if m.role == "system"]
-        recent_messages = messages[-self.sliding_window:]
+        recent_messages = messages[-self.sliding_window :]
 
         # Combine, removing duplicates
         seen = set()
@@ -219,7 +215,8 @@ class MemoryOptimizer:
             "total_messages_removed": self._total_messages_removed,
             "removal_rate": (
                 self._total_messages_removed / self._total_messages_processed
-                if self._total_messages_processed > 0 else 0
+                if self._total_messages_processed > 0
+                else 0
             ),
             "max_messages": self.max_messages,
             "sliding_window": self.sliding_window,
@@ -287,7 +284,7 @@ class ConnectionPool:
         """Close all connections in the pool."""
         async with self._lock:
             for conn in self._pool:
-                if hasattr(conn, 'close'):
+                if hasattr(conn, "close"):
                     await conn.close()
             self._pool.clear()
             self._in_use.clear()

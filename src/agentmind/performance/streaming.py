@@ -49,6 +49,7 @@ class StreamBuffer:
 
     async def start_auto_flush(self, callback: Callable) -> None:
         """Start automatic flushing at intervals."""
+
         async def auto_flush():
             while True:
                 await asyncio.sleep(self.flush_interval)
@@ -165,8 +166,7 @@ class OptimizedStreamProcessor:
             # Yield if buffer is full or timeout reached
             current_time = asyncio.get_event_loop().time()
             should_yield = (
-                len(buffer) >= self.chunk_size or
-                (current_time - last_yield) >= self.buffer_timeout
+                len(buffer) >= self.chunk_size or (current_time - last_yield) >= self.buffer_timeout
             )
 
             if should_yield and buffer:
@@ -204,10 +204,7 @@ async def stream_with_timeout(
     """
     async for item in stream:
         try:
-            yield await asyncio.wait_for(
-                asyncio.coroutine(lambda: item)(),
-                timeout=timeout
-            )
+            yield await asyncio.wait_for(asyncio.coroutine(lambda: item)(), timeout=timeout)
         except asyncio.TimeoutError:
             if default is not None:
                 yield default

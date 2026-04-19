@@ -324,9 +324,7 @@ class TestIntegration:
         mind.add_agent(coordinator)
 
         # Start collaboration
-        result = await mind.start_collaboration(
-            "How can we improve our product?", max_rounds=5
-        )
+        result = await mind.start_collaboration("How can we improve our product?", max_rounds=5)
 
         # Verify results
         assert result.success is True

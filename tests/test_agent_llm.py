@@ -21,7 +21,7 @@ class MockLLMProvider(LLMProvider):
             content=f"Mock response to: {user_msg}",
             model=self.model,
             usage={"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
-            metadata={}
+            metadata={},
         )
 
     async def generate_stream(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -119,7 +119,7 @@ async def test_agent_system_prompt_with_backstory():
     config = AgentConfig(
         name="test_agent",
         role="analyst",
-        backstory="Expert in financial analysis with 10 years experience"
+        backstory="Expert in financial analysis with 10 years experience",
     )
     agent = Agent(name="test_agent", role="analyst", config=config)
 
@@ -164,12 +164,7 @@ async def test_agent_temperature_config():
     """Test agent uses configured temperature."""
     from agentmind.core.types import AgentConfig
 
-    config = AgentConfig(
-        name="test_agent",
-        role="analyst",
-        temperature=0.9,
-        max_tokens=2000
-    )
+    config = AgentConfig(name="test_agent", role="analyst", temperature=0.9, max_tokens=2000)
     agent = Agent(name="test_agent", role="analyst", config=config)
 
     assert agent.config.temperature == 0.9

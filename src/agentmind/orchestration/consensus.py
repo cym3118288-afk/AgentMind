@@ -1,8 +1,7 @@
 """Consensus mechanisms for multi-agent decision making."""
 
-import asyncio
 from enum import Enum
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from ..core.agent import Agent
 from ..core.types import Message, MessageRole
@@ -247,12 +246,8 @@ CONFIDENCE: [0-100]"""
             Consensus result
         """
         # Simplified: weight by confidence
-        yes_confidence = sum(
-            v["confidence"] for v in votes.values() if v["vote"] == "YES"
-        )
-        no_confidence = sum(
-            v["confidence"] for v in votes.values() if v["vote"] == "NO"
-        )
+        yes_confidence = sum(v["confidence"] for v in votes.values() if v["vote"] == "YES")
+        no_confidence = sum(v["confidence"] for v in votes.values() if v["vote"] == "NO")
 
         total_confidence = yes_confidence + no_confidence
 

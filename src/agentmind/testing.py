@@ -10,7 +10,8 @@ This module provides helpers for testing agent systems, including:
 import asyncio
 import time
 from typing import Any, Callable, Dict, List, Optional
-from unittest.mock import AsyncMock, Mock
+
+# unittest.mock.patch available if needed
 
 from agentmind import Agent, AgentMind
 from agentmind.core.types import Message, MessageRole
@@ -68,12 +69,14 @@ class MockLLMProvider(LLMProvider):
             Mock LLM response
         """
         # Record call
-        self.call_history.append({
-            "messages": messages,
-            "temperature": temperature,
-            "max_tokens": max_tokens,
-            "kwargs": kwargs,
-        })
+        self.call_history.append(
+            {
+                "messages": messages,
+                "temperature": temperature,
+                "max_tokens": max_tokens,
+                "kwargs": kwargs,
+            }
+        )
 
         # Simulate delay
         if self.delay > 0:
@@ -125,7 +128,7 @@ class MockLLMProvider(LLMProvider):
         content = response.content
         chunk_size = max(1, len(content) // 10)
         for i in range(0, len(content), chunk_size):
-            yield content[i:i + chunk_size]
+            yield content[i : i + chunk_size]
             if self.delay > 0:
                 await asyncio.sleep(self.delay / 10)
 
@@ -215,8 +218,9 @@ class AgentTestCase:
             AssertionError: If text not found
         """
         assert message is not None, "Message is None"
-        assert text.lower() in message.content.lower(), \
-            f"Expected '{text}' in message content: {message.content}"
+        assert (
+            text.lower() in message.content.lower()
+        ), f"Expected '{text}' in message content: {message.content}"
 
     def assert_agent_called(self, provider: MockLLMProvider, times: int = 1) -> None:
         """Assert that mock provider was called specific number of times.
@@ -228,8 +232,7 @@ class AgentTestCase:
         Raises:
             AssertionError: If call count doesn't match
         """
-        assert provider.call_count == times, \
-            f"Expected {times} calls, got {provider.call_count}"
+        assert provider.call_count == times, f"Expected {times} calls, got {provider.call_count}"
 
 
 async def measure_performance(
@@ -302,14 +305,12 @@ def assert_response_quality(
     Raises:
         AssertionError: If quality criteria not met
     """
-    assert len(response) >= min_length, \
-        f"Response too short: {len(response)} < {min_length}"
+    assert len(response) >= min_length, f"Response too short: {len(response)} < {min_length}"
 
     if required_words:
         response_lower = response.lower()
         for word in required_words:
-            assert word.lower() in response_lower, \
-                f"Required word '{word}' not found in response"
+            assert word.lower() in response_lower, f"Required word '{word}' not found in response"
 
 
 class PerformanceMonitor:
@@ -369,10 +370,7 @@ class PerformanceMonitor:
                 "total": sum(times),
             }
 
-        return {
-            name: self.get_stats(name)
-            for name in self.metrics.keys()
-        }
+        return {name: self.get_stats(name) for name in self.metrics.keys()}
 
     def reset(self) -> None:
         """Reset all metrics."""

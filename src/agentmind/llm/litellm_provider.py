@@ -8,6 +8,7 @@ from typing import Any, AsyncIterator, Dict, List, Optional
 
 try:
     import litellm
+
     LITELLM_AVAILABLE = True
 except ImportError:
     LITELLM_AVAILABLE = False
@@ -38,7 +39,7 @@ class LiteLLMProvider(LLMProvider):
         temperature: float = 0.7,
         max_tokens: int = 1000,
         api_key: Optional[str] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> None:
         """Initialize LiteLLM provider.
 
@@ -53,9 +54,7 @@ class LiteLLMProvider(LLMProvider):
             ImportError: If litellm is not installed
         """
         if not LITELLM_AVAILABLE:
-            raise ImportError(
-                "litellm is not installed. Install it with: pip install litellm"
-            )
+            raise ImportError("litellm is not installed. Install it with: pip install litellm")
 
         super().__init__(model, temperature, max_tokens, **kwargs)
         self.api_key = api_key
@@ -72,7 +71,7 @@ class LiteLLMProvider(LLMProvider):
         messages: List[Dict[str, str]],
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> LLMResponse:
         """Generate a response using LiteLLM.
 
@@ -94,11 +93,7 @@ class LiteLLMProvider(LLMProvider):
         try:
             # Call LiteLLM's async completion
             response = await litellm.acompletion(
-                model=self.model,
-                messages=messages,
-                temperature=temp,
-                max_tokens=max_tok,
-                **kwargs
+                model=self.model, messages=messages, temperature=temp, max_tokens=max_tok, **kwargs
             )
 
             # Extract content
@@ -121,7 +116,7 @@ class LiteLLMProvider(LLMProvider):
                     "id": response.id,
                     "created": response.created,
                     "finish_reason": response.choices[0].finish_reason,
-                }
+                },
             )
 
         except Exception as e:
@@ -132,7 +127,7 @@ class LiteLLMProvider(LLMProvider):
         messages: List[Dict[str, str]],
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> AsyncIterator[str]:
         """Generate a streaming response using LiteLLM.
 
@@ -155,7 +150,7 @@ class LiteLLMProvider(LLMProvider):
                 temperature=temp,
                 max_tokens=max_tok,
                 stream=True,
-                **kwargs
+                **kwargs,
             )
 
             async for chunk in response:

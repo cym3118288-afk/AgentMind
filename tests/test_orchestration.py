@@ -21,7 +21,7 @@ class MockLLMProvider(LLMProvider):
             content=f"{self.response_prefix} response to: {user_msg}",
             model=self.model,
             usage={"total_tokens": 15},
-            metadata={}
+            metadata={},
         )
 
     async def generate_stream(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -140,11 +140,7 @@ async def test_stop_condition():
     def stop_fn(messages):
         return True
 
-    result = await mind.start_collaboration(
-        "Test task",
-        stop_condition=stop_fn,
-        use_llm=True
-    )
+    result = await mind.start_collaboration("Test task", stop_condition=stop_fn, use_llm=True)
 
     assert result.success
 
@@ -364,7 +360,9 @@ class TestConsensusOrchestration:
     @pytest.mark.asyncio
     async def test_majority_vote_consensus(self):
         """Test majority voting mechanism."""
-        provider = MockLLMProvider(response_prefix="VOTE: YES\nREASONING: Good idea\nCONFIDENCE: 80")
+        provider = MockLLMProvider(
+            response_prefix="VOTE: YES\nREASONING: Good idea\nCONFIDENCE: 80"
+        )
 
         agents = [
             Agent(name="agent1", role="analyst", llm_provider=provider),
@@ -374,8 +372,7 @@ class TestConsensusOrchestration:
 
         orchestrator = ConsensusOrchestrator(agents)
         result = await orchestrator.reach_consensus(
-            "Should we proceed?",
-            mechanism=VotingMechanism.MAJORITY
+            "Should we proceed?", mechanism=VotingMechanism.MAJORITY
         )
 
         assert result is not None
@@ -394,8 +391,7 @@ class TestConsensusOrchestration:
 
         orchestrator = ConsensusOrchestrator(agents)
         result = await orchestrator.reach_consensus(
-            "Should we proceed?",
-            mechanism=VotingMechanism.UNANIMOUS
+            "Should we proceed?", mechanism=VotingMechanism.UNANIMOUS
         )
 
         assert result is not None
@@ -416,9 +412,7 @@ class TestConsensusOrchestration:
         weights = {"expert": 2.0, "junior": 1.0}
 
         result = await orchestrator.reach_consensus(
-            "Should we proceed?",
-            mechanism=VotingMechanism.WEIGHTED,
-            weights=weights
+            "Should we proceed?", mechanism=VotingMechanism.WEIGHTED, weights=weights
         )
 
         assert result is not None
@@ -436,8 +430,7 @@ class TestConsensusOrchestration:
 
         orchestrator = ConsensusOrchestrator(agents)
         result = await orchestrator.reach_consensus(
-            "Should we proceed?",
-            mechanism=VotingMechanism.RANKED_CHOICE
+            "Should we proceed?", mechanism=VotingMechanism.RANKED_CHOICE
         )
 
         assert result is not None
@@ -455,10 +448,7 @@ class TestConsensusOrchestration:
         ]
 
         orchestrator = ConsensusOrchestrator(agents)
-        result = await orchestrator.multi_round_consensus(
-            "Should we proceed?",
-            max_rounds=3
-        )
+        result = await orchestrator.multi_round_consensus("Should we proceed?", max_rounds=3)
 
         assert result is not None
         assert "rounds" in result
@@ -537,10 +527,7 @@ class TestStopConditions:
             return any("DONE" in m.content for m in messages)
 
         result = await mind.start_collaboration(
-            "Test task",
-            stop_condition=stop_fn,
-            max_rounds=10,
-            use_llm=True
+            "Test task", stop_condition=stop_fn, max_rounds=10, use_llm=True
         )
 
         assert result.success
@@ -560,10 +547,7 @@ class TestStopConditions:
             return len(messages) >= 3
 
         result = await mind.start_collaboration(
-            "Test task",
-            stop_condition=stop_fn,
-            max_rounds=10,
-            use_llm=True
+            "Test task", stop_condition=stop_fn, max_rounds=10, use_llm=True
         )
 
         assert result.success
@@ -598,9 +582,7 @@ class TestMessageRouting:
         mind.add_agent(Agent(name="agent1", role="analyst"))
 
         message = Message(
-            content="Test",
-            sender="system",
-            metadata={"priority": "high", "task_id": "123"}
+            content="Test", sender="system", metadata={"priority": "high", "task_id": "123"}
         )
 
         responses = await mind.broadcast_message(message, use_llm=True)

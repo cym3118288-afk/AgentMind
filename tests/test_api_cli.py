@@ -12,6 +12,7 @@ from agentmind.llm import LLMProvider, LLMResponse
 # Check for optional dependencies
 try:
     from fastapi.testclient import TestClient
+
     FASTAPI_AVAILABLE = True
 except ImportError:
     FASTAPI_AVAILABLE = False
@@ -19,6 +20,7 @@ except ImportError:
 
 try:
     from click.testing import CliRunner
+
     CLICK_AVAILABLE = True
 except ImportError:
     CLICK_AVAILABLE = False
@@ -37,7 +39,7 @@ class MockLLMProvider(LLMProvider):
             content="Mock collaboration result",
             model=self.model,
             usage={"total_tokens": 100, "prompt_tokens": 50, "completion_tokens": 50},
-            metadata={}
+            metadata={},
         )
 
     async def generate_stream(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -54,6 +56,7 @@ class TestAPIServer:
     def client(self):
         """Create test client."""
         from api_server import app
+
         return TestClient(app)
 
     def test_root_endpoint(self, client):
@@ -81,8 +84,8 @@ class TestAPIServer:
         assert "total" in data
         assert "sessions" in data
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
     def test_collaborate_endpoint(self, mock_collaborate, mock_provider, client):
         """Test collaboration endpoint."""
         # Setup mocks
@@ -94,12 +97,12 @@ class TestAPIServer:
             "task": "Test task",
             "agents": [
                 {"name": "Agent1", "role": "assistant"},
-                {"name": "Agent2", "role": "reviewer"}
+                {"name": "Agent2", "role": "reviewer"},
             ],
             "max_rounds": 2,
             "llm_provider": "ollama",
             "llm_model": "llama3.2",
-            "temperature": 0.7
+            "temperature": 0.7,
         }
 
         response = client.post("/collaborate", json=request_data)
@@ -111,11 +114,7 @@ class TestAPIServer:
 
     def test_collaborate_invalid_request(self, client):
         """Test collaboration with invalid request."""
-        request_data = {
-            "task": "Test task",
-            "agents": [],  # Empty agents list
-            "max_rounds": 2
-        }
+        request_data = {"task": "Test task", "agents": [], "max_rounds": 2}  # Empty agents list
 
         response = client.post("/collaborate", json=request_data)
         assert response.status_code == 422  # Validation error
@@ -125,7 +124,7 @@ class TestAPIServer:
         request_data = {
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
-            "max_rounds": 25  # Exceeds maximum
+            "max_rounds": 25,  # Exceeds maximum
         }
 
         response = client.post("/collaborate", json=request_data)
@@ -141,8 +140,8 @@ class TestAPIServer:
         response = client.delete("/session/nonexistent-id")
         assert response.status_code == 404
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
     def test_session_lifecycle(self, mock_collaborate, mock_provider, client):
         """Test complete session lifecycle."""
         # Setup mocks
@@ -153,7 +152,7 @@ class TestAPIServer:
         request_data = {
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
-            "max_rounds": 1
+            "max_rounds": 1,
         }
 
         create_response = client.post("/collaborate", json=request_data)
@@ -190,9 +189,7 @@ class TestAPIModels:
 
         # With tools
         config_with_tools = AgentConfig(
-            name="TestAgent",
-            role="assistant",
-            tools=["search", "calculator"]
+            name="TestAgent", role="assistant", tools=["search", "calculator"]
         )
         assert len(config_with_tools.tools) == 2
 
@@ -202,9 +199,7 @@ class TestAPIModels:
 
         # Valid request
         request = CollaborationRequest(
-            task="Test task",
-            agents=[AgentConfig(name="Agent1", role="assistant")],
-            max_rounds=5
+            task="Test task", agents=[AgentConfig(name="Agent1", role="assistant")], max_rounds=5
         )
         assert request.task == "Test task"
         assert len(request.agents) == 1
@@ -215,8 +210,7 @@ class TestAPIModels:
         from api_server import CollaborationRequest, AgentConfig
 
         request = CollaborationRequest(
-            task="Test task",
-            agents=[AgentConfig(name="Agent1", role="assistant")]
+            task="Test task", agents=[AgentConfig(name="Agent1", role="assistant")]
         )
         assert request.max_rounds == 5
         assert request.llm_provider == "ollama"
@@ -272,25 +266,25 @@ class TestCLICommands:
         # Should only create 5 agents (max available roles)
         assert len(agents) == 5
 
-    @patch('cli.console')
+    @patch("cli.console")
     def test_cli_version_command(self, mock_console):
         """Test version command."""
         from click.testing import CliRunner
         from cli import cli
 
         runner = CliRunner()
-        result = runner.invoke(cli, ['--version'])
+        result = runner.invoke(cli, ["--version"])
         assert result.exit_code == 0
-        assert '0.3.0' in result.output
+        assert "0.3.0" in result.output
 
-    @patch('cli.console')
+    @patch("cli.console")
     def test_cli_examples_command(self, mock_console):
         """Test examples command."""
         from click.testing import CliRunner
         from cli import cli
 
         runner = CliRunner()
-        result = runner.invoke(cli, ['examples'])
+        result = runner.invoke(cli, ["examples"])
         assert result.exit_code == 0
 
 
@@ -298,34 +292,28 @@ class TestCLICommands:
 class TestCLIValidation:
     """Test CLI input validation."""
 
-    @patch('cli.asyncio.run')
-    @patch('cli.console')
+    @patch("cli.asyncio.run")
+    @patch("cli.console")
     def test_run_command_invalid_agents(self, mock_console, mock_run):
         """Test run command with invalid agent count."""
         from click.testing import CliRunner
         from cli import cli
 
         runner = CliRunner()
-        result = runner.invoke(cli, [
-            'run',
-            '--task', 'Test task',
-            '--agents', '0'  # Invalid
-        ])
+        result = runner.invoke(cli, ["run", "--task", "Test task", "--agents", "0"])  # Invalid
         assert result.exit_code == 1
 
-    @patch('cli.asyncio.run')
-    @patch('cli.console')
+    @patch("cli.asyncio.run")
+    @patch("cli.console")
     def test_run_command_invalid_rounds(self, mock_console, mock_run):
         """Test run command with invalid rounds."""
         from click.testing import CliRunner
         from cli import cli
 
         runner = CliRunner()
-        result = runner.invoke(cli, [
-            'run',
-            '--task', 'Test task',
-            '--rounds', '25'  # Exceeds maximum
-        ])
+        result = runner.invoke(
+            cli, ["run", "--task", "Test task", "--rounds", "25"]  # Exceeds maximum
+        )
         assert result.exit_code == 1
 
 
@@ -363,10 +351,11 @@ class TestStreamingAPI:
     def client(self):
         """Create test client."""
         from api_server import app
+
         return TestClient(app)
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
     def test_streaming_endpoint(self, mock_collaborate, mock_provider, client):
         """Test streaming collaboration endpoint."""
         # Setup mocks
@@ -377,7 +366,7 @@ class TestStreamingAPI:
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
             "max_rounds": 1,
-            "stream": True
+            "stream": True,
         }
 
         response = client.post("/collaborate/stream", json=request_data)
@@ -393,10 +382,11 @@ class TestConcurrency:
     def client(self):
         """Create test client."""
         from api_server import app
+
         return TestClient(app)
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
     def test_concurrent_collaborations(self, mock_collaborate, mock_provider, client):
         """Test handling multiple concurrent collaborations."""
         # Setup mocks
@@ -406,7 +396,7 @@ class TestConcurrency:
         request_data = {
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
-            "max_rounds": 1
+            "max_rounds": 1,
         }
 
         # Send multiple requests
@@ -431,10 +421,11 @@ class TestErrorHandling:
     def client(self):
         """Create test client."""
         from api_server import app
+
         return TestClient(app)
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
     def test_collaboration_error_handling(self, mock_collaborate, mock_provider, client):
         """Test error handling during collaboration."""
         # Setup mocks to raise error
@@ -444,7 +435,7 @@ class TestErrorHandling:
         request_data = {
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
-            "max_rounds": 1
+            "max_rounds": 1,
         }
 
         response = client.post("/collaborate", json=request_data)
@@ -459,11 +450,12 @@ class TestTracing:
     def client(self):
         """Create test client."""
         from api_server import app
+
         return TestClient(app)
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
-    @patch('api_server.Tracer')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
+    @patch("api_server.Tracer")
     def test_tracing_enabled(self, mock_tracer_class, mock_collaborate, mock_provider, client):
         """Test collaboration with tracing enabled."""
         # Setup mocks
@@ -472,7 +464,7 @@ class TestTracing:
         mock_tracer = Mock()
         mock_tracer.get_summary.return_value = {
             "token_usage": {"total_tokens": 100},
-            "cost_estimate": {"total_cost": 0.001}
+            "cost_estimate": {"total_cost": 0.001},
         }
         mock_tracer_class.return_value = mock_tracer
 
@@ -480,7 +472,7 @@ class TestTracing:
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
             "max_rounds": 1,
-            "enable_tracing": True
+            "enable_tracing": True,
         }
 
         response = client.post("/collaborate", json=request_data)
@@ -490,8 +482,8 @@ class TestTracing:
         mock_tracer.start.assert_called_once()
         mock_tracer.end.assert_called_once()
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
     def test_tracing_disabled(self, mock_collaborate, mock_provider, client):
         """Test collaboration with tracing disabled."""
         # Setup mocks
@@ -502,7 +494,7 @@ class TestTracing:
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
             "max_rounds": 1,
-            "enable_tracing": False
+            "enable_tracing": False,
         }
 
         response = client.post("/collaborate", json=request_data)
@@ -517,10 +509,11 @@ class TestPerformance:
     def client(self):
         """Create test client."""
         from api_server import app
+
         return TestClient(app)
 
-    @patch('api_server.create_llm_provider')
-    @patch('agentmind.AgentMind.collaborate')
+    @patch("api_server.create_llm_provider")
+    @patch("agentmind.AgentMind.collaborate")
     def test_response_time_tracking(self, mock_collaborate, mock_provider, client):
         """Test that response includes duration."""
         # Setup mocks
@@ -530,7 +523,7 @@ class TestPerformance:
         request_data = {
             "task": "Test task",
             "agents": [{"name": "Agent1", "role": "assistant"}],
-            "max_rounds": 1
+            "max_rounds": 1,
         }
 
         response = client.post("/collaborate", json=request_data)
@@ -542,6 +535,7 @@ class TestPerformance:
     def test_health_check_performance(self, client):
         """Test health check is fast."""
         import time
+
         start = time.time()
         response = client.get("/health")
         duration = time.time() - start

@@ -9,7 +9,7 @@ This module provides different storage backends for agent memory:
 from abc import ABC, abstractmethod
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import List
 import json
 import sqlite3
 
@@ -35,7 +35,9 @@ class MemoryBackend(ABC):
         pass
 
     @abstractmethod
-    async def search_by_importance(self, min_importance: float, limit: int = 10) -> List[MemoryEntry]:
+    async def search_by_importance(
+        self, min_importance: float, limit: int = 10
+    ) -> List[MemoryEntry]:
         """Search entries by minimum importance score."""
         pass
 
@@ -78,7 +80,9 @@ class InMemoryBackend(MemoryBackend):
         """Get all memory entries."""
         return self._entries.copy()
 
-    async def search_by_importance(self, min_importance: float, limit: int = 10) -> List[MemoryEntry]:
+    async def search_by_importance(
+        self, min_importance: float, limit: int = 10
+    ) -> List[MemoryEntry]:
         """Search entries by minimum importance score."""
         filtered = [e for e in self._entries if e.importance >= min_importance]
         # Sort by importance descending
@@ -120,17 +124,17 @@ class JsonFileBackend(MemoryBackend):
         """Load entries from JSON file."""
         if self.file_path.exists():
             try:
-                with open(self.file_path, 'r', encoding='utf-8') as f:
+                with open(self.file_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     self._entries = [
                         MemoryEntry(
-                            message=Message(**entry['message']),
-                            importance=entry.get('importance', 0.5),
-                            embedding=entry.get('embedding')
+                            message=Message(**entry["message"]),
+                            importance=entry.get("importance", 0.5),
+                            embedding=entry.get("embedding"),
                         )
                         for entry in data
                     ]
-            except (json.JSONDecodeError, KeyError) as e:
+            except (json.JSONDecodeError, KeyError):
                 # If file is corrupted, start fresh
                 self._entries = []
 
@@ -138,13 +142,15 @@ class JsonFileBackend(MemoryBackend):
         """Save entries to JSON file."""
         data = []
         for entry in self._entries:
-            data.append({
-                'message': entry.message.model_dump(mode='json'),
-                'importance': entry.importance,
-                'embedding': entry.embedding
-            })
+            data.append(
+                {
+                    "message": entry.message.model_dump(mode="json"),
+                    "importance": entry.importance,
+                    "embedding": entry.embedding,
+                }
+            )
 
-        with open(self.file_path, 'w', encoding='utf-8') as f:
+        with open(self.file_path, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False, default=str)
 
     async def add(self, entry: MemoryEntry) -> None:
@@ -160,7 +166,9 @@ class JsonFileBackend(MemoryBackend):
         """Get all memory entries."""
         return self._entries.copy()
 
-    async def search_by_importance(self, min_importance: float, limit: int = 10) -> List[MemoryEntry]:
+    async def search_by_importance(
+        self, min_importance: float, limit: int = 10
+    ) -> List[MemoryEntry]:
         """Search entries by minimum importance score."""
         filtered = [e for e in self._entries if e.importance >= min_importance]
         filtered.sort(key=lambda x: x.importance, reverse=True)
@@ -205,7 +213,8 @@ class SQLiteBackend(MemoryBackend):
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
 
-        cursor.execute('''
+        cursor.execute(
+            """
             CREATE TABLE IF NOT EXISTS memory_entries (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 content TEXT NOT NULL,
@@ -217,32 +226,41 @@ class SQLiteBackend(MemoryBackend):
                 embedding TEXT,
                 created_at TEXT DEFAULT CURRENT_TIMESTAMP
             )
-        ''')
+        """
+        )
 
         # Optimized indexes for common queries
-        cursor.execute('''
+        cursor.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_importance ON memory_entries(importance DESC)
-        ''')
+        """
+        )
 
-        cursor.execute('''
+        cursor.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_timestamp ON memory_entries(timestamp DESC)
-        ''')
+        """
+        )
 
-        cursor.execute('''
+        cursor.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_id_desc ON memory_entries(id DESC)
-        ''')
+        """
+        )
 
-        cursor.execute('''
+        cursor.execute(
+            """
             CREATE INDEX IF NOT EXISTS idx_sender ON memory_entries(sender)
-        ''')
+        """
+        )
 
         # Enable WAL mode for better concurrent access
-        cursor.execute('PRAGMA journal_mode=WAL')
+        cursor.execute("PRAGMA journal_mode=WAL")
 
         # Optimize for performance
-        cursor.execute('PRAGMA synchronous=NORMAL')
-        cursor.execute('PRAGMA cache_size=-64000')  # 64MB cache
-        cursor.execute('PRAGMA temp_store=MEMORY')
+        cursor.execute("PRAGMA synchronous=NORMAL")
+        cursor.execute("PRAGMA cache_size=-64000")  # 64MB cache
+        cursor.execute("PRAGMA temp_store=MEMORY")
 
         conn.commit()
         conn.close()
@@ -253,19 +271,22 @@ class SQLiteBackend(MemoryBackend):
         cursor = conn.cursor()
 
         msg = entry.message
-        cursor.execute('''
+        cursor.execute(
+            """
             INSERT INTO memory_entries
             (content, sender, role, timestamp, metadata, importance, embedding)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (
-            msg.content,
-            msg.sender,
-            msg.role.value,
-            msg.timestamp.isoformat(),
-            json.dumps(msg.metadata),
-            entry.importance,
-            json.dumps(entry.embedding) if entry.embedding else None
-        ))
+        """,
+            (
+                msg.content,
+                msg.sender,
+                msg.role.value,
+                msg.timestamp.isoformat(),
+                json.dumps(msg.metadata),
+                entry.importance,
+                json.dumps(entry.embedding) if entry.embedding else None,
+            ),
+        )
 
         conn.commit()
         conn.close()
@@ -275,12 +296,15 @@ class SQLiteBackend(MemoryBackend):
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
 
-        cursor.execute('''
+        cursor.execute(
+            """
             SELECT content, sender, role, timestamp, metadata, importance, embedding
             FROM memory_entries
             ORDER BY id DESC
             LIMIT ?
-        ''', (limit,))
+        """,
+            (limit,),
+        )
 
         rows = cursor.fetchall()
         conn.close()
@@ -297,29 +321,36 @@ class SQLiteBackend(MemoryBackend):
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
 
-        cursor.execute('''
+        cursor.execute(
+            """
             SELECT content, sender, role, timestamp, metadata, importance, embedding
             FROM memory_entries
             ORDER BY id ASC
-        ''')
+        """
+        )
 
         rows = cursor.fetchall()
         conn.close()
 
         return [self._row_to_entry(row) for row in rows]
 
-    async def search_by_importance(self, min_importance: float, limit: int = 10) -> List[MemoryEntry]:
+    async def search_by_importance(
+        self, min_importance: float, limit: int = 10
+    ) -> List[MemoryEntry]:
         """Search entries by minimum importance score."""
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
 
-        cursor.execute('''
+        cursor.execute(
+            """
             SELECT content, sender, role, timestamp, metadata, importance, embedding
             FROM memory_entries
             WHERE importance >= ?
             ORDER BY importance DESC
             LIMIT ?
-        ''', (min_importance, limit))
+        """,
+            (min_importance, limit),
+        )
 
         rows = cursor.fetchall()
         conn.close()
@@ -330,7 +361,7 @@ class SQLiteBackend(MemoryBackend):
         """Clear all memory entries."""
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
-        cursor.execute('DELETE FROM memory_entries')
+        cursor.execute("DELETE FROM memory_entries")
         conn.commit()
         conn.close()
 
@@ -338,7 +369,7 @@ class SQLiteBackend(MemoryBackend):
         """Get total number of entries."""
         conn = sqlite3.connect(str(self.db_path))
         cursor = conn.cursor()
-        cursor.execute('SELECT COUNT(*) FROM memory_entries')
+        cursor.execute("SELECT COUNT(*) FROM memory_entries")
         count = cursor.fetchone()[0]
         conn.close()
         return count
@@ -353,10 +384,10 @@ class SQLiteBackend(MemoryBackend):
                 sender=sender,
                 role=role,
                 timestamp=datetime.fromisoformat(timestamp),
-                metadata=json.loads(metadata) if metadata else {}
+                metadata=json.loads(metadata) if metadata else {},
             ),
             importance=importance,
-            embedding=json.loads(embedding) if embedding else None
+            embedding=json.loads(embedding) if embedding else None,
         )
 
     async def add_batch(self, entries: List[MemoryEntry]) -> None:
@@ -374,21 +405,26 @@ class SQLiteBackend(MemoryBackend):
         values = []
         for entry in entries:
             msg = entry.message
-            values.append((
-                msg.content,
-                msg.sender,
-                msg.role.value,
-                msg.timestamp.isoformat(),
-                json.dumps(msg.metadata),
-                entry.importance,
-                json.dumps(entry.embedding) if entry.embedding else None
-            ))
+            values.append(
+                (
+                    msg.content,
+                    msg.sender,
+                    msg.role.value,
+                    msg.timestamp.isoformat(),
+                    json.dumps(msg.metadata),
+                    entry.importance,
+                    json.dumps(entry.embedding) if entry.embedding else None,
+                )
+            )
 
-        cursor.executemany('''
+        cursor.executemany(
+            """
             INSERT INTO memory_entries
             (content, sender, role, timestamp, metadata, importance, embedding)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', values)
+        """,
+            values,
+        )
 
         conn.commit()
         conn.close()

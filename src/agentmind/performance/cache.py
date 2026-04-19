@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 try:
     import redis.asyncio as aioredis
+
     REDIS_AVAILABLE = True
 except ImportError:
     aioredis = None
@@ -136,7 +137,9 @@ class RedisCache(CacheBackend):
             prefix: Key prefix for namespacing
         """
         if not REDIS_AVAILABLE:
-            raise ImportError("redis package required for RedisCache. Install with: pip install redis")
+            raise ImportError(
+                "redis package required for RedisCache. Install with: pip install redis"
+            )
 
         self.host = host
         self.port = port
@@ -225,16 +228,11 @@ class CacheManager:
         """Generate cache key from messages and parameters."""
         # Create deterministic hash from messages and params
         content = json.dumps(
-            {"messages": messages, "params": sorted(kwargs.items())},
-            sort_keys=True
+            {"messages": messages, "params": sorted(kwargs.items())}, sort_keys=True
         )
         return hashlib.sha256(content.encode()).hexdigest()
 
-    async def get_response(
-        self,
-        messages: List[Dict[str, str]],
-        **kwargs
-    ) -> Optional[Any]:
+    async def get_response(self, messages: List[Dict[str, str]], **kwargs) -> Optional[Any]:
         """Get cached LLM response.
 
         Args:
@@ -258,11 +256,7 @@ class CacheManager:
         return result
 
     async def set_response(
-        self,
-        messages: List[Dict[str, str]],
-        response: Any,
-        ttl: Optional[int] = None,
-        **kwargs
+        self, messages: List[Dict[str, str]], response: Any, ttl: Optional[int] = None, **kwargs
     ) -> None:
         """Cache an LLM response.
 

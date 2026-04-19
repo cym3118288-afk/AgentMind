@@ -5,7 +5,6 @@ types used across different provider implementations.
 """
 
 from abc import ABC, abstractmethod
-from enum import Enum
 from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
@@ -25,12 +24,9 @@ class LLMResponse(BaseModel):
     model: str = Field(..., description="Model identifier")
     usage: Dict[str, int] = Field(
         default_factory=dict,
-        description="Token usage (prompt_tokens, completion_tokens, total_tokens)"
+        description="Token usage (prompt_tokens, completion_tokens, total_tokens)",
     )
-    metadata: Dict[str, Any] = Field(
-        default_factory=dict,
-        description="Provider-specific metadata"
-    )
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Provider-specific metadata")
 
 
 class LLMMessage(BaseModel):
@@ -53,11 +49,7 @@ class LLMProvider(ABC):
     """
 
     def __init__(
-        self,
-        model: str,
-        temperature: float = 0.7,
-        max_tokens: int = 1000,
-        **kwargs: Any
+        self, model: str, temperature: float = 0.7, max_tokens: int = 1000, **kwargs: Any
     ) -> None:
         """Initialize the LLM provider.
 
@@ -78,7 +70,7 @@ class LLMProvider(ABC):
         messages: List[Dict[str, str]],
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> LLMResponse:
         """Generate a response from the LLM.
 
@@ -102,7 +94,7 @@ class LLMProvider(ABC):
         messages: List[Dict[str, str]],
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ):
         """Generate a streaming response from the LLM.
 
@@ -124,7 +116,7 @@ class LLMProvider(ABC):
         self,
         system_prompt: Optional[str] = None,
         user_message: Optional[str] = None,
-        history: Optional[List[Dict[str, str]]] = None
+        history: Optional[List[Dict[str, str]]] = None,
     ) -> List[Dict[str, str]]:
         """Build a message list for the LLM.
 

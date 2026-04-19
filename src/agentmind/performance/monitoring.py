@@ -3,12 +3,14 @@
 Provides Prometheus metrics, OpenTelemetry integration, and structured logging.
 """
 
+import json
 import time
 from typing import Any, Dict, Optional
 from contextlib import contextmanager
 
 try:
     from prometheus_client import Counter, Histogram, Gauge, CollectorRegistry, generate_latest
+
     PROMETHEUS_AVAILABLE = True
 except ImportError:
     PROMETHEUS_AVAILABLE = False
@@ -18,6 +20,7 @@ try:
     from opentelemetry.sdk.trace import TracerProvider
     from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
     from opentelemetry.sdk.resources import Resource
+
     OTEL_AVAILABLE = True
 except ImportError:
     OTEL_AVAILABLE = False
@@ -33,92 +36,88 @@ class PrometheusMetrics:
             registry: Optional Prometheus registry
         """
         if not PROMETHEUS_AVAILABLE:
-            raise ImportError("prometheus_client required. Install with: pip install prometheus-client")
+            raise ImportError(
+                "prometheus_client required. Install with: pip install prometheus-client"
+            )
 
         self.registry = registry or CollectorRegistry()
 
         # Agent metrics
         self.agent_messages_total = Counter(
-            'agentmind_agent_messages_total',
-            'Total messages processed by agents',
-            ['agent_name', 'role'],
-            registry=self.registry
+            "agentmind_agent_messages_total",
+            "Total messages processed by agents",
+            ["agent_name", "role"],
+            registry=self.registry,
         )
 
         self.agent_processing_duration = Histogram(
-            'agentmind_agent_processing_duration_seconds',
-            'Time spent processing messages',
-            ['agent_name', 'role'],
-            registry=self.registry
+            "agentmind_agent_processing_duration_seconds",
+            "Time spent processing messages",
+            ["agent_name", "role"],
+            registry=self.registry,
         )
 
         # LLM metrics
         self.llm_requests_total = Counter(
-            'agentmind_llm_requests_total',
-            'Total LLM requests',
-            ['provider', 'model'],
-            registry=self.registry
+            "agentmind_llm_requests_total",
+            "Total LLM requests",
+            ["provider", "model"],
+            registry=self.registry,
         )
 
         self.llm_tokens_total = Counter(
-            'agentmind_llm_tokens_total',
-            'Total tokens used',
-            ['provider', 'model', 'type'],
-            registry=self.registry
+            "agentmind_llm_tokens_total",
+            "Total tokens used",
+            ["provider", "model", "type"],
+            registry=self.registry,
         )
 
         self.llm_request_duration = Histogram(
-            'agentmind_llm_request_duration_seconds',
-            'LLM request duration',
-            ['provider', 'model'],
-            registry=self.registry
+            "agentmind_llm_request_duration_seconds",
+            "LLM request duration",
+            ["provider", "model"],
+            registry=self.registry,
         )
 
         self.llm_errors_total = Counter(
-            'agentmind_llm_errors_total',
-            'Total LLM errors',
-            ['provider', 'model', 'error_type'],
-            registry=self.registry
+            "agentmind_llm_errors_total",
+            "Total LLM errors",
+            ["provider", "model", "error_type"],
+            registry=self.registry,
         )
 
         # Cache metrics
         self.cache_hits_total = Counter(
-            'agentmind_cache_hits_total',
-            'Total cache hits',
-            registry=self.registry
+            "agentmind_cache_hits_total", "Total cache hits", registry=self.registry
         )
 
         self.cache_misses_total = Counter(
-            'agentmind_cache_misses_total',
-            'Total cache misses',
-            registry=self.registry
+            "agentmind_cache_misses_total", "Total cache misses", registry=self.registry
         )
 
         self.cache_size = Gauge(
-            'agentmind_cache_size',
-            'Current cache size',
-            registry=self.registry
+            "agentmind_cache_size", "Current cache size", registry=self.registry
         )
 
         # Collaboration metrics
         self.collaboration_rounds = Histogram(
-            'agentmind_collaboration_rounds',
-            'Number of collaboration rounds',
-            registry=self.registry
+            "agentmind_collaboration_rounds",
+            "Number of collaboration rounds",
+            registry=self.registry,
         )
 
         self.collaboration_duration = Histogram(
-            'agentmind_collaboration_duration_seconds',
-            'Total collaboration duration',
-            registry=self.registry
+            "agentmind_collaboration_duration_seconds",
+            "Total collaboration duration",
+            registry=self.registry,
         )
 
         # Memory metrics
         self.memory_messages_total = Gauge(
-            'agentmind_memory_messages_total',
-            'Total messages in memory',
-            ['agent_name'],
-            registry=self.registry
+            "agentmind_memory_messages_total",
+            "Total messages in memory",
+            ["agent_name"],
+            registry=self.registry,
         )
 
     def export_metrics(self) -> bytes:
@@ -137,9 +136,7 @@ class PrometheusMetrics:
         except Exception as e:
             duration = time.time() - start_time
             self.llm_errors_total.labels(
-                provider=provider,
-                model=model,
-                error_type=type(e).__name__
+                provider=provider, model=model, error_type=type(e).__name__
             ).inc()
             raise
 
@@ -151,7 +148,9 @@ class PrometheusMetrics:
             yield
             duration = time.time() - start_time
             self.agent_messages_total.labels(agent_name=agent_name, role=role).inc()
-            self.agent_processing_duration.labels(agent_name=agent_name, role=role).observe(duration)
+            self.agent_processing_duration.labels(agent_name=agent_name, role=role).observe(
+                duration
+            )
         except Exception:
             raise
 
@@ -171,7 +170,9 @@ class OpenTelemetryTracer:
             exporter: Optional span exporter (defaults to console)
         """
         if not OTEL_AVAILABLE:
-            raise ImportError("opentelemetry required. Install with: pip install opentelemetry-api opentelemetry-sdk")
+            raise ImportError(
+                "opentelemetry required. Install with: pip install opentelemetry-api opentelemetry-sdk"
+            )
 
         # Create resource
         resource = Resource.create({"service.name": service_name})
@@ -224,7 +225,6 @@ class StructuredLogger:
             name: Logger name
         """
         import logging
-        import json
 
         self.logger = logging.getLogger(name)
         self.context: Dict[str, Any] = {}
@@ -239,12 +239,8 @@ class StructuredLogger:
 
     def _format_message(self, message: str, **kwargs) -> str:
         """Format message with context."""
-        import json
-        data = {
-            "message": message,
-            "context": self.context,
-            **kwargs
-        }
+
+        data = {"message": message, "context": self.context, **kwargs}
         return json.dumps(data)
 
     def info(self, message: str, **kwargs) -> None:

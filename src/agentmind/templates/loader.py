@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 from ..core.agent import Agent
 from ..core.mind import AgentMind
 from ..llm.provider import LLMProvider
-from .registry import TeamTemplate, get_registry
+from .registry import get_registry
 
 
 class TemplateLoader:

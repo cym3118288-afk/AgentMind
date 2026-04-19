@@ -135,10 +135,7 @@ class TestCodeExecutor:
         executor = CodeExecutor(timeout=1)
 
         # This should timeout
-        result = await executor.execute(
-            code="import time; time.sleep(5); print('done')",
-            timeout=1
-        )
+        result = await executor.execute(code="import time; time.sleep(5); print('done')", timeout=1)
         assert result.success is False
         assert "timed out" in result.error.lower()
 
@@ -168,17 +165,12 @@ class TestFileIO:
 
             # Write file
             write_result = await file_io.execute(
-                operation="write",
-                path="test.txt",
-                content="Hello, World!"
+                operation="write", path="test.txt", content="Hello, World!"
             )
             assert write_result.success is True
 
             # Read file
-            read_result = await file_io.execute(
-                operation="read",
-                path="test.txt"
-            )
+            read_result = await file_io.execute(operation="read", path="test.txt")
             assert read_result.success is True
             assert read_result.output == "Hello, World!"
 
@@ -188,10 +180,7 @@ class TestFileIO:
         with tempfile.TemporaryDirectory() as tmpdir:
             file_io = FileIO(base_dir=tmpdir)
 
-            result = await file_io.execute(
-                operation="read",
-                path="nonexistent.txt"
-            )
+            result = await file_io.execute(operation="read", path="nonexistent.txt")
             assert result.success is False
             assert "not found" in result.error.lower()
 
@@ -202,10 +191,7 @@ class TestFileIO:
             file_io = FileIO(base_dir=tmpdir)
 
             # Try to access parent directory
-            result = await file_io.execute(
-                operation="read",
-                path="../../../etc/passwd"
-            )
+            result = await file_io.execute(operation="read", path="../../../etc/passwd")
             assert result.success is False
             assert "denied" in result.error.lower()
 
@@ -215,10 +201,7 @@ class TestFileIO:
         with tempfile.TemporaryDirectory() as tmpdir:
             file_io = FileIO(base_dir=tmpdir)
 
-            result = await file_io.execute(
-                operation="write",
-                path="test.txt"
-            )
+            result = await file_io.execute(operation="write", path="test.txt")
             assert result.success is False
             assert "required" in result.error.lower()
 
@@ -228,10 +211,7 @@ class TestFileIO:
         with tempfile.TemporaryDirectory() as tmpdir:
             file_io = FileIO(base_dir=tmpdir)
 
-            result = await file_io.execute(
-                operation="delete",
-                path="test.txt"
-            )
+            result = await file_io.execute(operation="delete", path="test.txt")
             assert result.success is False
             assert "unknown operation" in result.error.lower()
 
@@ -492,8 +472,7 @@ print('stderr message', file=sys.stderr)
         """Test custom timeout parameter."""
         executor = CodeExecutor(timeout=10)
         result = await executor.execute(
-            code="import time; time.sleep(0.5); print('done')",
-            timeout=2
+            code="import time; time.sleep(0.5); print('done')", timeout=2
         )
         assert result.success is True
         assert "done" in result.output
@@ -508,9 +487,7 @@ class TestFileIOAdvanced:
         with tempfile.TemporaryDirectory() as tmpdir:
             file_io = FileIO(base_dir=tmpdir)
             result = await file_io.execute(
-                operation="write",
-                path="subdir/nested/file.txt",
-                content="test content"
+                operation="write", path="subdir/nested/file.txt", content="test content"
             )
             assert result.success is True
             assert Path(tmpdir, "subdir/nested/file.txt").exists()
@@ -522,25 +499,14 @@ class TestFileIOAdvanced:
             file_io = FileIO(base_dir=tmpdir)
 
             # Write initial content
-            await file_io.execute(
-                operation="write",
-                path="test.txt",
-                content="original"
-            )
+            await file_io.execute(operation="write", path="test.txt", content="original")
 
             # Overwrite
-            result = await file_io.execute(
-                operation="write",
-                path="test.txt",
-                content="updated"
-            )
+            result = await file_io.execute(operation="write", path="test.txt", content="updated")
             assert result.success is True
 
             # Verify overwrite
-            read_result = await file_io.execute(
-                operation="read",
-                path="test.txt"
-            )
+            read_result = await file_io.execute(operation="read", path="test.txt")
             assert read_result.output == "updated"
 
     @pytest.mark.asyncio
@@ -551,16 +517,11 @@ class TestFileIOAdvanced:
 
             unicode_content = "Hello 世界 🌍 Привет"
             write_result = await file_io.execute(
-                operation="write",
-                path="unicode.txt",
-                content=unicode_content
+                operation="write", path="unicode.txt", content=unicode_content
             )
             assert write_result.success is True
 
-            read_result = await file_io.execute(
-                operation="read",
-                path="unicode.txt"
-            )
+            read_result = await file_io.execute(operation="read", path="unicode.txt")
             assert read_result.success is True
             assert read_result.output == unicode_content
 
@@ -573,16 +534,11 @@ class TestFileIOAdvanced:
             # Create 1MB content
             large_content = "x" * (1024 * 1024)
             write_result = await file_io.execute(
-                operation="write",
-                path="large.txt",
-                content=large_content
+                operation="write", path="large.txt", content=large_content
             )
             assert write_result.success is True
 
-            read_result = await file_io.execute(
-                operation="read",
-                path="large.txt"
-            )
+            read_result = await file_io.execute(operation="read", path="large.txt")
             assert read_result.success is True
             assert len(read_result.output) == len(large_content)
 
@@ -592,17 +548,10 @@ class TestFileIOAdvanced:
         with tempfile.TemporaryDirectory() as tmpdir:
             file_io = FileIO(base_dir=tmpdir)
 
-            write_result = await file_io.execute(
-                operation="write",
-                path="empty.txt",
-                content=""
-            )
+            write_result = await file_io.execute(operation="write", path="empty.txt", content="")
             assert write_result.success is True
 
-            read_result = await file_io.execute(
-                operation="read",
-                path="empty.txt"
-            )
+            read_result = await file_io.execute(operation="read", path="empty.txt")
             assert read_result.success is True
             assert read_result.output == ""
 
@@ -616,14 +565,11 @@ class TestFileIOAdvanced:
                 "../../../etc/passwd",
                 "..\\..\\..\\windows\\system32",
                 "./../../sensitive.txt",
-                "subdir/../../outside.txt"
+                "subdir/../../outside.txt",
             ]
 
             for path in dangerous_paths:
-                result = await file_io.execute(
-                    operation="read",
-                    path=path
-                )
+                result = await file_io.execute(operation="read", path=path)
                 # Should either fail or stay within base_dir
                 if result.success:
                     # If it succeeds, verify it's within base_dir
@@ -644,9 +590,18 @@ class TestToolRegistryAdvanced:
         registry.register(executor)
 
         tool_calls = [
-            {"name": "code_executor", "parameters": {"code": "import time; time.sleep(0.1); print('done')"}},
-            {"name": "code_executor", "parameters": {"code": "import time; time.sleep(0.1); print('done')"}},
-            {"name": "code_executor", "parameters": {"code": "import time; time.sleep(0.1); print('done')"}},
+            {
+                "name": "code_executor",
+                "parameters": {"code": "import time; time.sleep(0.1); print('done')"},
+            },
+            {
+                "name": "code_executor",
+                "parameters": {"code": "import time; time.sleep(0.1); print('done')"},
+            },
+            {
+                "name": "code_executor",
+                "parameters": {"code": "import time; time.sleep(0.1); print('done')"},
+            },
         ]
 
         # Parallel execution

@@ -72,12 +72,14 @@ class PromptOptimizer:
         optimized_prompt = self._extract_prompt(response.content)
 
         # Store in history
-        self.optimization_history.append({
-            "original": current_prompt,
-            "optimized": optimized_prompt,
-            "feedback": feedback,
-            "metrics": performance_metrics,
-        })
+        self.optimization_history.append(
+            {
+                "original": current_prompt,
+                "optimized": optimized_prompt,
+                "feedback": feedback,
+                "metrics": performance_metrics,
+            }
+        )
 
         return optimized_prompt
 

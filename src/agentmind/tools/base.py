@@ -8,7 +8,7 @@ import asyncio
 import inspect
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Optional, get_type_hints
-from pydantic import BaseModel, Field, create_model
+from pydantic import BaseModel, Field
 
 from ..core.types import ToolDefinition
 
@@ -65,7 +65,7 @@ class Tool(ABC):
         required = []
 
         for param_name, param in sig.parameters.items():
-            if param_name in ('self', 'kwargs'):
+            if param_name in ("self", "kwargs"):
                 continue
 
             param_type = hints.get(param_name, str)
@@ -76,16 +76,10 @@ class Tool(ABC):
             if param.default == inspect.Parameter.empty:
                 required.append(param_name)
 
-        parameters = {
-            "type": "object",
-            "properties": properties
-        }
+        parameters = {"type": "object", "properties": properties}
 
         return ToolDefinition(
-            name=self.name,
-            description=self.description,
-            parameters=parameters,
-            required=required
+            name=self.name, description=self.description, parameters=parameters, required=required
         )
 
     def _type_to_schema(self, python_type) -> Dict[str, Any]:
@@ -162,18 +156,12 @@ class ToolRegistry:
         """
         tool = self.get(name)
         if not tool:
-            return ToolResult(
-                success=False,
-                error=f"Tool '{name}' not found"
-            )
+            return ToolResult(success=False, error=f"Tool '{name}' not found")
 
         try:
             return await tool.execute(**kwargs)
         except Exception as e:
-            return ToolResult(
-                success=False,
-                error=f"Tool execution failed: {str(e)}"
-            )
+            return ToolResult(success=False, error=f"Tool execution failed: {str(e)}")
 
     async def execute_parallel(self, tool_calls: List[Dict[str, Any]]) -> List[ToolResult]:
         """Execute multiple tools in parallel.
@@ -186,8 +174,8 @@ class ToolRegistry:
         """
         tasks = []
         for call in tool_calls:
-            name = call.get('name')
-            params = call.get('parameters', {})
+            name = call.get("name")
+            params = call.get("parameters", {})
             tasks.append(self.execute(name, **params))
 
         return await asyncio.gather(*tasks)
@@ -197,10 +185,7 @@ class ToolRegistry:
 _global_registry = ToolRegistry()
 
 
-def tool(
-    name: Optional[str] = None,
-    description: Optional[str] = None
-):
+def tool(name: Optional[str] = None, description: Optional[str] = None):
     """Decorator to convert a function into a tool.
 
     Args:
@@ -216,6 +201,7 @@ def tool(
             result = eval(expression)
             return ToolResult(success=True, output=str(result))
     """
+
     def decorator(func: Callable) -> Tool:
         tool_name = name or func.__name__
         tool_description = description or func.__doc__ or "No description"
@@ -253,7 +239,7 @@ def tool(
                 required = []
 
                 for param_name, param in sig.parameters.items():
-                    if param_name in ('self', 'kwargs'):
+                    if param_name in ("self", "kwargs"):
                         continue
 
                     param_type = hints.get(param_name, str)
@@ -264,16 +250,13 @@ def tool(
                     if param.default == inspect.Parameter.empty:
                         required.append(param_name)
 
-                parameters = {
-                    "type": "object",
-                    "properties": properties
-                }
+                parameters = {"type": "object", "properties": properties}
 
                 return ToolDefinition(
                     name=self.name,
                     description=self.description,
                     parameters=parameters,
-                    required=required
+                    required=required,
                 )
 
         tool_instance = FunctionTool()

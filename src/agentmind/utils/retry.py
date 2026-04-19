@@ -7,7 +7,7 @@ fallback strategies, and error handling for LLM calls and agent operations.
 import asyncio
 import logging
 from functools import wraps
-from typing import Any, Callable, List, Optional, Type, TypeVar, Union
+from typing import Any, Callable, List, Optional, Type, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -34,8 +34,7 @@ class RetryConfig(BaseModel):
     exponential_base: float = Field(default=2.0, ge=1.0, description="Exponential backoff base")
     jitter: float = Field(default=0.1, ge=0.0, le=1.0, description="Random jitter factor")
     retry_on_exceptions: List[Type[Exception]] = Field(
-        default_factory=lambda: [Exception],
-        description="Exception types to retry on"
+        default_factory=lambda: [Exception], description="Exception types to retry on"
     )
 
 
@@ -45,16 +44,10 @@ class RetryExhaustedError(Exception):
     def __init__(self, attempts: int, last_error: Exception):
         self.attempts = attempts
         self.last_error = last_error
-        super().__init__(
-            f"Retry exhausted after {attempts} attempts. Last error: {last_error}"
-        )
+        super().__init__(f"Retry exhausted after {attempts} attempts. Last error: {last_error}")
 
 
-def calculate_delay(
-    attempt: int,
-    config: RetryConfig,
-    jitter: bool = True
-) -> float:
+def calculate_delay(attempt: int, config: RetryConfig, jitter: bool = True) -> float:
     """Calculate delay for a retry attempt with exponential backoff.
 
     Args:
@@ -68,7 +61,7 @@ def calculate_delay(
     import random
 
     # Exponential backoff: initial_delay * (base ^ attempt)
-    delay = config.initial_delay * (config.exponential_base ** attempt)
+    delay = config.initial_delay * (config.exponential_base**attempt)
 
     # Cap at max_delay
     delay = min(delay, config.max_delay)
@@ -86,7 +79,7 @@ async def retry_async(
     *args: Any,
     config: Optional[RetryConfig] = None,
     on_retry: Optional[Callable[[int, Exception], None]] = None,
-    **kwargs: Any
+    **kwargs: Any,
 ) -> T:
     """Retry an async function with exponential backoff.
 
@@ -154,7 +147,7 @@ async def retry_async(
 
 def with_retry(
     config: Optional[RetryConfig] = None,
-    on_retry: Optional[Callable[[int, Exception], None]] = None
+    on_retry: Optional[Callable[[int, Exception], None]] = None,
 ):
     """Decorator to add retry logic to async functions.
 
@@ -170,17 +163,14 @@ def with_retry(
         ... async def fetch_data():
         ...     return await api.get_data()
     """
+
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> T:
-            return await retry_async(
-                func,
-                *args,
-                config=config,
-                on_retry=on_retry,
-                **kwargs
-            )
+            return await retry_async(func, *args, config=config, on_retry=on_retry, **kwargs)
+
         return wrapper
+
     return decorator
 
 
@@ -284,10 +274,7 @@ class CircuitBreaker:
     """
 
     def __init__(
-        self,
-        failure_threshold: int = 5,
-        timeout: float = 60.0,
-        half_open_attempts: int = 1
+        self, failure_threshold: int = 5, timeout: float = 60.0, half_open_attempts: int = 1
     ):
         """Initialize circuit breaker.
 

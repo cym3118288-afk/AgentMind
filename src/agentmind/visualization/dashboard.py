@@ -3,9 +3,7 @@
 import asyncio
 from typing import Any, Dict, List, Optional, Tuple
 
-from ..core.agent import Agent
 from ..core.mind import AgentMind
-from ..core.types import Message
 from .visualizer import MemoryVisualizer, MessageFlowVisualizer
 
 
@@ -73,11 +71,13 @@ class Dashboard:
                 self.memory_visualizer.update_agent_memory(agent.name, agent.memory)
 
         # Store in history
-        self.collaboration_history.append({
-            "task": task,
-            "result": result,
-            "rounds": max_rounds,
-        })
+        self.collaboration_history.append(
+            {
+                "task": task,
+                "result": result,
+                "rounds": max_rounds,
+            }
+        )
 
         # Generate visualizations
         message_flow = self.message_visualizer.get_flow_diagram()
@@ -117,7 +117,9 @@ class Dashboard:
 
         if self.mind:
             lines.append(f"Active agents: {len(self.mind.agents)}")
-            lines.append(f"Strategy: {self.mind.strategy.value if hasattr(self.mind.strategy, 'value') else self.mind.strategy}")
+            lines.append(
+                f"Strategy: {self.mind.strategy.value if hasattr(self.mind.strategy, 'value') else self.mind.strategy}"
+            )
 
         msg_stats = self.message_visualizer.get_statistics()
         if msg_stats:
@@ -173,9 +175,7 @@ def launch_dashboard(mind: Optional[AgentMind] = None, share: bool = False) -> N
         if not task:
             return "Please enter a task", "", "", ""
 
-        result, flow, memory = asyncio.run(
-            dashboard.run_collaboration(task, max_rounds)
-        )
+        result, flow, memory = asyncio.run(dashboard.run_collaboration(task, max_rounds))
         stats = dashboard.get_statistics()
         return result, flow, memory, stats
 

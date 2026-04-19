@@ -10,10 +10,9 @@ This module provides commonly used tools:
 import ast
 import asyncio
 import operator
-import subprocess
+
 import sys
 from pathlib import Path
-from typing import Any, Dict
 
 from .base import Tool, ToolResult
 
@@ -47,19 +46,15 @@ class Calculator(Tool):
         """
         try:
             # Parse the expression
-            tree = ast.parse(expression, mode='eval')
+            tree = ast.parse(expression, mode="eval")
             result = self._eval_node(tree.body)
 
-            return ToolResult(
-                success=True,
-                output=str(result),
-                metadata={"expression": expression}
-            )
+            return ToolResult(success=True, output=str(result), metadata={"expression": expression})
         except Exception as e:
             return ToolResult(
                 success=False,
                 error=f"Calculation error: {str(e)}",
-                metadata={"expression": expression}
+                metadata={"expression": expression},
             )
 
     def _eval_node(self, node):
@@ -89,7 +84,9 @@ class WebSearch(Tool):
     def __init__(self):
         super().__init__()
         self.name = "web_search"
-        self.description = "Search the web for information using DuckDuckGo. Returns top search results."
+        self.description = (
+            "Search the web for information using DuckDuckGo. Returns top search results."
+        )
 
     async def execute(self, query: str, max_results: int = 5) -> ToolResult:
         """Search the web.
@@ -122,21 +119,16 @@ class WebSearch(Tool):
                 return ToolResult(
                     success=True,
                     output=output,
-                    metadata={
-                        "query": query,
-                        "num_results": len(results)
-                    }
+                    metadata={"query": query, "num_results": len(results)},
                 )
             except ImportError:
                 return ToolResult(
                     success=False,
-                    error="duckduckgo_search package not installed. Install with: pip install duckduckgo-search"
+                    error="duckduckgo_search package not installed. Install with: pip install duckduckgo-search",
                 )
         except Exception as e:
             return ToolResult(
-                success=False,
-                error=f"Search failed: {str(e)}",
-                metadata={"query": query}
+                success=False, error=f"Search failed: {str(e)}", metadata={"query": query}
             )
 
 
@@ -146,7 +138,9 @@ class CodeExecutor(Tool):
     def __init__(self, timeout: int = 10):
         super().__init__()
         self.name = "code_executor"
-        self.description = "Execute Python code safely in an isolated subprocess with timeout protection."
+        self.description = (
+            "Execute Python code safely in an isolated subprocess with timeout protection."
+        )
         self.timeout = timeout
 
     async def execute(self, code: str, timeout: int = None) -> ToolResult:
@@ -165,20 +159,17 @@ class CodeExecutor(Tool):
             # Run code in subprocess for isolation
             process = await asyncio.create_subprocess_exec(
                 sys.executable,
-                '-c',
+                "-c",
                 code,
                 stdout=asyncio.subprocess.PIPE,
-                stderr=asyncio.subprocess.PIPE
+                stderr=asyncio.subprocess.PIPE,
             )
 
             try:
-                stdout, stderr = await asyncio.wait_for(
-                    process.communicate(),
-                    timeout=exec_timeout
-                )
+                stdout, stderr = await asyncio.wait_for(process.communicate(), timeout=exec_timeout)
 
-                stdout_text = stdout.decode('utf-8') if stdout else ""
-                stderr_text = stderr.decode('utf-8') if stderr else ""
+                stdout_text = stdout.decode("utf-8") if stdout else ""
+                stderr_text = stderr.decode("utf-8") if stderr else ""
 
                 if process.returncode == 0:
                     return ToolResult(
@@ -186,30 +177,26 @@ class CodeExecutor(Tool):
                         output=stdout_text,
                         metadata={
                             "return_code": process.returncode,
-                            "stderr": stderr_text if stderr_text else None
-                        }
+                            "stderr": stderr_text if stderr_text else None,
+                        },
                     )
                 else:
                     return ToolResult(
                         success=False,
                         error=stderr_text or "Code execution failed",
                         output=stdout_text,
-                        metadata={"return_code": process.returncode}
+                        metadata={"return_code": process.returncode},
                     )
 
             except asyncio.TimeoutError:
                 process.kill()
                 await process.wait()
                 return ToolResult(
-                    success=False,
-                    error=f"Code execution timed out after {exec_timeout} seconds"
+                    success=False, error=f"Code execution timed out after {exec_timeout} seconds"
                 )
 
         except Exception as e:
-            return ToolResult(
-                success=False,
-                error=f"Execution error: {str(e)}"
-            )
+            return ToolResult(success=False, error=f"Execution error: {str(e)}")
 
 
 class FileIO(Tool):
@@ -218,7 +205,9 @@ class FileIO(Tool):
     def __init__(self, base_dir: str = "."):
         super().__init__()
         self.name = "file_io"
-        self.description = "Read from and write to files. Operations are restricted to the base directory."
+        self.description = (
+            "Read from and write to files. Operations are restricted to the base directory."
+        )
         self.base_dir = Path(base_dir).resolve()
 
     async def execute(self, operation: str, path: str, content: str = None) -> ToolResult:
@@ -237,59 +226,43 @@ class FileIO(Tool):
             file_path = (self.base_dir / path).resolve()
 
             if not str(file_path).startswith(str(self.base_dir)):
-                return ToolResult(
-                    success=False,
-                    error="Access denied: path outside base directory"
-                )
+                return ToolResult(success=False, error="Access denied: path outside base directory")
 
             if operation == "read":
                 if not file_path.exists():
-                    return ToolResult(
-                        success=False,
-                        error=f"File not found: {path}"
-                    )
+                    return ToolResult(success=False, error=f"File not found: {path}")
 
-                content = file_path.read_text(encoding='utf-8')
+                content = file_path.read_text(encoding="utf-8")
                 return ToolResult(
                     success=True,
                     output=content,
-                    metadata={
-                        "operation": "read",
-                        "path": str(path),
-                        "size": len(content)
-                    }
+                    metadata={"operation": "read", "path": str(path), "size": len(content)},
                 )
 
             elif operation == "write":
                 if content is None:
                     return ToolResult(
-                        success=False,
-                        error="Content is required for write operation"
+                        success=False, error="Content is required for write operation"
                     )
 
                 # Create parent directories if needed
                 file_path.parent.mkdir(parents=True, exist_ok=True)
 
-                file_path.write_text(content, encoding='utf-8')
+                file_path.write_text(content, encoding="utf-8")
                 return ToolResult(
                     success=True,
                     output=f"Successfully wrote {len(content)} characters to {path}",
-                    metadata={
-                        "operation": "write",
-                        "path": str(path),
-                        "size": len(content)
-                    }
+                    metadata={"operation": "write", "path": str(path), "size": len(content)},
                 )
 
             else:
                 return ToolResult(
-                    success=False,
-                    error=f"Unknown operation: {operation}. Use 'read' or 'write'."
+                    success=False, error=f"Unknown operation: {operation}. Use 'read' or 'write'."
                 )
 
         except Exception as e:
             return ToolResult(
                 success=False,
                 error=f"File I/O error: {str(e)}",
-                metadata={"operation": operation, "path": path}
+                metadata={"operation": operation, "path": path},
             )

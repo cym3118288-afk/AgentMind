@@ -7,7 +7,6 @@ from collections import defaultdict
 from typing import Any, Callable, Dict, List, Optional
 
 from ..core.agent import Agent
-from ..core.types import Message
 
 
 class FeedbackLoop:
@@ -131,14 +130,18 @@ class FeedbackLoop:
         """
         history = self.interaction_history[agent_name]
         if len(history) < min_interactions:
-            return ["Not enough data for suggestions (need at least {min_interactions} interactions)"]
+            return [
+                "Not enough data for suggestions (need at least {min_interactions} interactions)"
+            ]
 
         metrics = self.performance_metrics[agent_name]
         suggestions = []
 
         # Analyze ratings
         if metrics["avg_rating"] < 3.0:
-            suggestions.append("Low average rating - consider reviewing response quality and relevance")
+            suggestions.append(
+                "Low average rating - consider reviewing response quality and relevance"
+            )
 
         # Analyze success rate
         if metrics["success_rate"] < 0.7:
@@ -154,12 +157,16 @@ class FeedbackLoop:
         if len(recent_ratings) >= 3:
             avg_recent = sum(recent_ratings) / len(recent_ratings)
             if avg_recent < metrics["avg_rating"] - 0.5:
-                suggestions.append("Recent performance decline detected - investigate recent changes")
+                suggestions.append(
+                    "Recent performance decline detected - investigate recent changes"
+                )
 
         # Analyze common failure patterns
         failures = [i for i in history if i.get("success") is False]
         if len(failures) > len(history) * 0.3:
-            suggestions.append("High failure rate on specific task types - consider specialized training")
+            suggestions.append(
+                "High failure rate on specific task types - consider specialized training"
+            )
 
         if not suggestions:
             suggestions.append("Performance is good - continue current approach")
@@ -199,10 +206,7 @@ class FeedbackLoop:
         Returns:
             Dictionary mapping agent names to their metrics
         """
-        return {
-            name: dict(metrics)
-            for name, metrics in self.performance_metrics.items()
-        }
+        return {name: dict(metrics) for name, metrics in self.performance_metrics.items()}
 
     def reset_agent_metrics(self, agent_name: str) -> None:
         """Reset metrics for a specific agent.

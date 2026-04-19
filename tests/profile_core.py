@@ -47,6 +47,7 @@ def profile_memory_operations():
 
 def profile_agentmind_collaboration():
     """Profile multi-agent collaboration."""
+
     async def run_collaboration():
         mind = AgentMind(strategy=CollaborationStrategy.BROADCAST)
 
@@ -64,6 +65,7 @@ def profile_agentmind_collaboration():
 
 def profile_broadcast():
     """Profile message broadcasting."""
+
     async def run_broadcast():
         mind = AgentMind()
 
@@ -107,7 +109,7 @@ def run_profile(func, name):
     """Run profiling on a function."""
     print(f"\n{'='*60}")
     print(f"Profiling: {name}")
-    print('='*60)
+    print("=" * 60)
 
     profiler = cProfile.Profile()
 
@@ -119,7 +121,7 @@ def run_profile(func, name):
 
     # Print stats
     s = io.StringIO()
-    ps = pstats.Stats(profiler, stream=s).sort_stats('cumulative')
+    ps = pstats.Stats(profiler, stream=s).sort_stats("cumulative")
     ps.print_stats(20)  # Top 20 functions
 
     print(s.getvalue())
@@ -128,23 +130,27 @@ def run_profile(func, name):
 
 def benchmark_operations():
     """Benchmark key operations."""
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("BENCHMARKING KEY OPERATIONS")
-    print("="*60)
+    print("=" * 60)
 
     # Agent creation
     start = time.time()
     for i in range(1000):
         agent = Agent(name=f"agent_{i}", role="analyst")
     agent_creation_time = time.time() - start
-    print(f"Agent creation (1000x): {agent_creation_time:.4f}s ({agent_creation_time/1000*1000:.2f}ms each)")
+    print(
+        f"Agent creation (1000x): {agent_creation_time:.4f}s ({agent_creation_time/1000*1000:.2f}ms each)"
+    )
 
     # Message creation
     start = time.time()
     for i in range(1000):
         msg = Message(content=f"Message {i}", sender="user")
     message_creation_time = time.time() - start
-    print(f"Message creation (1000x): {message_creation_time:.4f}s ({message_creation_time/1000*1000:.2f}ms each)")
+    print(
+        f"Message creation (1000x): {message_creation_time:.4f}s ({message_creation_time/1000*1000:.2f}ms each)"
+    )
 
     # Memory retrieval
     agent = Agent(name="test", role="analyst")
@@ -155,19 +161,23 @@ def benchmark_operations():
     for _ in range(1000):
         recent = agent.get_recent_memory(limit=10)
     memory_retrieval_time = time.time() - start
-    print(f"Memory retrieval (1000x): {memory_retrieval_time:.4f}s ({memory_retrieval_time/1000*1000:.2f}ms each)")
+    print(
+        f"Memory retrieval (1000x): {memory_retrieval_time:.4f}s ({memory_retrieval_time/1000*1000:.2f}ms each)"
+    )
 
     # AgentMind creation
     start = time.time()
     for i in range(100):
         mind = AgentMind()
     agentmind_creation_time = time.time() - start
-    print(f"AgentMind creation (100x): {agentmind_creation_time:.4f}s ({agentmind_creation_time/100*1000:.2f}ms each)")
+    print(
+        f"AgentMind creation (100x): {agentmind_creation_time:.4f}s ({agentmind_creation_time/100*1000:.2f}ms each)"
+    )
 
 
 if __name__ == "__main__":
     print("AgentMind Core Module Profiling")
-    print("="*60)
+    print("=" * 60)
 
     # Run benchmarks first
     benchmark_operations()
@@ -180,9 +190,9 @@ if __name__ == "__main__":
     run_profile(profile_broadcast, "Message Broadcasting")
     run_profile(profile_session_save_load, "Session Save/Load")
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("PROFILING COMPLETE")
-    print("="*60)
+    print("=" * 60)
     print("\nOptimization recommendations:")
     print("1. Check for repeated object creation in hot paths")
     print("2. Look for unnecessary list copies or iterations")

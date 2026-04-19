@@ -310,7 +310,7 @@ class TestMemoryEdgeCases:
             file_path = Path(tmpdir) / "corrupted.json"
 
             # Write corrupted JSON
-            with open(file_path, 'w') as f:
+            with open(file_path, "w") as f:
                 f.write("{invalid json content")
 
             # Should initialize with empty entries
@@ -538,7 +538,7 @@ class TestBackendComparison:
             backends = [
                 InMemoryBackend(),
                 JsonFileBackend(str(Path(tmpdir) / "test.json")),
-                SQLiteBackend(str(Path(tmpdir) / "test.db"))
+                SQLiteBackend(str(Path(tmpdir) / "test.db")),
             ]
 
             for backend in backends:

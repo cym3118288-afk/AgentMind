@@ -16,10 +16,7 @@ class MockLLMProvider(LLMProvider):
     async def generate(self, messages, temperature=None, max_tokens=None, **kwargs):
         """Generate a mock response."""
         return LLMResponse(
-            content="Mock response",
-            model=self.model,
-            usage={"total_tokens": 10},
-            metadata={}
+            content="Mock response", model=self.model, usage={"total_tokens": 10}, metadata={}
         )
 
     async def generate_stream(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -62,12 +59,9 @@ class TestTemplateRegistry:
             description="Custom team",
             agents=[
                 AgentTemplate(
-                    name="agent1",
-                    role="role1",
-                    system_prompt="Prompt 1",
-                    description="Agent 1"
+                    name="agent1", role="role1", system_prompt="Prompt 1", description="Agent 1"
                 )
-            ]
+            ],
         )
 
         registry.register(custom_template)
@@ -91,12 +85,26 @@ class TestTemplateRegistry:
         registry = TemplateRegistry()
 
         expected_templates = [
-            "research", "code-generation", "startup-validator",
-            "content-creation", "data-analysis", "customer-support",
-            "product-design", "marketing-campaign", "legal-review",
-            "education", "crisis-management", "scientific-research",
-            "investment-analysis", "game-development", "healthcare-consultation",
-            "debate", "translation", "security-audit", "creative-writing", "devops"
+            "research",
+            "code-generation",
+            "startup-validator",
+            "content-creation",
+            "data-analysis",
+            "customer-support",
+            "product-design",
+            "marketing-campaign",
+            "legal-review",
+            "education",
+            "crisis-management",
+            "scientific-research",
+            "investment-analysis",
+            "game-development",
+            "healthcare-consultation",
+            "debate",
+            "translation",
+            "security-audit",
+            "creative-writing",
+            "devops",
         ]
 
         for template_name in expected_templates:
@@ -276,11 +284,7 @@ class TestTemplateEdgeCases:
         """Test template with no agents."""
         registry = TemplateRegistry()
 
-        empty_template = TeamTemplate(
-            name="empty",
-            description="Empty team",
-            agents=[]
-        )
+        empty_template = TeamTemplate(name="empty", description="Empty team", agents=[])
 
         registry.register(empty_template)
         template = registry.get("empty")
@@ -333,8 +337,12 @@ class TestTemplateStrategies:
         registry = TemplateRegistry()
 
         sequential_templates = [
-            "research", "code-generation", "content-creation",
-            "data-analysis", "product-design", "marketing-campaign"
+            "research",
+            "code-generation",
+            "content-creation",
+            "data-analysis",
+            "product-design",
+            "marketing-campaign",
         ]
 
         for template_name in sequential_templates:
@@ -346,8 +354,10 @@ class TestTemplateStrategies:
         registry = TemplateRegistry()
 
         broadcast_templates = [
-            "startup-validator", "legal-review", "investment-analysis",
-            "security-audit"
+            "startup-validator",
+            "legal-review",
+            "investment-analysis",
+            "security-audit",
         ]
 
         for template_name in broadcast_templates:
@@ -358,9 +368,7 @@ class TestTemplateStrategies:
         """Test templates using hierarchical strategy."""
         registry = TemplateRegistry()
 
-        hierarchical_templates = [
-            "customer-support", "crisis-management"
-        ]
+        hierarchical_templates = ["customer-support", "crisis-management"]
 
         for template_name in hierarchical_templates:
             template = registry.get(template_name)

@@ -83,6 +83,20 @@ docs = [
     "mkdocstrings[python]>=0.22.0",
 ]
 
+# Production features (Phase 3)
+api = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+]
+
+cli = [
+    "click>=8.1.0",
+    "rich>=13.0.0",
+]
+
+[project.scripts]
+agentmind = "cli:cli"
+
 [project.urls]
 Homepage = "https://github.com/cym3118288-afk/AgentMind-Framework"
 Documentation = "https://github.com/cym3118288-afk/AgentMind-Framework"

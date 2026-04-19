@@ -163,6 +163,63 @@ export ANTHROPIC_API_KEY=your-key-here
 python examples/basic_collaboration.py
 ```
 
+## Production Features (Phase 3)
+
+### REST API Server
+
+Run AgentMind as a production API service:
+
+```bash
+pip install -e ".[api]"
+python api_server.py
+# API available at http://localhost:8000
+```
+
+API endpoints:
+- `POST /collaborate` - Run agent collaboration
+- `GET /health` - Health check
+- `GET /sessions/{id}` - Get session details
+- `GET /metrics` - System metrics
+
+### CLI Tool
+
+Use AgentMind from the command line:
+
+```bash
+pip install -e ".[cli]"
+agentmind run --task "Analyze this codebase" --agents 3 --model llama3.2
+```
+
+### Docker Deployment
+
+Run with Docker (includes Ollama):
+
+```bash
+docker-compose up
+# API available at http://localhost:8000
+# Ollama at http://localhost:11434
+```
+
+### Error Recovery & Observability
+
+Built-in retry mechanisms and cost tracking:
+
+```python
+from agentmind.utils.retry import RetryConfig, retry_with_backoff
+from agentmind.utils.observability import Tracer, CostTracker
+
+# Automatic retry with exponential backoff
+config = RetryConfig(max_retries=3, initial_delay=1.0)
+result = await retry_with_backoff(agent.generate, config)
+
+# Track costs and performance
+tracer = Tracer(session_id="my-session")
+tracer.start()
+# ... your code ...
+tracer.end()
+print(tracer.get_summary())
+```
+
 ## Interactive Chat UI
 
 AgentMind includes a web-based chat interface:
@@ -206,12 +263,12 @@ agentmind/
 - [x] Phase 0: Core architecture (Days 1-10)
 - [x] Phase 1: LLM integration (Days 11-20)
 - [x] Phase 2: Memory & Tools (Days 11-20)
-- [ ] Phase 3: Production features (Days 21-40)
-  - [ ] Error recovery & retry mechanisms
-  - [ ] Observability (tracing, cost tracking)
-  - [ ] FastAPI REST API
-  - [ ] Docker image with Ollama
-  - [ ] CLI tool
+- [x] Phase 3: Production features (Days 21-40)
+  - [x] Error recovery & retry mechanisms
+  - [x] Observability (tracing, cost tracking)
+  - [x] FastAPI REST API
+  - [x] Docker image with Ollama
+  - [x] CLI tool
   - [ ] Multi-modal support
 - [ ] Phase 4: Advanced features (Days 41-60)
   - [ ] Vector memory backends

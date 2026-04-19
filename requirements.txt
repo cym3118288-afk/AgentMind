@@ -23,3 +23,9 @@ flask>=3.0.0
 flask-socketio>=5.3.5
 python-socketio>=5.10.0
 eventlet>=0.33.3
+
+# Phase 3: Production features
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+click>=8.1.0
+rich>=13.0.0

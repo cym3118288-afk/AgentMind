@@ -120,12 +120,33 @@ from examples.hierarchical_example import run_hierarchical
 await run_hierarchical("Plan a product launch")
 ```
 
+### Data Analysis Team
+
+```python
+# Multi-agent data analysis with specialized roles
+from examples.data_analysis_team import analyze_dataset
+
+await analyze_dataset("E-commerce sales data for Q1 2024")
+```
+
+### FastAPI Integration
+
+```python
+# Production API with AgentMind
+# See examples/fastapi_integration.py for full implementation
+python examples/fastapi_integration.py
+# API available at http://localhost:8000
+```
+
 See the [examples/](examples/) directory for more.
 
 ## Documentation
 
 - [Quick Start Guide](QUICKSTART.md) - Get up and running in 5 minutes
 - [Architecture Overview](ARCHITECTURE.md) - Understand the design
+- [Performance Guide](PERFORMANCE.md) - Optimization tips and benchmarks
+- [API Documentation](API.md) - REST API reference
+- [Docker Guide](DOCKER.md) - Container deployment
 - [Contributing Guide](CONTRIBUTING.md) - Help improve AgentMind
 - [Roadmap](ROADMAP.md) - What's coming next
 

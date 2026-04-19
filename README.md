@@ -138,6 +138,44 @@ python examples/fastapi_integration.py
 # API available at http://localhost:8000
 ```
 
+### Integration Examples
+
+AgentMind integrates seamlessly with popular AI/ML frameworks:
+
+```python
+# LangChain Integration - Use LangChain tools in AgentMind
+from examples.integrations.langchain_integration import example_langchain_tools_in_agentmind
+
+# LlamaIndex Integration - Advanced RAG with multi-agent reasoning
+from examples.integrations.llamaindex_integration import example_basic_rag
+
+# Haystack Integration - Production NLP pipelines
+from examples.integrations.haystack_integration import example_basic_retrieval
+
+# OpenAI Assistants API Compatibility - Drop-in replacement
+from examples.integrations.openai_assistants_compat import Assistant
+
+# Hugging Face Integration - Local NLP models
+from examples.integrations.huggingface_integration import example_sentiment_analysis
+```
+
+See [Integration Guide](docs/INTEGRATIONS.md) for complete documentation.
+
+### Real-World Use Cases
+
+Production-ready examples for common scenarios:
+
+```python
+# Customer Support Automation
+from examples.use_cases.customer_support import process_ticket
+
+# Content Generation Pipeline
+from examples.use_cases.content_generation import generate_content
+
+# Code Review Automation
+from examples.use_cases.code_review_automation import review_code
+```
+
 See the [examples/](examples/) directory for more.
 
 ## Documentation
@@ -297,7 +335,8 @@ agentmind/
   - [x] Evaluation suite (GAIA/AgentBench subsets, benchmarks)
   - [x] Visualization dashboard (Gradio UI)
   - [x] Advanced orchestration (consensus, dynamic spawning, parallel decomposition)
-  - [ ] Integration examples (LangChain, LlamaIndex, etc.)
+  - [x] Integration examples (LangChain, LlamaIndex, Haystack, HuggingFace, OpenAI Assistants)
+  - [x] Real-world use cases (Customer Support, Content Generation, Code Review)
   - [ ] Performance optimizations (caching, batching)
 
 See [ROADMAP.md](ROADMAP.md) for details.

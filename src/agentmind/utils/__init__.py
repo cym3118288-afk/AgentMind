@@ -20,7 +20,7 @@ from .exceptions import (
     validate_model_name,
 )
 from .observability import CostTracker, Tracer
-from .retry import RetryConfig, retry_with_backoff
+from .retry import RetryConfig, retry_async, with_retry
 
 T = TypeVar("T")
 
@@ -66,7 +66,8 @@ __all__ = [
     "format_prompt",
     # Retry
     "RetryConfig",
-    "retry_with_backoff",
+    "retry_async",
+    "with_retry",
     # Observability
     "Tracer",
     "CostTracker",

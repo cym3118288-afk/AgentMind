@@ -5,13 +5,22 @@ across a wide range of inputs and edge cases.
 """
 
 import pytest
-from hypothesis import given, strategies as st, settings, assume
-from hypothesis.stateful import RuleBasedStateMachine, rule, invariant
+
+try:
+    from hypothesis import given, strategies as st, settings, assume
+    from hypothesis.stateful import RuleBasedStateMachine, rule, invariant
+    HYPOTHESIS_AVAILABLE = True
+except ImportError:
+    HYPOTHESIS_AVAILABLE = False
 
 from agentmind.core.types import Message, AgentConfig, MessageRole
 from agentmind.performance.cache import InMemoryCache, CacheManager
 from agentmind.performance.batch import BatchProcessor
 from agentmind.performance.memory_optimizer import MemoryOptimizer
+
+
+if not HYPOTHESIS_AVAILABLE:
+    pytest.skip("Hypothesis not installed", allow_module_level=True)
 
 
 # Strategies for generating test data

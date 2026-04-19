@@ -100,6 +100,35 @@ class MockLLMProvider(LLMProvider):
         """Mock streaming (not implemented)."""
         raise NotImplementedError("Streaming not supported in mock provider")
 
+    async def generate_stream(
+        self,
+        messages: List[Dict[str, str]],
+        temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
+        **kwargs,
+    ):
+        """Generate a streaming mock response.
+
+        Args:
+            messages: Input messages
+            temperature: Temperature parameter (recorded but not used)
+            max_tokens: Max tokens (recorded but not used)
+            **kwargs: Additional parameters
+
+        Yields:
+            Chunks of the mock response
+        """
+        # Get the full response
+        response = await self.generate(messages, temperature, max_tokens, **kwargs)
+
+        # Yield it in chunks
+        content = response.content
+        chunk_size = max(1, len(content) // 10)
+        for i in range(0, len(content), chunk_size):
+            yield content[i:i + chunk_size]
+            if self.delay > 0:
+                await asyncio.sleep(self.delay / 10)
+
 
 class AgentTestCase:
     """Base class for agent testing with common utilities.

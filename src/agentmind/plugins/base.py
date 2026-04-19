@@ -33,6 +33,13 @@ class PluginMetadata(BaseModel):
     license: Optional[str] = Field(None, description="Plugin license")
 
 
+class PluginConfig(BaseModel):
+    """Base configuration for plugins."""
+
+    enabled: bool = Field(default=True, description="Whether plugin is enabled")
+    settings: Dict[str, Any] = Field(default_factory=dict, description="Plugin-specific settings")
+
+
 class Plugin(ABC):
     """Base class for all AgentMind plugins."""
 

@@ -53,7 +53,10 @@ class GuardrailsManager:
             "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
             "credit_card": r"\b\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}\b",
             "ip_address": r"\b(?:\d{1,3}\.){3}\d{1,3}\b",
-            "url": r"https?://(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&/=]*)",
+            "url": (
+                r"https?://(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}"
+                r"\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&/=]*)"
+            ),
         }
 
         # Content filtering patterns (basic)

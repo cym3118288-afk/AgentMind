@@ -172,7 +172,6 @@ class HybridMemoryBackend(MemoryBackend):
             ),
         )
 
-        memory_id = cursor.lastrowid
         conn.commit()
         conn.close()
 

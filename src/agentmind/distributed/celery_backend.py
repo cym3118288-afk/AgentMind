@@ -6,7 +6,6 @@ Enables running agents across multiple workers using Celery
 from typing import Any, Dict, List, Optional
 from celery import Celery, Task
 from celery.result import AsyncResult
-import json
 from datetime import datetime
 
 

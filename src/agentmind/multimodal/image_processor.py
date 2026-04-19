@@ -7,11 +7,13 @@ from pathlib import Path
 from typing import Optional, Union, Tuple
 
 try:
-    from PIL import Image
+    from PIL import Image as PILImage
 
     PIL_AVAILABLE = True
+    Image = PILImage
 except ImportError:
     PIL_AVAILABLE = False
+    Image = None  # type: ignore
 
 
 class ImageFormat(str, Enum):
@@ -39,7 +41,7 @@ class ImageProcessor:
             )
         self.max_size = max_size
 
-    def load_image(self, path: Union[str, Path]) -> Image.Image:
+    def load_image(self, path: Union[str, Path]) -> "PILImage.Image":
         """Load an image from file.
 
         Args:

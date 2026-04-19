@@ -4,9 +4,12 @@ Tests for production features: authentication, rate limiting, observability.
 
 import pytest
 import asyncio
-from fastapi.testclient import TestClient
 from unittest.mock import Mock, patch
 import time
+
+# Skip all tests if fastapi is not installed
+fastapi = pytest.importorskip("fastapi")
+from fastapi.testclient import TestClient
 
 # Import the enhanced API server
 import sys

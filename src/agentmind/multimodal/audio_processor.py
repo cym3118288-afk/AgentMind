@@ -10,8 +10,11 @@ try:
     import speech_recognition as sr
 
     SR_AVAILABLE = True
+    SpeechRecognition = sr
 except ImportError:
     SR_AVAILABLE = False
+    sr = None  # type: ignore
+    SpeechRecognition = None  # type: ignore
 
 try:
     from pydub import AudioSegment
@@ -43,7 +46,7 @@ class AudioProcessor:
             )
         self.recognizer = sr.Recognizer()
 
-    def load_audio(self, path: Union[str, Path]) -> sr.AudioData:
+    def load_audio(self, path: Union[str, Path]) -> "sr.AudioData":
         """Load audio from file.
 
         Args:
@@ -57,7 +60,7 @@ class AudioProcessor:
         return audio
 
     def speech_to_text(
-        self, audio: Union[sr.AudioData, str, Path], language: str = "en-US", engine: str = "google"
+        self, audio: Union["sr.AudioData", str, Path], language: str = "en-US", engine: str = "google"
     ) -> str:
         """Convert speech to text.
 
@@ -89,7 +92,7 @@ class AudioProcessor:
 
     def record_audio(
         self, duration: Optional[int] = None, timeout: Optional[int] = None
-    ) -> sr.AudioData:
+    ) -> "sr.AudioData":
         """Record audio from microphone.
 
         Args:
@@ -107,7 +110,7 @@ class AudioProcessor:
                 audio = self.recognizer.listen(source, timeout=timeout)
         return audio
 
-    def audio_to_base64(self, audio: Union[sr.AudioData, str, Path]) -> str:
+    def audio_to_base64(self, audio: Union["sr.AudioData", str, Path]) -> str:
         """Convert audio to base64 string.
 
         Args:
@@ -124,7 +127,7 @@ class AudioProcessor:
 
         return base64.b64encode(audio_bytes).decode()
 
-    def base64_to_audio(self, base64_str: str) -> sr.AudioData:
+    def base64_to_audio(self, base64_str: str) -> "sr.AudioData":
         """Convert base64 string to AudioData.
 
         Args:
@@ -206,7 +209,7 @@ class AudioProcessor:
 
     def prepare_for_llm(
         self,
-        audio: Union[sr.AudioData, str, Path],
+        audio: Union["sr.AudioData", str, Path],
         transcribe: bool = True,
         language: str = "en-US",
     ) -> dict:

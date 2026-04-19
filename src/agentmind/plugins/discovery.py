@@ -5,17 +5,7 @@ This module provides dynamic plugin loading from installed packages.
 
 import importlib.metadata
 import logging
-from typing import Dict, List, Optional, Type, Any
-from pathlib import Path
-
-from .interfaces import (
-    LLMProvider,
-    MemoryBackend,
-    ToolRegistry,
-    Orchestrator,
-    Observer,
-    PluginInterface,
-)
+from typing import Dict, List, Optional, Any
 
 logger = logging.getLogger(__name__)
 

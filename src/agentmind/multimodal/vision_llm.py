@@ -2,7 +2,6 @@
 
 from typing import List, Dict, Any, Optional, Union
 from pathlib import Path
-import asyncio
 
 from ..llm.provider import LLMProvider
 from .image_processor import ImageProcessor
@@ -260,3 +259,7 @@ class VisionAgent:
     def clear_history(self) -> None:
         """Clear conversation history."""
         self.conversation_history = []
+
+
+# Alias for backward compatibility
+VisionLLM = VisionLLMProvider

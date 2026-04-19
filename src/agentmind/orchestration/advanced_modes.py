@@ -8,7 +8,7 @@ This module implements:
 - Graph-based (LangGraph compatible)
 """
 
-from typing import Any, Callable, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 from enum import Enum
 import asyncio
 from abc import ABC, abstractmethod
@@ -103,7 +103,7 @@ class SequentialOrchestrator(BaseOrchestrator):
 
         # Process each agent in sequence
         for i, agent in enumerate(agents):
-            print(f"[Sequential] Step {i+1}/{len(agents)}: {agent.name}")
+            print(f"[Sequential] Step {i + 1}/{len(agents)}: {agent.name}")
 
             response = await agent.process_message(current_message)
             if response:
@@ -444,7 +444,7 @@ class GraphOrchestrator(BaseOrchestrator):
                 node_id = f"node_{i}"
                 self.add_node(node_id, agent)
                 if i > 0:
-                    self.add_edge(f"node_{i-1}", node_id)
+                    self.add_edge(f"node_{i - 1}", node_id)
             start_node = "node_0"
 
         print(f"[Graph] Executing graph with {len(self.node_agents)} nodes")

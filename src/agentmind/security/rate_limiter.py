@@ -4,9 +4,18 @@ import asyncio
 import time
 from collections import defaultdict
 from typing import Dict, Optional, Tuple
+from pydantic import BaseModel, Field
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+class RateLimitConfig(BaseModel):
+    """Configuration for rate limiting."""
+
+    max_requests: int = Field(default=100, description="Maximum requests per time window")
+    time_window: float = Field(default=60.0, description="Time window in seconds")
+    burst_size: Optional[int] = Field(None, description="Maximum burst size")
 
 
 class RateLimitExceeded(Exception):

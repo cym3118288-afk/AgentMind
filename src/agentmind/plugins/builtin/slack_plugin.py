@@ -1,6 +1,5 @@
 """Slack integration plugin for AgentMind."""
 
-import asyncio
 from typing import Any, Dict, List, Optional
 import logging
 

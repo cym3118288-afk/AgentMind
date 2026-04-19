@@ -1,9 +1,7 @@
 """Webhook plugin for AgentMind."""
 
-import asyncio
 from typing import Any, Dict, Optional
 import logging
-import json
 
 from ..base import IntegrationPlugin, PluginMetadata, PluginType
 

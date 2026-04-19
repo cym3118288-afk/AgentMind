@@ -1,6 +1,5 @@
 """Document processing utilities for AgentMind."""
 
-import io
 from enum import Enum
 from pathlib import Path
 from typing import Optional, Union, List, Dict

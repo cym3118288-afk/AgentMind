@@ -174,6 +174,51 @@ def with_retry(
     return decorator
 
 
+def retry_with_backoff(config: Optional[RetryConfig] = None):
+    """Decorator to add retry logic to sync functions.
+
+    Args:
+        config: Retry configuration
+
+    Returns:
+        Decorated function with retry logic
+    """
+    def decorator(func: Callable[..., T]) -> Callable[..., T]:
+        @wraps(func)
+        def wrapper(*args: Any, **kwargs: Any) -> T:
+            if config is None:
+                retry_config = RetryConfig()
+            else:
+                retry_config = config
+
+            last_error = None
+            for attempt in range(retry_config.max_attempts):
+                try:
+                    return func(*args, **kwargs)
+                except tuple(retry_config.retry_on_exceptions) as e:
+                    last_error = e
+                    if attempt == retry_config.max_attempts - 1:
+                        raise RetryExhaustedError(retry_config.max_attempts, last_error)
+                    import time
+                    delay = calculate_delay(attempt, retry_config)
+                    time.sleep(delay)
+            raise RetryExhaustedError(retry_config.max_attempts, last_error or Exception("Unknown"))
+        return wrapper
+    return decorator
+
+
+def async_retry_with_backoff(config: Optional[RetryConfig] = None):
+    """Decorator to add retry logic to async functions (alias for with_retry).
+
+    Args:
+        config: Retry configuration
+
+    Returns:
+        Decorated function with retry logic
+    """
+    return with_retry(config=config)
+
+
 class FallbackChain:
     """Chain of fallback strategies for robust error handling.
 
@@ -253,6 +298,14 @@ class FallbackChain:
 
         # Should never reach here
         raise Exception("Fallback chain execution failed unexpectedly")
+
+
+# Re-export RateLimiter for backward compatibility
+try:
+    from ..security.rate_limiter import RateLimiter as _RateLimiter
+    RateLimiter = _RateLimiter
+except ImportError:
+    pass
 
 
 class CircuitBreaker:

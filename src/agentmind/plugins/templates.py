@@ -7,7 +7,6 @@ from typing import Any, Dict, List, Optional
 from agentmind.plugins.interfaces import (
     LLMProvider,
     MemoryBackend,
-    ToolRegistry,
     Orchestrator,
     Observer,
     PluginMetadata,

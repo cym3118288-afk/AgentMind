@@ -1,6 +1,5 @@
 """Audit logging for security events."""
 
-import json
 import time
 from enum import Enum
 from pathlib import Path

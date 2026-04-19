@@ -53,8 +53,8 @@ class ImageProcessor:
         return Image.open(path)
 
     def resize_image(
-        self, image: Image.Image, max_size: Optional[Tuple[int, int]] = None
-    ) -> Image.Image:
+        self, image: "PILImage.Image", max_size: Optional[Tuple[int, int]] = None
+    ) -> "PILImage.Image":
         """Resize image while maintaining aspect ratio.
 
         Args:
@@ -69,7 +69,7 @@ class ImageProcessor:
         return image
 
     def image_to_base64(
-        self, image: Union[Image.Image, str, Path], format: ImageFormat = ImageFormat.PNG
+        self, image: Union["PILImage.Image", str, Path], format: ImageFormat = ImageFormat.PNG
     ) -> str:
         """Convert image to base64 string.
 
@@ -88,7 +88,7 @@ class ImageProcessor:
         img_str = base64.b64encode(buffered.getvalue()).decode()
         return img_str
 
-    def base64_to_image(self, base64_str: str) -> Image.Image:
+    def base64_to_image(self, base64_str: str) -> "PILImage.Image":
         """Convert base64 string to PIL Image.
 
         Args:
@@ -101,7 +101,7 @@ class ImageProcessor:
         return Image.open(io.BytesIO(img_data))
 
     def prepare_for_llm(
-        self, image: Union[Image.Image, str, Path], format: ImageFormat = ImageFormat.PNG
+        self, image: Union["PILImage.Image", str, Path], format: ImageFormat = ImageFormat.PNG
     ) -> dict:
         """Prepare image for LLM input.
 
@@ -147,7 +147,7 @@ class ImageProcessor:
         image.save(path, format=format.value.upper())
 
     def create_thumbnail(
-        self, image: Union[Image.Image, str, Path], size: Tuple[int, int] = (128, 128)
+        self, image: Union["PILImage.Image", str, Path], size: Tuple[int, int] = (128, 128)
     ) -> Image.Image:
         """Create a thumbnail of the image.
 
@@ -165,7 +165,7 @@ class ImageProcessor:
         thumb.thumbnail(size, Image.Resampling.LANCZOS)
         return thumb
 
-    def get_image_info(self, image: Union[Image.Image, str, Path]) -> dict:
+    def get_image_info(self, image: Union["PILImage.Image", str, Path]) -> dict:
         """Get information about an image.
 
         Args:

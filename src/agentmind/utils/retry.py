@@ -183,6 +183,7 @@ def retry_with_backoff(config: Optional[RetryConfig] = None):
     Returns:
         Decorated function with retry logic
     """
+
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> T:
@@ -200,10 +201,13 @@ def retry_with_backoff(config: Optional[RetryConfig] = None):
                     if attempt == retry_config.max_attempts - 1:
                         raise RetryExhaustedError(retry_config.max_attempts, last_error)
                     import time
+
                     delay = calculate_delay(attempt, retry_config)
                     time.sleep(delay)
             raise RetryExhaustedError(retry_config.max_attempts, last_error or Exception("Unknown"))
+
         return wrapper
+
     return decorator
 
 
@@ -303,6 +307,7 @@ class FallbackChain:
 # Re-export RateLimiter for backward compatibility
 try:
     from ..security.rate_limiter import RateLimiter as _RateLimiter
+
     RateLimiter = _RateLimiter
 except ImportError:
     pass

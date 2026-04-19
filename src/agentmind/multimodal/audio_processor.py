@@ -60,7 +60,10 @@ class AudioProcessor:
         return audio
 
     def speech_to_text(
-        self, audio: Union["sr.AudioData", str, Path], language: str = "en-US", engine: str = "google"
+        self,
+        audio: Union["sr.AudioData", str, Path],
+        language: str = "en-US",
+        engine: str = "google",
     ) -> str:
         """Convert speech to text.
 

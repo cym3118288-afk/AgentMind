@@ -69,6 +69,7 @@ class TestOrchestrationMetrics:
         """Test duration calculation."""
         metrics = OrchestrationMetrics()
         import time
+
         time.sleep(0.1)
         metrics.finalize()
 
@@ -111,9 +112,7 @@ class TestSequentialOrchestrator:
 
         orchestrator = SequentialOrchestrator()
 
-        result = await orchestrator.orchestrate(
-            agents, "Test task", early_termination=True
-        )
+        result = await orchestrator.orchestrate(agents, "Test task", early_termination=True)
 
         # Should still succeed as inactive agents are skipped
         assert result.success
@@ -124,9 +123,7 @@ class TestSequentialOrchestrator:
         agents = create_test_agents(2)
         orchestrator = SequentialOrchestrator()
 
-        result = await orchestrator.orchestrate(
-            agents, "Test task", max_retries=2
-        )
+        result = await orchestrator.orchestrate(agents, "Test task", max_retries=2)
 
         assert result.success
 
@@ -263,9 +260,7 @@ class TestConsensusOrchestrator:
         agents = create_test_agents(4)
         orchestrator = ConsensusOrchestrator()
 
-        result = await orchestrator.orchestrate(
-            agents, "Establish coding standards"
-        )
+        result = await orchestrator.orchestrate(agents, "Establish coding standards")
 
         assert result.success
 
@@ -309,9 +304,7 @@ class TestSwarmOrchestrator:
         agents = create_test_agents(6)
         orchestrator = SwarmOrchestrator()
 
-        result = await orchestrator.orchestrate(
-            agents, "Process large dataset"
-        )
+        result = await orchestrator.orchestrate(agents, "Process large dataset")
 
         assert result.success
 
@@ -369,9 +362,7 @@ class TestGraphOrchestrator:
         orchestrator.add_edge("start", "middle")
         orchestrator.add_edge("middle", "end")
 
-        result = await orchestrator.orchestrate(
-            agents, "Test task", start_node="start"
-        )
+        result = await orchestrator.orchestrate(agents, "Test task", start_node="start")
 
         assert result.success
 

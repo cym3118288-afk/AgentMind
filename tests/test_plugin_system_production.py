@@ -17,7 +17,11 @@ from agentmind.plugins.security import (
     SignatureVerifier,
 )
 from agentmind.plugins.config import ConfigManager, ConfigEnvironment
-from agentmind.plugins.marketplace import PluginRegistry as MarketplaceRegistry, PluginManifest, PluginCategory
+from agentmind.plugins.marketplace import (
+    PluginRegistry as MarketplaceRegistry,
+    PluginManifest,
+    PluginCategory,
+)
 from agentmind.plugins.audit import PluginAuditLogger, AuditEventType
 from agentmind.plugins.testing import MockPlugin, FailingPlugin, PluginTestHarness
 
@@ -114,18 +118,17 @@ class TestDependencyResolution:
 
         # Add plugins with dependencies
         resolver.add_plugin("plugin-a", "1.0.0", [])
-        resolver.add_plugin("plugin-b", "1.0.0", [
-            PluginDependency(name="plugin-a", version_spec=">=1.0.0")
-        ])
-        resolver.add_plugin("plugin-c", "1.0.0", [
-            PluginDependency(name="plugin-b", version_spec=">=1.0.0")
-        ])
+        resolver.add_plugin(
+            "plugin-b", "1.0.0", [PluginDependency(name="plugin-a", version_spec=">=1.0.0")]
+        )
+        resolver.add_plugin(
+            "plugin-c", "1.0.0", [PluginDependency(name="plugin-b", version_spec=">=1.0.0")]
+        )
 
         # Get load order
         available = {"plugin-a": "1.0.0", "plugin-b": "1.0.0", "plugin-c": "1.0.0"}
         load_order, errors = resolver.resolve_load_order(
-            ["plugin-a", "plugin-b", "plugin-c"],
-            available
+            ["plugin-a", "plugin-b", "plugin-c"], available
         )
 
         assert errors == []
@@ -136,12 +139,12 @@ class TestDependencyResolution:
         """Test circular dependency detection."""
         resolver = DependencyResolver()
 
-        resolver.add_plugin("plugin-a", "1.0.0", [
-            PluginDependency(name="plugin-b", version_spec="*")
-        ])
-        resolver.add_plugin("plugin-b", "1.0.0", [
-            PluginDependency(name="plugin-a", version_spec="*")
-        ])
+        resolver.add_plugin(
+            "plugin-a", "1.0.0", [PluginDependency(name="plugin-b", version_spec="*")]
+        )
+        resolver.add_plugin(
+            "plugin-b", "1.0.0", [PluginDependency(name="plugin-a", version_spec="*")]
+        )
 
         has_circular, cycle = resolver.graph.has_circular_dependency()
         assert has_circular
@@ -151,9 +154,9 @@ class TestDependencyResolution:
         """Test missing dependency detection."""
         resolver = DependencyResolver()
 
-        resolver.add_plugin("plugin-a", "1.0.0", [
-            PluginDependency(name="plugin-missing", version_spec=">=1.0.0")
-        ])
+        resolver.add_plugin(
+            "plugin-a", "1.0.0", [PluginDependency(name="plugin-missing", version_spec=">=1.0.0")]
+        )
 
         available = {"plugin-a": "1.0.0"}
         satisfied, missing = resolver.check_dependencies("plugin-a", available)
@@ -173,7 +176,7 @@ class TestPluginSecurity:
             plugin_name="test-plugin",
             allow_network=True,
             allow_filesystem=False,
-            allowed_apis={"api1", "api2"}
+            allowed_apis={"api1", "api2"},
         )
 
         manager.register_permissions(permissions)
@@ -192,10 +195,7 @@ class TestPluginSecurity:
             return value * 2
 
         result = await executor.execute_sandboxed(
-            "test-plugin",
-            test_func,
-            ResourceLimits(max_execution_time=5.0),
-            5
+            "test-plugin", test_func, ResourceLimits(max_execution_time=5.0), 5
         )
 
         assert result == 10
@@ -210,11 +210,7 @@ class TestPluginSecurity:
             return "done"
 
         with pytest.raises(asyncio.TimeoutError):
-            await executor.execute_with_timeout(
-                "test-plugin",
-                slow_func,
-                timeout=0.1
-            )
+            await executor.execute_with_timeout("test-plugin", slow_func, timeout=0.1)
 
     def test_signature_verification(self):
         """Test plugin signature verification."""
@@ -229,7 +225,7 @@ class TestPluginSecurity:
             plugin_name="test-plugin",
             version="1.0.0",
             checksum=checksum,
-            signed_by="trusted-signer"
+            signed_by="trusted-signer",
         )
 
         verifier.register_signature(signature)
@@ -306,7 +302,7 @@ class TestPluginMarketplace:
             description="Test plugin",
             author="Test Author",
             category=PluginCategory.TOOLS,
-            tags=["test", "example"]
+            tags=["test", "example"],
         )
 
         assert registry.register_plugin(manifest)
@@ -326,7 +322,7 @@ class TestPluginMarketplace:
                 description=f"Test plugin {i}",
                 author="Test",
                 category=PluginCategory.TOOLS if i % 2 == 0 else PluginCategory.INTEGRATION,
-                tags=["test"]
+                tags=["test"],
             )
             registry.register_plugin(manifest)
 
@@ -347,7 +343,7 @@ class TestPluginMarketplace:
             version="1.0.0",
             description="Test",
             author="Test",
-            category=PluginCategory.TOOLS
+            category=PluginCategory.TOOLS,
         )
         registry.register_plugin(manifest)
 
@@ -372,7 +368,7 @@ class TestPluginAudit:
             AuditEventType.PLUGIN_LOADED,
             "test-plugin",
             details={"version": "1.0.0"},
-            user_id="user123"
+            user_id="user123",
         )
 
         assert event.plugin_name == "test-plugin"

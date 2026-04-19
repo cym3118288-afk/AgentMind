@@ -25,7 +25,7 @@ class MockPlugin(Plugin):
         config: Optional[Dict[str, Any]] = None,
     ):
         """Initialize mock plugin."""
-        super().__init__(config)
+        super().__init__(config or {})
         self._name = name
         self._version = version
         self.initialize_called = False
@@ -117,7 +117,7 @@ class PluginTestHarness:
 
     async def setup(self) -> None:
         """Set up test environment."""
-        self.plugin = self.plugin_class(self.config)
+        self.plugin = self.plugin_class(config=self.config)
         metadata = self.plugin.get_metadata()
         self.lifecycle_manager.register_plugin(metadata.name)
 

@@ -258,9 +258,7 @@ class Agent:
 
     # ==================== Multi-Modal Support ====================
 
-    def enable_multimodal(
-        self, content_types: List[ContentType], streaming: bool = False
-    ) -> None:
+    def enable_multimodal(self, content_types: List[ContentType], streaming: bool = False) -> None:
         """Enable multi-modal content support.
 
         Args:
@@ -321,9 +319,7 @@ class Agent:
 
     # ==================== Human-in-the-Loop ====================
 
-    async def request_human_approval(
-        self, action: str, context: Dict[str, Any]
-    ) -> bool:
+    async def request_human_approval(self, action: str, context: Dict[str, Any]) -> bool:
         """Request human approval for an action.
 
         Args:
@@ -563,9 +559,11 @@ class Agent:
                 "is_active": agent.is_active,
                 "state": agent.state.value if hasattr(agent, "state") else "unknown",
                 "memory_size": len(agent.memory),
-                "error_count": agent.performance_metrics.get("error_count", 0)
-                if hasattr(agent, "performance_metrics")
-                else 0,
+                "error_count": (
+                    agent.performance_metrics.get("error_count", 0)
+                    if hasattr(agent, "performance_metrics")
+                    else 0
+                ),
             }
         return health
 

@@ -3,7 +3,14 @@
 This module provides sophisticated orchestration patterns beyond simple
 broadcasting, including hierarchical, round-robin, and topic-based routing.
 
-This is a placeholder for Phase 2 implementation.
+Available orchestration modes:
+- Sequential: Chain of responsibility with context passing
+- Hierarchical: 3-tier architecture (manager, workers, reviewer)
+- Debate: Multi-round deliberation with voting
+- Consensus: Agreement-based decision making
+- Swarm: Dynamic scaling with load balancing
+- Graph: DAG-based workflows
+- Hybrid: Combinations of multiple modes
 """
 
 from abc import ABC, abstractmethod
@@ -11,6 +18,24 @@ from typing import List
 
 from ..core.agent import Agent
 from ..core.types import Message
+
+# Import advanced modes
+from .advanced_modes import (
+    OrchestrationMode,
+    OrchestrationMetrics,
+    BaseOrchestrator,
+    SequentialOrchestrator,
+    HierarchicalOrchestrator,
+    DebateOrchestrator,
+    ConsensusOrchestrator,
+    SwarmOrchestrator,
+    GraphOrchestrator,
+    HybridOrchestrator,
+    create_orchestrator,
+    get_available_modes,
+    get_mode_description,
+    recommend_mode,
+)
 
 
 class OrchestrationStrategy(ABC):
@@ -89,9 +114,25 @@ class TopicBasedStrategy(OrchestrationStrategy):
 
 
 __all__ = [
+    # Strategies
     "OrchestrationStrategy",
     "BroadcastStrategy",
     "RoundRobinStrategy",
     "HierarchicalStrategy",
     "TopicBasedStrategy",
+    # Advanced modes
+    "OrchestrationMode",
+    "OrchestrationMetrics",
+    "BaseOrchestrator",
+    "SequentialOrchestrator",
+    "HierarchicalOrchestrator",
+    "DebateOrchestrator",
+    "ConsensusOrchestrator",
+    "SwarmOrchestrator",
+    "GraphOrchestrator",
+    "HybridOrchestrator",
+    "create_orchestrator",
+    "get_available_modes",
+    "get_mode_description",
+    "recommend_mode",
 ]

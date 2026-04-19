@@ -3,12 +3,17 @@
 import asyncio
 import hashlib
 import logging
-import resource
-import signal
 from typing import Any, Dict, List, Optional, Set
 from datetime import datetime, timedelta
 from pydantic import BaseModel, Field
 from functools import wraps
+
+# Try to import resource module (Unix-like systems only)
+try:
+    import resource
+    HAS_RESOURCE = True
+except ImportError:
+    HAS_RESOURCE = False
 
 logger = logging.getLogger(__name__)
 
@@ -223,28 +228,31 @@ class SandboxExecutor:
 
         try:
             # Set resource limits (Unix-like systems only)
-            try:
-                # Memory limit
-                if limits.max_memory_mb:
-                    max_memory = limits.max_memory_mb * 1024 * 1024
-                    resource.setrlimit(resource.RLIMIT_AS, (max_memory, max_memory))
+            if HAS_RESOURCE:
+                try:
+                    # Memory limit
+                    if limits.max_memory_mb:
+                        max_memory = limits.max_memory_mb * 1024 * 1024
+                        resource.setrlimit(resource.RLIMIT_AS, (max_memory, max_memory))
 
-                # CPU time limit
-                if limits.max_cpu_time:
-                    resource.setrlimit(
-                        resource.RLIMIT_CPU, (int(limits.max_cpu_time), int(limits.max_cpu_time))
-                    )
+                    # CPU time limit
+                    if limits.max_cpu_time:
+                        resource.setrlimit(
+                            resource.RLIMIT_CPU, (int(limits.max_cpu_time), int(limits.max_cpu_time))
+                        )
 
-                # File descriptor limit
-                if limits.max_file_descriptors:
-                    resource.setrlimit(
-                        resource.RLIMIT_NOFILE,
-                        (limits.max_file_descriptors, limits.max_file_descriptors),
-                    )
+                    # File descriptor limit
+                    if limits.max_file_descriptors:
+                        resource.setrlimit(
+                            resource.RLIMIT_NOFILE,
+                            (limits.max_file_descriptors, limits.max_file_descriptors),
+                        )
 
-            except (AttributeError, ValueError) as e:
-                # Resource limits not available on this platform
-                logger.warning(f"Could not set resource limits: {e}")
+                except (AttributeError, ValueError) as e:
+                    # Resource limits not available on this platform
+                    logger.warning(f"Could not set resource limits: {e}")
+            else:
+                logger.debug("Resource limits not available on this platform (Windows)")
 
             # Execute with timeout
             result = await self.execute_with_timeout(
@@ -259,15 +267,16 @@ class SandboxExecutor:
                 del self._active_contexts[plugin_name]
 
             # Reset resource limits
-            try:
-                resource.setrlimit(
-                    resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
-                )
-                resource.setrlimit(
-                    resource.RLIMIT_CPU, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
-                )
-            except (AttributeError, ValueError):
-                pass
+            if HAS_RESOURCE:
+                try:
+                    resource.setrlimit(
+                        resource.RLIMIT_AS, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
+                    )
+                    resource.setrlimit(
+                        resource.RLIMIT_CPU, (resource.RLIM_INFINITY, resource.RLIM_INFINITY)
+                    )
+                except (AttributeError, ValueError):
+                    pass
 
     def get_active_contexts(self) -> Dict[str, ExecutionContext]:
         """Get all active execution contexts.

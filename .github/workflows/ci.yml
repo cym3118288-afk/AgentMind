@@ -16,9 +16,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        # Ensure LF line endings on checkout
-        autocrlf: false
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -48,9 +45,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-      with:
-        # Ensure LF line endings on checkout
-        autocrlf: false
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -66,7 +60,7 @@ jobs:
       run: black --check src/ tests/
 
     - name: Lint with flake8
-      run: flake8 src/ tests/ --max-line-length=100 --ignore=E203,W503
+      run: flake8 src/ tests/
 
     - name: Type check with mypy
       run: mypy src/agentmind --ignore-missing-imports

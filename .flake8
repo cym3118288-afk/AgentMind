@@ -1,0 +1,20 @@
+[flake8]
+max-line-length = 120
+ignore = E203,W503
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    build,
+    dist
+
+# More lenient rules for test files
+per-file-ignores =
+    tests/*.py:F401,F841,E402,E501,F811,E226
+    src/agentmind/templates/registry.py:E501
+    src/agentmind/evaluation/benchmark.py:E501
+    src/agentmind/core/agent.py:E501
+    src/agentmind/memory/manager.py:E501
+    src/agentmind/orchestration/consensus.py:E501
+    src/agentmind/orchestration/parallel.py:E501

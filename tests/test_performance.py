@@ -57,11 +57,15 @@ class TestInMemoryCache:
 
         # Fill cache
         await cache.set("key1", "value1")
+        await asyncio.sleep(0.01)  # Small delay to ensure distinct timestamps
         await cache.set("key2", "value2")
+        await asyncio.sleep(0.01)
         await cache.set("key3", "value3")
+        await asyncio.sleep(0.01)
 
         # Access key1 to make it recently used
         await cache.get("key1")
+        await asyncio.sleep(0.01)
 
         # Add new key, should evict key2 (least recently used)
         await cache.set("key4", "value4")

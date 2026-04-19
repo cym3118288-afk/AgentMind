@@ -2,12 +2,25 @@
 
 This module provides various utility functions for async operations,
 prompt templates, tracing, and other common tasks.
-
-This is a placeholder for Phase 1-2 implementation.
 """
 
 import asyncio
 from typing import Any, Coroutine, List, TypeVar
+
+from .exceptions import (
+    AgentConfigError,
+    AgentMindError,
+    CollaborationError,
+    LLMProviderError,
+    MemoryError,
+    ToolExecutionError,
+    ValidationError,
+    validate_agent_name,
+    validate_max_rounds,
+    validate_model_name,
+)
+from .observability import CostTracker, Tracer
+from .retry import RetryConfig, retry_with_backoff
 
 T = TypeVar("T")
 
@@ -48,21 +61,24 @@ def format_prompt(template: str, **kwargs: Any) -> str:
     return template.format(**kwargs)
 
 
-# Placeholder for future utilities
-class Tracer:
-    """Tracing utility for observability.
-
-    To be implemented in Phase 3.
-    """
-
-    def __init__(self) -> None:
-        """Initialize tracer."""
-        self.traces: List[Any] = []
-
-    def trace(self, event: str, data: Any) -> None:
-        """Record a trace event."""
-        # Placeholder implementation
-        pass
-
-
-__all__ = ["gather_with_timeout", "format_prompt", "Tracer"]
+__all__ = [
+    "gather_with_timeout",
+    "format_prompt",
+    # Retry
+    "RetryConfig",
+    "retry_with_backoff",
+    # Observability
+    "Tracer",
+    "CostTracker",
+    # Exceptions
+    "AgentMindError",
+    "AgentConfigError",
+    "CollaborationError",
+    "LLMProviderError",
+    "ToolExecutionError",
+    "MemoryError",
+    "ValidationError",
+    "validate_agent_name",
+    "validate_max_rounds",
+    "validate_model_name",
+]

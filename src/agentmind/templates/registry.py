@@ -114,7 +114,7 @@ class TemplateRegistry:
                     description="Synthesizes findings into reports",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 2. Code Generation Team
@@ -141,7 +141,7 @@ class TemplateRegistry:
                     description="Reviews and improves code",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 3. Startup Idea Validator
@@ -195,7 +195,7 @@ class TemplateRegistry:
                     description="Optimizes for SEO",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 5. Data Analysis Team
@@ -222,7 +222,7 @@ class TemplateRegistry:
                     description="Interprets findings",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 6. Customer Support Team
@@ -276,7 +276,7 @@ class TemplateRegistry:
                     description="Creates prototypes",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 8. Marketing Campaign Team
@@ -303,7 +303,7 @@ class TemplateRegistry:
                     description="Analyzes performance",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 9. Legal Review Team
@@ -357,7 +357,7 @@ class TemplateRegistry:
                     description="Creates assessments",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # Additional templates (11-20)
@@ -417,7 +417,7 @@ class TemplateRegistry:
                     description="Reviews research",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 13. Investment Analysis
@@ -471,7 +471,7 @@ class TemplateRegistry:
                     description="Tests gameplay",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 15. Healthcare Consultation
@@ -498,7 +498,7 @@ class TemplateRegistry:
                     description="Advises on wellness",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 16-20: More specialized templates
@@ -531,7 +531,7 @@ class TemplateRegistry:
                     description="Judges the debate",
                 ),
             ],
-            strategy=CollaborationStrategy.DEBATE,
+            strategy=CollaborationStrategy.BROADCAST,
         ))
 
         # 17. Translation Team
@@ -558,7 +558,7 @@ class TemplateRegistry:
                     description="Checks quality",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 18. Security Audit Team
@@ -612,7 +612,7 @@ class TemplateRegistry:
                     description="Edits the story",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
         # 20. DevOps Team
@@ -639,7 +639,7 @@ class TemplateRegistry:
                     description="Sets up monitoring",
                 ),
             ],
-            strategy=CollaborationStrategy.SEQUENTIAL,
+            strategy=CollaborationStrategy.ROUND_ROBIN,
         ))
 
 

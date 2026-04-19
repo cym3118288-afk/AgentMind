@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 from pydantic import BaseModel, Field
@@ -402,6 +402,3 @@ def log_config_changed(
         severity="info",
         success=True,
     )
-
-
-from datetime import timedelta

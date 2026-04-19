@@ -1,8 +1,6 @@
 """Plugin CLI commands for AgentMind."""
 
-import asyncio
 import click
-import json
 from pathlib import Path
 from rich.console import Console
 from rich.table import Table
@@ -14,12 +12,8 @@ from agentmind.plugins.manager import PluginManager
 from agentmind.plugins.loader import PluginRegistry
 from agentmind.plugins.marketplace import (
     PluginRegistry as MarketplaceRegistry,
-    PluginManifest,
     PluginCategory,
 )
-from agentmind.plugins.config import ConfigManager
-from agentmind.plugins.dependencies import DependencyResolver
-from agentmind.plugins.audit import PluginAuditLogger
 
 console = Console()
 
@@ -202,10 +196,10 @@ settings:
 
     console.print("\n[bold green]✓ Plugin created successfully![/bold green]\n")
     console.print(tree)
-    console.print(f"\n[bold]Next steps:[/bold]")
+    console.print("\n[bold]Next steps:[/bold]")
     console.print(f"  cd {output_dir.name}")
-    console.print(f"  pip install -e .")
-    console.print(f"  pytest tests/")
+    console.print("  pip install -e .")
+    console.print("  pytest tests/")
 
 
 def _generate_plugin_code(name: str, plugin_type: str, author: str, description: str) -> str:

@@ -1,7 +1,7 @@
 """Plugin dependency resolution and version compatibility checking."""
 
 import logging
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Tuple
 from packaging import version
 from pydantic import BaseModel, Field
 

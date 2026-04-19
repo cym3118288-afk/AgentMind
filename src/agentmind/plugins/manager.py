@@ -7,7 +7,7 @@ from pathlib import Path
 
 from .base import Plugin, PluginType
 from .loader import PluginLoader, PluginRegistry
-from .lifecycle import PluginLifecycleManager, PluginState
+from .lifecycle import PluginLifecycleManager
 from .dependencies import DependencyResolver, PluginDependency
 from .security import PermissionManager, SandboxExecutor, ResourceLimits
 from .config import ConfigManager

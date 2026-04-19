@@ -482,7 +482,7 @@ Worker outputs:
                 if result:
                     review_content += f"\nWorker {i + 1}: {result.content[:200]}...\n"
 
-            review_content += f"""
+            review_content += """
 
 Evaluate:
 1. Quality score (0-1)
@@ -524,7 +524,10 @@ SYNTHESIS: [final output]"""
 
                 # Re-execute with feedback
                 feedback_msg = Message(
-                    content=f"Previous attempt had quality {quality_score:.2f}. Issues: {review_response.content}. Please improve.",
+                    content=(
+                        f"Previous attempt had quality {quality_score:.2f}. "
+                        f"Issues: {review_response.content}. Please improve."
+                    ),
                     sender="reviewer",
                     role=MessageRole.SYSTEM,
                 )
@@ -1341,7 +1344,7 @@ class SwarmOrchestrator(BaseOrchestrator):
         """Decompose task into subtasks for swarm."""
         # Simple decomposition - in production would use LLM
         base_task = f"Work on: {task}"
-        return [f"{base_task} (part {i+1}/{num_agents})" for i in range(num_agents)]
+        return [f"{base_task} (part {i + 1}/{num_agents})" for i in range(num_agents)]
 
     async def _execute_with_work_stealing(
         self,
@@ -1677,7 +1680,7 @@ class GraphOrchestrator(BaseOrchestrator):
     ) -> Optional[Message]:
         """Process a merge node that combines multiple inputs."""
         recent = all_messages[-3:] if len(all_messages) >= 3 else all_messages
-        merge_content = f"Merge these inputs:\n" + "\n".join(
+        merge_content = "Merge these inputs:\n" + "\n".join(
             f"- {m.sender}: {m.content[:100]}..." for m in recent
         )
 

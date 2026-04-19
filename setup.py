@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="agentmind",
-    version="0.1.0",
+    version="0.2.0",
     author="Terry Carson",
     author_email="cym3118288@gmail.com",
     description="Multi-Agent Collaboration Framework",
@@ -27,6 +27,14 @@ setup(
     ],
     python_requires=">=3.8",
     install_requires=[
-        # asyncio is built-in for Python 3.8+
+        "pydantic>=2.0.0,<3.0.0",
+        "httpx>=0.24.0",
     ],
+    entry_points={
+        "agentmind.plugins.llm": [],
+        "agentmind.plugins.memory": [],
+        "agentmind.plugins.tools": [],
+        "agentmind.plugins.orchestrator": [],
+        "agentmind.plugins.observer": [],
+    },
 )

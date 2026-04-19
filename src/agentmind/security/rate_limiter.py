@@ -27,10 +27,7 @@ class RateLimiter:
     """Rate limiter using token bucket algorithm."""
 
     def __init__(
-        self,
-        max_requests: int = 100,
-        time_window: float = 60.0,
-        burst_size: Optional[int] = None
+        self, max_requests: int = 100, time_window: float = 60.0, burst_size: Optional[int] = None
     ):
         """Initialize rate limiter.
 
@@ -82,8 +79,7 @@ class RateLimiter:
                 # Rate limit exceeded
                 retry_after = (1 - current_tokens) * (self.time_window / self.max_requests)
                 raise RateLimitExceeded(
-                    f"Rate limit exceeded for {identifier}",
-                    retry_after=retry_after
+                    f"Rate limit exceeded for {identifier}", retry_after=retry_after
                 )
 
     async def acquire(self, identifier: str, wait: bool = False) -> bool:
@@ -195,10 +191,7 @@ class SlidingWindowRateLimiter:
             cutoff = now - self.time_window
 
             # Remove old requests
-            self._requests[identifier] = [
-                ts for ts in self._requests[identifier]
-                if ts > cutoff
-            ]
+            self._requests[identifier] = [ts for ts in self._requests[identifier] if ts > cutoff]
 
             if len(self._requests[identifier]) < self.max_requests:
                 # Allow request
@@ -209,8 +202,7 @@ class SlidingWindowRateLimiter:
                 oldest = self._requests[identifier][0]
                 retry_after = oldest + self.time_window - now
                 raise RateLimitExceeded(
-                    f"Rate limit exceeded for {identifier}",
-                    retry_after=retry_after
+                    f"Rate limit exceeded for {identifier}", retry_after=retry_after
                 )
 
     async def acquire(self, identifier: str, wait: bool = False) -> bool:
@@ -269,7 +261,7 @@ class AdaptiveRateLimiter:
         base_max_requests: int = 100,
         time_window: float = 60.0,
         min_requests: int = 10,
-        max_requests: int = 1000
+        max_requests: int = 1000,
     ):
         """Initialize adaptive rate limiter.
 
@@ -295,10 +287,7 @@ class AdaptiveRateLimiter:
         """
         # Decrease limit as load increases
         adjusted = int(self.base_max_requests * (1.0 - load_factor * 0.5))
-        self.current_max = max(
-            self.min_requests,
-            min(self.max_requests, adjusted)
-        )
+        self.current_max = max(self.min_requests, min(self.max_requests, adjusted))
 
         # Update limiter
         self._limiter.max_requests = self.current_max

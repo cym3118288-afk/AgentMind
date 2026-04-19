@@ -38,12 +38,12 @@ class DiscordPlugin(IntegrationPlugin):
                 "required": ["token"],
                 "properties": {
                     "token": {"type": "string", "description": "Discord bot token"},
-                    "guild_id": {"type": "string", "description": "Default guild ID"}
-                }
+                    "guild_id": {"type": "string", "description": "Default guild ID"},
+                },
             },
             tags=["discord", "messaging", "integration"],
             homepage="https://github.com/agentmind/plugins/discord",
-            license="MIT"
+            license="MIT",
         )
 
     async def initialize(self) -> None:
@@ -53,14 +53,14 @@ class DiscordPlugin(IntegrationPlugin):
 
         try:
             import discord
+
             intents = discord.Intents.default()
             intents.message_content = True
             self.client = discord.Client(intents=intents)
             logger.info("Discord plugin initialized")
         except ImportError:
             raise ImportError(
-                "discord.py is required for Discord plugin. "
-                "Install with: pip install discord.py"
+                "discord.py is required for Discord plugin. " "Install with: pip install discord.py"
             )
 
     async def shutdown(self) -> None:
@@ -93,12 +93,7 @@ class DiscordPlugin(IntegrationPlugin):
         self._connected = False
         logger.info("Disconnected from Discord")
 
-    async def send_message(
-        self,
-        message: str,
-        channel_id: Optional[int] = None,
-        **kwargs
-    ) -> Any:
+    async def send_message(self, message: str, channel_id: Optional[int] = None, **kwargs) -> Any:
         """Send message to Discord channel.
 
         Args:
@@ -132,7 +127,7 @@ class DiscordPlugin(IntegrationPlugin):
         title: str,
         description: str,
         color: Optional[int] = None,
-        fields: Optional[List[Dict[str, Any]]] = None
+        fields: Optional[List[Dict[str, Any]]] = None,
     ) -> Any:
         """Send embed message to Discord channel.
 
@@ -156,18 +151,14 @@ class DiscordPlugin(IntegrationPlugin):
             if not channel:
                 raise ValueError(f"Channel {channel_id} not found")
 
-            embed = discord.Embed(
-                title=title,
-                description=description,
-                color=color or 0x00ff00
-            )
+            embed = discord.Embed(title=title, description=description, color=color or 0x00FF00)
 
             if fields:
                 for field in fields:
                     embed.add_field(
                         name=field.get("name", ""),
                         value=field.get("value", ""),
-                        inline=field.get("inline", False)
+                        inline=field.get("inline", False),
                     )
 
             sent_message = await channel.send(embed=embed)
@@ -176,11 +167,7 @@ class DiscordPlugin(IntegrationPlugin):
             logger.error(f"Failed to send embed: {e}")
             raise
 
-    async def get_channel_messages(
-        self,
-        channel_id: int,
-        limit: int = 100
-    ) -> List[Any]:
+    async def get_channel_messages(self, channel_id: int, limit: int = 100) -> List[Any]:
         """Get channel message history.
 
         Args:
@@ -206,12 +193,7 @@ class DiscordPlugin(IntegrationPlugin):
             logger.error(f"Failed to get channel messages: {e}")
             raise
 
-    async def add_reaction(
-        self,
-        message_id: int,
-        channel_id: int,
-        emoji: str
-    ) -> None:
+    async def add_reaction(self, message_id: int, channel_id: int, emoji: str) -> None:
         """Add reaction to message.
 
         Args:
@@ -233,11 +215,7 @@ class DiscordPlugin(IntegrationPlugin):
             logger.error(f"Failed to add reaction: {e}")
             raise
 
-    async def delete_message(
-        self,
-        message_id: int,
-        channel_id: int
-    ) -> None:
+    async def delete_message(self, message_id: int, channel_id: int) -> None:
         """Delete a message.
 
         Args:
@@ -269,11 +247,7 @@ class DiscordPlugin(IntegrationPlugin):
 
         guilds = []
         for guild in self.client.guilds:
-            guilds.append({
-                "id": guild.id,
-                "name": guild.name,
-                "member_count": guild.member_count
-            })
+            guilds.append({"id": guild.id, "name": guild.name, "member_count": guild.member_count})
         return guilds
 
     async def list_channels(self, guild_id: Optional[int] = None) -> List[Dict[str, Any]]:
@@ -298,11 +272,7 @@ class DiscordPlugin(IntegrationPlugin):
 
         channels = []
         for channel in guild.channels:
-            channels.append({
-                "id": channel.id,
-                "name": channel.name,
-                "type": str(channel.type)
-            })
+            channels.append({"id": channel.id, "name": channel.name, "type": str(channel.type)})
         return channels
 
     def is_connected(self) -> bool:
@@ -324,6 +294,6 @@ class DiscordPlugin(IntegrationPlugin):
                 "id": user.id,
                 "name": user.name,
                 "discriminator": user.discriminator,
-                "bot": user.bot
+                "bot": user.bot,
             }
         return None

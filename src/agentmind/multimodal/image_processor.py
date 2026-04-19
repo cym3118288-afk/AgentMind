@@ -8,6 +8,7 @@ from typing import Optional, Union, Tuple
 
 try:
     from PIL import Image
+
     PIL_AVAILABLE = True
 except ImportError:
     PIL_AVAILABLE = False
@@ -15,6 +16,7 @@ except ImportError:
 
 class ImageFormat(str, Enum):
     """Supported image formats."""
+
     PNG = "png"
     JPEG = "jpeg"
     JPG = "jpg"
@@ -33,8 +35,7 @@ class ImageProcessor:
         """
         if not PIL_AVAILABLE:
             raise ImportError(
-                "PIL/Pillow is required for image processing. "
-                "Install with: pip install Pillow"
+                "PIL/Pillow is required for image processing. " "Install with: pip install Pillow"
             )
         self.max_size = max_size
 
@@ -50,9 +51,7 @@ class ImageProcessor:
         return Image.open(path)
 
     def resize_image(
-        self,
-        image: Image.Image,
-        max_size: Optional[Tuple[int, int]] = None
+        self, image: Image.Image, max_size: Optional[Tuple[int, int]] = None
     ) -> Image.Image:
         """Resize image while maintaining aspect ratio.
 
@@ -68,9 +67,7 @@ class ImageProcessor:
         return image
 
     def image_to_base64(
-        self,
-        image: Union[Image.Image, str, Path],
-        format: ImageFormat = ImageFormat.PNG
+        self, image: Union[Image.Image, str, Path], format: ImageFormat = ImageFormat.PNG
     ) -> str:
         """Convert image to base64 string.
 
@@ -102,9 +99,7 @@ class ImageProcessor:
         return Image.open(io.BytesIO(img_data))
 
     def prepare_for_llm(
-        self,
-        image: Union[Image.Image, str, Path],
-        format: ImageFormat = ImageFormat.PNG
+        self, image: Union[Image.Image, str, Path], format: ImageFormat = ImageFormat.PNG
     ) -> dict:
         """Prepare image for LLM input.
 
@@ -127,18 +122,11 @@ class ImageProcessor:
 
         return {
             "type": "image",
-            "source": {
-                "type": "base64",
-                "media_type": f"image/{format.value}",
-                "data": base64_str
-            }
+            "source": {"type": "base64", "media_type": f"image/{format.value}", "data": base64_str},
         }
 
     def save_image(
-        self,
-        image: Image.Image,
-        path: Union[str, Path],
-        format: Optional[ImageFormat] = None
+        self, image: Image.Image, path: Union[str, Path], format: Optional[ImageFormat] = None
     ) -> None:
         """Save image to file.
 
@@ -149,15 +137,15 @@ class ImageProcessor:
         """
         if format is None:
             # Infer from path extension
-            ext = Path(path).suffix.lower().lstrip('.')
-            format = ImageFormat(ext) if ext in ImageFormat.__members__.values() else ImageFormat.PNG
+            ext = Path(path).suffix.lower().lstrip(".")
+            format = (
+                ImageFormat(ext) if ext in ImageFormat.__members__.values() else ImageFormat.PNG
+            )
 
         image.save(path, format=format.value.upper())
 
     def create_thumbnail(
-        self,
-        image: Union[Image.Image, str, Path],
-        size: Tuple[int, int] = (128, 128)
+        self, image: Union[Image.Image, str, Path], size: Tuple[int, int] = (128, 128)
     ) -> Image.Image:
         """Create a thumbnail of the image.
 

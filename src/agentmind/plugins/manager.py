@@ -24,11 +24,7 @@ class PluginManager:
         self.loader = PluginLoader(self.registry)
         self._active_plugins: Dict[str, Plugin] = {}
 
-    async def load_plugin(
-        self,
-        plugin_name: str,
-        config: Optional[Dict[str, Any]] = None
-    ) -> bool:
+    async def load_plugin(self, plugin_name: str, config: Optional[Dict[str, Any]] = None) -> bool:
         """Load and initialize a plugin.
 
         Args:
@@ -89,9 +85,7 @@ class PluginManager:
             return False
 
     async def reload_plugin(
-        self,
-        plugin_name: str,
-        config: Optional[Dict[str, Any]] = None
+        self, plugin_name: str, config: Optional[Dict[str, Any]] = None
     ) -> bool:
         """Reload a plugin.
 
@@ -124,10 +118,7 @@ class PluginManager:
         """
         return list(self._active_plugins.keys())
 
-    def list_available_plugins(
-        self,
-        plugin_type: Optional[PluginType] = None
-    ) -> List[str]:
+    def list_available_plugins(self, plugin_type: Optional[PluginType] = None) -> List[str]:
         """List all available plugins.
 
         Args:
@@ -139,10 +130,7 @@ class PluginManager:
         metadata_list = self.registry.list_plugins(plugin_type)
         return [metadata.name for metadata in metadata_list]
 
-    async def load_all_plugins(
-        self,
-        configs: Optional[Dict[str, Dict[str, Any]]] = None
-    ) -> int:
+    async def load_all_plugins(self, configs: Optional[Dict[str, Dict[str, Any]]] = None) -> int:
         """Load all available plugins.
 
         Args:
@@ -181,7 +169,7 @@ class PluginManager:
         self,
         search_paths: Optional[List[Path]] = None,
         auto_load: bool = False,
-        configs: Optional[Dict[str, Dict[str, Any]]] = None
+        configs: Optional[Dict[str, Dict[str, Any]]] = None,
     ) -> int:
         """Discover plugins and optionally load them.
 
@@ -224,11 +212,7 @@ class PluginManager:
                 result.append(plugin)
         return result
 
-    async def execute_tool_plugin(
-        self,
-        plugin_name: str,
-        **kwargs
-    ) -> Any:
+    async def execute_tool_plugin(self, plugin_name: str, **kwargs) -> Any:
         """Execute a tool plugin.
 
         Args:
@@ -247,6 +231,7 @@ class PluginManager:
             raise ValueError(f"Plugin {plugin_name} is not a tool plugin")
 
         from .base import ToolPlugin
+
         if not isinstance(plugin, ToolPlugin):
             raise ValueError(f"Plugin {plugin_name} is not a ToolPlugin")
 
@@ -259,6 +244,7 @@ class PluginManager:
             List of tool definitions
         """
         from .base import ToolPlugin
+
         definitions = []
 
         for plugin in self._active_plugins.values():

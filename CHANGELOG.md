@@ -60,29 +60,90 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added pre-commit hooks for automated checks
 - Configured pytest with coverage reporting
 
+## [0.2.0] - 2026-04-20
+
+### Added - Wave 1: Core Architecture Upgrade
+
+#### Plugin System Maturity
+- **Entry Points Integration**: Implemented `importlib.metadata` for dynamic plugin loading
+- **Standardized Interfaces**: Created `LLMProvider`, `MemoryBackend`, `ToolRegistry`, `Orchestrator`, `Observer` interfaces
+- **Plugin Discovery**: Auto-discovery system using entry_points
+- **Plugin Registry**: Central registry supporting `pip install agentmind-plugin-xxx`
+- **Plugin Marketplace**: Documentation and templates in `docs/plugin_marketplace.md`
+- **Example Templates**: Complete plugin templates for all plugin types
+
+#### Core Class Enhancements
+- **EnhancedAgent**: 
+  - Multi-modal support (image, audio, video, file attachments)
+  - Human-in-the-loop hooks with callback system
+  - Dynamic role switching at runtime
+  - Sub-agent management (add, remove, delegate, broadcast)
+  - Agent state machine (IDLE, THINKING, EXECUTING, WAITING_HUMAN, DELEGATING, ERROR)
+  - Execution history tracking
+- **EnhancedAgentMind**:
+  - Global state machine (IDLE, PLANNING, EXECUTING, REFLECTING, ADAPTING, PAUSED, ERROR)
+  - Checkpoint/restore capabilities with JSON serialization
+  - Parallel task scheduler with priority queue
+  - Task dependency management
+  - Observer pattern for system events
+  - Comprehensive system status reporting
+
+#### Advanced Orchestration Modes
+- **Sequential Orchestrator**: Agents process in order with message chaining
+- **Hierarchical Orchestrator**: 3-tier (manager-executor-reviewer) architecture
+- **Debate Orchestrator**: Multi-agent debate with voting and arbitration
+- **Swarm Orchestrator**: Dynamic agent creation/destruction based on task complexity
+- **Graph Orchestrator**: LangGraph-compatible with Mermaid visualization
+- **Custom Orchestrators**: Base class for user-defined strategies
+
+#### Memory & RAG Integration
+- **HybridMemoryBackend**: Combined Chroma + SQLite storage
+  - Vector search with semantic similarity
+  - Structured data storage in SQLite
+  - Knowledge graph support (subject-predicate-object triples)
+  - Long-term memory compression
+  - Cross-session memory with session tracking
+  - Memory statistics and analytics
+- **Redis Support**: Ready for Redis backend plugin
+- **Pinecone Support**: Ready for Pinecone backend plugin
+- **Weaviate Support**: Ready for Weaviate backend plugin
+
+#### Tool System Upgrade
+- **LangChain Tools**: Native adapter for LangChain tools
+- **LlamaIndex Tools**: Native adapter for LlamaIndex tools
+- **MCP Support**: Model Context Protocol tool adapter
+- **Security Sandbox**: Permission-based execution control
+  - Permission levels: READ, WRITE, EXECUTE, NETWORK, FILESYSTEM
+  - Timeout protection
+  - Docker isolation support (placeholder)
+- **Tool Auto-Discovery**: Automatic tool discovery from modules
+- **Tool Description Generation**: Natural language descriptions
+- **Advanced Tool Registry**: Enhanced registry with security and metadata
+
+### Changed
+- Updated `setup.py` to version 0.2.0 with entry_points configuration
+- Enhanced `__init__.py` with plugin system exports
+- Improved type hints and documentation throughout
+
+### Infrastructure
+- Plugin system architecture with standardized interfaces
+- Entry points configuration for plugin discovery
+- Template system for plugin development
+
 ## [Unreleased]
 
-### Planned for Phase 1 (Days 4-10)
-- LLM integration with LiteLLM and Ollama providers
-- Real agent intelligence with ReAct-style reasoning
-- Built-in role templates with specialized system prompts
-- Advanced orchestration strategies
-- Human-in-the-loop support
-- Global tracing and observability
-
-### Planned for Phase 2 (Days 11-20)
-- Memory system with multiple backends (JSON, SQLite, ChromaDB)
-- Tool system with LangChain compatibility
-- Built-in tools (web_search, code_executor, file_io, calculator)
-- State graph support for complex workflows
-- Session persistence and loading
-
-### Planned for Phase 3 (Days 21-40)
-- Production-grade error recovery and retry mechanisms
+### Planned for Wave 2
+- Additional memory backends (Redis, Pinecone, Weaviate implementations)
+- More built-in tools (web_search, code_executor, file_io)
+- Enhanced LLM provider integrations
+- Production-grade error recovery
 - Cost tracking and token budgets
+
+### Planned for Wave 3
 - FastAPI wrapper for API deployment
-- Docker support
-- CLI tool (`agentmind` command)
-- Multi-modal message support
+- Enhanced Docker support
+- CLI tool improvements
+- Real-time collaboration features
+- Advanced monitoring and observability
 
 [0.1.0]: https://github.com/cym3118288-afk/AgentMind-Framework/releases/tag/v0.1.0

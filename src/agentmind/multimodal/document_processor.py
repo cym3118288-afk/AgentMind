@@ -7,12 +7,14 @@ from typing import Optional, Union, List, Dict
 
 try:
     import PyPDF2
+
     PYPDF2_AVAILABLE = True
 except ImportError:
     PYPDF2_AVAILABLE = False
 
 try:
     from docx import Document as DocxDocument
+
     DOCX_AVAILABLE = True
 except ImportError:
     DOCX_AVAILABLE = False
@@ -20,6 +22,7 @@ except ImportError:
 
 class DocumentFormat(str, Enum):
     """Supported document formats."""
+
     PDF = "pdf"
     DOCX = "docx"
     TXT = "txt"
@@ -34,9 +37,7 @@ class DocumentProcessor:
         pass
 
     def extract_text_from_pdf(
-        self,
-        path: Union[str, Path],
-        pages: Optional[List[int]] = None
+        self, path: Union[str, Path], pages: Optional[List[int]] = None
     ) -> str:
         """Extract text from PDF file.
 
@@ -49,8 +50,7 @@ class DocumentProcessor:
         """
         if not PYPDF2_AVAILABLE:
             raise ImportError(
-                "PyPDF2 is required for PDF processing. "
-                "Install with: pip install PyPDF2"
+                "PyPDF2 is required for PDF processing. " "Install with: pip install PyPDF2"
             )
 
         text_parts = []
@@ -99,11 +99,7 @@ class DocumentProcessor:
         with open(path, "r", encoding="utf-8") as file:
             return file.read()
 
-    def extract_text(
-        self,
-        path: Union[str, Path],
-        format: Optional[DocumentFormat] = None
-    ) -> str:
+    def extract_text(self, path: Union[str, Path], format: Optional[DocumentFormat] = None) -> str:
         """Extract text from document (auto-detect format).
 
         Args:
@@ -116,7 +112,7 @@ class DocumentProcessor:
         path = Path(path)
 
         if format is None:
-            ext = path.suffix.lower().lstrip('.')
+            ext = path.suffix.lower().lstrip(".")
             if ext in DocumentFormat.__members__.values():
                 format = DocumentFormat(ext)
             else:
@@ -142,8 +138,7 @@ class DocumentProcessor:
         """
         if not PYPDF2_AVAILABLE:
             raise ImportError(
-                "PyPDF2 is required for PDF processing. "
-                "Install with: pip install PyPDF2"
+                "PyPDF2 is required for PDF processing. " "Install with: pip install PyPDF2"
             )
 
         with open(path, "rb") as file:
@@ -187,12 +182,7 @@ class DocumentProcessor:
             "num_paragraphs": len(doc.paragraphs),
         }
 
-    def chunk_text(
-        self,
-        text: str,
-        chunk_size: int = 1000,
-        overlap: int = 100
-    ) -> List[str]:
+    def chunk_text(self, text: str, chunk_size: int = 1000, overlap: int = 100) -> List[str]:
         """Split text into overlapping chunks.
 
         Args:
@@ -219,7 +209,7 @@ class DocumentProcessor:
         path: Union[str, Path],
         format: Optional[DocumentFormat] = None,
         chunk_size: Optional[int] = None,
-        pages: Optional[List[int]] = None
+        pages: Optional[List[int]] = None,
     ) -> dict:
         """Prepare document for LLM input.
 
@@ -241,7 +231,7 @@ class DocumentProcessor:
         # Get metadata
         path = Path(path)
         if format is None:
-            ext = path.suffix.lower().lstrip('.')
+            ext = path.suffix.lower().lstrip(".")
             format = DocumentFormat(ext) if ext in DocumentFormat.__members__.values() else None
 
         metadata = {}
@@ -271,10 +261,7 @@ class DocumentProcessor:
         return result
 
     def save_text_to_file(
-        self,
-        text: str,
-        path: Union[str, Path],
-        format: DocumentFormat = DocumentFormat.TXT
+        self, text: str, path: Union[str, Path], format: DocumentFormat = DocumentFormat.TXT
     ) -> None:
         """Save text to file.
 

@@ -12,9 +12,7 @@ class VisionLLMProvider(LLMProvider):
     """LLM provider with vision capabilities (GPT-4V, Claude 3, etc.)."""
 
     def __init__(
-        self,
-        base_provider: LLMProvider,
-        image_processor: Optional[ImageProcessor] = None
+        self, base_provider: LLMProvider, image_processor: Optional[ImageProcessor] = None
     ):
         """Initialize vision LLM provider.
 
@@ -26,11 +24,7 @@ class VisionLLMProvider(LLMProvider):
         self.image_processor = image_processor or ImageProcessor()
         self.supports_vision = True
 
-    async def generate(
-        self,
-        messages: List[Dict[str, Any]],
-        **kwargs
-    ) -> str:
+    async def generate(self, messages: List[Dict[str, Any]], **kwargs) -> str:
         """Generate response with vision support.
 
         Args:
@@ -52,26 +46,17 @@ class VisionLLMProvider(LLMProvider):
                         processed_content.append(item)
                     elif item.get("type") == "image_path":
                         # Process image from path
-                        image_data = self.image_processor.prepare_for_llm(
-                            item["path"]
-                        )
+                        image_data = self.image_processor.prepare_for_llm(item["path"])
                         processed_content.append(image_data)
                     else:
                         processed_content.append(item)
-                processed_messages.append({
-                    "role": msg["role"],
-                    "content": processed_content
-                })
+                processed_messages.append({"role": msg["role"], "content": processed_content})
             else:
                 processed_messages.append(msg)
 
         return await self.base_provider.generate(processed_messages, **kwargs)
 
-    async def generate_stream(
-        self,
-        messages: List[Dict[str, Any]],
-        **kwargs
-    ):
+    async def generate_stream(self, messages: List[Dict[str, Any]], **kwargs):
         """Generate streaming response with vision support.
 
         Args:
@@ -90,29 +75,19 @@ class VisionLLMProvider(LLMProvider):
                     if item.get("type") == "image":
                         processed_content.append(item)
                     elif item.get("type") == "image_path":
-                        image_data = self.image_processor.prepare_for_llm(
-                            item["path"]
-                        )
+                        image_data = self.image_processor.prepare_for_llm(item["path"])
                         processed_content.append(image_data)
                     else:
                         processed_content.append(item)
-                processed_messages.append({
-                    "role": msg["role"],
-                    "content": processed_content
-                })
+                processed_messages.append({"role": msg["role"], "content": processed_content})
             else:
                 processed_messages.append(msg)
 
-        async for chunk in self.base_provider.generate_stream(
-            processed_messages, **kwargs
-        ):
+        async for chunk in self.base_provider.generate_stream(processed_messages, **kwargs):
             yield chunk
 
     def create_vision_message(
-        self,
-        text: str,
-        images: List[Union[str, Path]],
-        role: str = "user"
+        self, text: str, images: List[Union[str, Path]], role: str = "user"
     ) -> Dict[str, Any]:
         """Create a multi-modal message with text and images.
 
@@ -130,16 +105,10 @@ class VisionLLMProvider(LLMProvider):
             image_data = self.image_processor.prepare_for_llm(image_path)
             content.append(image_data)
 
-        return {
-            "role": role,
-            "content": content
-        }
+        return {"role": role, "content": content}
 
     async def analyze_image(
-        self,
-        image: Union[str, Path],
-        prompt: str = "Describe this image in detail.",
-        **kwargs
+        self, image: Union[str, Path], prompt: str = "Describe this image in detail.", **kwargs
     ) -> str:
         """Analyze an image with a prompt.
 
@@ -158,7 +127,7 @@ class VisionLLMProvider(LLMProvider):
         self,
         images: List[Union[str, Path]],
         prompt: str = "Compare these images and describe the differences.",
-        **kwargs
+        **kwargs,
     ) -> str:
         """Compare multiple images.
 
@@ -173,11 +142,7 @@ class VisionLLMProvider(LLMProvider):
         message = self.create_vision_message(prompt, images)
         return await self.generate([message], **kwargs)
 
-    async def extract_text_from_image(
-        self,
-        image: Union[str, Path],
-        **kwargs
-    ) -> str:
+    async def extract_text_from_image(self, image: Union[str, Path], **kwargs) -> str:
         """Extract text from an image (OCR).
 
         Args:
@@ -190,12 +155,7 @@ class VisionLLMProvider(LLMProvider):
         prompt = "Extract all text from this image. Return only the text content."
         return await self.analyze_image(image, prompt, **kwargs)
 
-    async def answer_about_image(
-        self,
-        image: Union[str, Path],
-        question: str,
-        **kwargs
-    ) -> str:
+    async def answer_about_image(self, image: Union[str, Path], question: str, **kwargs) -> str:
         """Answer a question about an image.
 
         Args:
@@ -228,7 +188,7 @@ class VisionAgent:
         self,
         vision_provider: VisionLLMProvider,
         name: str = "VisionAgent",
-        system_prompt: Optional[str] = None
+        system_prompt: Optional[str] = None,
     ):
         """Initialize vision agent.
 
@@ -245,12 +205,7 @@ class VisionAgent:
         )
         self.conversation_history: List[Dict[str, Any]] = []
 
-    async def process_with_image(
-        self,
-        text: str,
-        images: List[Union[str, Path]],
-        **kwargs
-    ) -> str:
+    async def process_with_image(self, text: str, images: List[Union[str, Path]], **kwargs) -> str:
         """Process a request with images.
 
         Args:
@@ -263,26 +218,17 @@ class VisionAgent:
         """
         # Add system prompt if first message
         if not self.conversation_history:
-            self.conversation_history.append({
-                "role": "system",
-                "content": self.system_prompt
-            })
+            self.conversation_history.append({"role": "system", "content": self.system_prompt})
 
         # Create and add user message
         user_message = self.vision_provider.create_vision_message(text, images)
         self.conversation_history.append(user_message)
 
         # Generate response
-        response = await self.vision_provider.generate(
-            self.conversation_history,
-            **kwargs
-        )
+        response = await self.vision_provider.generate(self.conversation_history, **kwargs)
 
         # Add assistant response to history
-        self.conversation_history.append({
-            "role": "assistant",
-            "content": response
-        })
+        self.conversation_history.append({"role": "assistant", "content": response})
 
         return response
 
@@ -298,28 +244,16 @@ class VisionAgent:
         """
         # Add system prompt if first message
         if not self.conversation_history:
-            self.conversation_history.append({
-                "role": "system",
-                "content": self.system_prompt
-            })
+            self.conversation_history.append({"role": "system", "content": self.system_prompt})
 
         # Add user message
-        self.conversation_history.append({
-            "role": "user",
-            "content": text
-        })
+        self.conversation_history.append({"role": "user", "content": text})
 
         # Generate response
-        response = await self.vision_provider.generate(
-            self.conversation_history,
-            **kwargs
-        )
+        response = await self.vision_provider.generate(self.conversation_history, **kwargs)
 
         # Add assistant response to history
-        self.conversation_history.append({
-            "role": "assistant",
-            "content": response
-        })
+        self.conversation_history.append({"role": "assistant", "content": response})
 
         return response
 

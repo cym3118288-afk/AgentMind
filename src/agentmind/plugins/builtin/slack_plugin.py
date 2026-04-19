@@ -38,12 +38,12 @@ class SlackPlugin(IntegrationPlugin):
                 "required": ["token"],
                 "properties": {
                     "token": {"type": "string", "description": "Slack bot token"},
-                    "channel": {"type": "string", "description": "Default channel ID"}
-                }
+                    "channel": {"type": "string", "description": "Default channel ID"},
+                },
             },
             tags=["slack", "messaging", "integration"],
             homepage="https://github.com/agentmind/plugins/slack",
-            license="MIT"
+            license="MIT",
         )
 
     async def initialize(self) -> None:
@@ -53,12 +53,12 @@ class SlackPlugin(IntegrationPlugin):
 
         try:
             from slack_sdk.web.async_client import AsyncWebClient
+
             self.client = AsyncWebClient(token=self.token)
             logger.info("Slack plugin initialized")
         except ImportError:
             raise ImportError(
-                "slack-sdk is required for Slack plugin. "
-                "Install with: pip install slack-sdk"
+                "slack-sdk is required for Slack plugin. " "Install with: pip install slack-sdk"
             )
 
     async def shutdown(self) -> None:
@@ -88,12 +88,7 @@ class SlackPlugin(IntegrationPlugin):
         self._connected = False
         logger.info("Disconnected from Slack")
 
-    async def send_message(
-        self,
-        message: str,
-        channel: Optional[str] = None,
-        **kwargs
-    ) -> Any:
+    async def send_message(self, message: str, channel: Optional[str] = None, **kwargs) -> Any:
         """Send message to Slack channel.
 
         Args:
@@ -113,9 +108,7 @@ class SlackPlugin(IntegrationPlugin):
 
         try:
             response = await self.client.chat_postMessage(
-                channel=target_channel,
-                text=message,
-                **kwargs
+                channel=target_channel, text=message, **kwargs
             )
             return response
         except Exception as e:
@@ -123,10 +116,7 @@ class SlackPlugin(IntegrationPlugin):
             raise
 
     async def send_rich_message(
-        self,
-        channel: str,
-        blocks: List[Dict[str, Any]],
-        text: Optional[str] = None
+        self, channel: str, blocks: List[Dict[str, Any]], text: Optional[str] = None
     ) -> Any:
         """Send rich message with blocks.
 
@@ -143,20 +133,14 @@ class SlackPlugin(IntegrationPlugin):
 
         try:
             response = await self.client.chat_postMessage(
-                channel=channel,
-                blocks=blocks,
-                text=text or "Message"
+                channel=channel, blocks=blocks, text=text or "Message"
             )
             return response
         except Exception as e:
             logger.error(f"Failed to send rich message: {e}")
             raise
 
-    async def get_channel_history(
-        self,
-        channel: str,
-        limit: int = 100
-    ) -> List[Dict[str, Any]]:
+    async def get_channel_history(self, channel: str, limit: int = 100) -> List[Dict[str, Any]]:
         """Get channel message history.
 
         Args:
@@ -170,10 +154,7 @@ class SlackPlugin(IntegrationPlugin):
             raise RuntimeError("Plugin not initialized")
 
         try:
-            response = await self.client.conversations_history(
-                channel=channel,
-                limit=limit
-            )
+            response = await self.client.conversations_history(channel=channel, limit=limit)
             return response.get("messages", [])
         except Exception as e:
             logger.error(f"Failed to get channel history: {e}")
@@ -200,7 +181,7 @@ class SlackPlugin(IntegrationPlugin):
         file_path: str,
         channel: str,
         title: Optional[str] = None,
-        comment: Optional[str] = None
+        comment: Optional[str] = None,
     ) -> Any:
         """Upload file to Slack.
 
@@ -218,22 +199,14 @@ class SlackPlugin(IntegrationPlugin):
 
         try:
             response = await self.client.files_upload(
-                channels=channel,
-                file=file_path,
-                title=title,
-                initial_comment=comment
+                channels=channel, file=file_path, title=title, initial_comment=comment
             )
             return response
         except Exception as e:
             logger.error(f"Failed to upload file: {e}")
             raise
 
-    async def add_reaction(
-        self,
-        channel: str,
-        timestamp: str,
-        emoji: str
-    ) -> Any:
+    async def add_reaction(self, channel: str, timestamp: str, emoji: str) -> Any:
         """Add reaction to message.
 
         Args:
@@ -249,9 +222,7 @@ class SlackPlugin(IntegrationPlugin):
 
         try:
             response = await self.client.reactions_add(
-                channel=channel,
-                timestamp=timestamp,
-                name=emoji
+                channel=channel, timestamp=timestamp, name=emoji
             )
             return response
         except Exception as e:

@@ -1,6 +1,5 @@
-"""Command-line interface for AgentMind.
-
-Provides a simple CLI for running multi-agent collaborations from the terminal.
+"""
+Enhanced CLI for AgentMind with new commands and improved UX.
 """
 
 import asyncio
@@ -17,6 +16,7 @@ from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 from rich.markdown import Markdown
+from rich.tree import Tree
 
 from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider, LiteLLMProvider
@@ -240,6 +240,180 @@ async def run_collaboration(
 
 
 @cli.command()
+@click.argument("name")
+@click.option("--llm", default="ollama", help="LLM provider (ollama, openai)")
+@click.option("--agents", default=3, type=int, help="Number of agents")
+@click.option("--template", help="Template to use (research, dev, marketing)")
+def new(name: str, llm: str, agents: int, template: Optional[str]):
+    """Create a new agent team project.
+
+    Example:
+        agentmind new my-team --llm ollama --agents 5 --template research
+    """
+    project_path = Path(name)
+
+    if project_path.exists():
+        console.print(f"[red]Error: Directory '{name}' already exists[/red]")
+        sys.exit(1)
+
+    # Create project structure
+    console.print(f"[bold cyan]Creating new AgentMind project: {name}[/bold cyan]\n")
+
+    project_path.mkdir(parents=True)
+    (project_path / "agents").mkdir()
+    (project_path / "tools").mkdir()
+    (project_path / "config").mkdir()
+
+    # Create main.py
+    main_content = f'''"""
+{name} - AgentMind Team
+"""
+
+from agentmind import Agent, AgentMind
+from agentmind.llm import {"OllamaProvider" if llm == "ollama" else "LiteLLMProvider"}
+import asyncio
+
+async def main():
+    # Initialize LLM provider
+    llm = {"OllamaProvider(model='llama3.2')" if llm == "ollama" else "LiteLLMProvider(model='gpt-4')"}
+    mind = AgentMind(llm_provider=llm)
+
+    # Create agents
+    # TODO: Customize your agents here
+    for i in range({agents}):
+        agent = Agent(
+            name=f"Agent{{i+1}}",
+            role=f"role{{i+1}}",
+            system_prompt="You are a helpful agent."
+        )
+        mind.add_agent(agent)
+
+    # Run collaboration
+    result = await mind.collaborate(
+        "Your task here",
+        max_rounds=5
+    )
+
+    print(result)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+'''
+
+    (project_path / "main.py").write_text(main_content)
+
+    # Create requirements.txt
+    requirements = f'''agentmind{"[full]" if llm != "ollama" else ""}
+'''
+    (project_path / "requirements.txt").write_text(requirements)
+
+    # Create .env.example
+    env_content = f'''# LLM Configuration
+{"OLLAMA_BASE_URL=http://localhost:11434" if llm == "ollama" else "OPENAI_API_KEY=your-key-here"}
+
+# AgentMind Settings
+AGENTMIND_LOG_LEVEL=INFO
+AGENTMIND_MAX_RETRIES=3
+'''
+    (project_path / ".env.example").write_text(env_content)
+
+    # Create README.md
+    readme = f'''# {name}
+
+AgentMind multi-agent team project.
+
+## Setup
+
+```bash
+pip install -r requirements.txt
+```
+
+## Run
+
+```bash
+python main.py
+```
+
+## Configuration
+
+Copy `.env.example` to `.env` and configure your settings.
+'''
+    (project_path / "README.md").write_text(readme)
+
+    # Display success
+    tree = Tree(f"[bold green]{name}/[/bold green]")
+    tree.add("[cyan]main.py[/cyan]")
+    tree.add("[cyan]requirements.txt[/cyan]")
+    tree.add("[cyan].env.example[/cyan]")
+    tree.add("[cyan]README.md[/cyan]")
+    agents_node = tree.add("[yellow]agents/[/yellow]")
+    tools_node = tree.add("[yellow]tools/[/yellow]")
+    config_node = tree.add("[yellow]config/[/yellow]")
+
+    console.print("\n[bold green]✓ Project created successfully![/bold green]\n")
+    console.print(tree)
+    console.print(f"\n[bold]Next steps:[/bold]")
+    console.print(f"  cd {name}")
+    console.print(f"  pip install -r requirements.txt")
+    console.print(f"  python main.py")
+
+
+@cli.command()
+@click.argument("example_name")
+def example(example_name: str):
+    """Run a built-in example.
+
+    Examples:
+        agentmind example research
+        agentmind example code-review
+        agentmind example customer-support
+    """
+    examples_map = {
+        "research": "examples/research_team.py",
+        "code-review": "examples/code_review_team.py",
+        "customer-support": "examples/use_cases/customer_support.py",
+        "marketing": "examples/use_cases/content_generation.py",
+        "data-analysis": "examples/data_analysis_team.py",
+    }
+
+    if example_name not in examples_map:
+        console.print(f"[red]Error: Example '{example_name}' not found[/red]")
+        console.print("\n[bold]Available examples:[/bold]")
+        for name in examples_map.keys():
+            console.print(f"  - {name}")
+        sys.exit(1)
+
+    example_path = Path(examples_map[example_name])
+
+    if not example_path.exists():
+        console.print(f"[red]Error: Example file not found: {example_path}[/red]")
+        sys.exit(1)
+
+    console.print(f"[bold cyan]Running example: {example_name}[/bold cyan]\n")
+
+    import subprocess
+    result = subprocess.run([sys.executable, str(example_path)])
+    sys.exit(result.returncode)
+
+
+@cli.command()
+def dashboard():
+    """Launch the web dashboard.
+
+    Opens the AgentMind web dashboard for visual monitoring and debugging.
+    """
+    console.print("[bold cyan]Starting AgentMind Dashboard...[/bold cyan]\n")
+    console.print("Dashboard will be available at: [bold]http://localhost:8001[/bold]")
+    console.print("Press Ctrl+C to stop\n")
+
+    import subprocess
+    try:
+        subprocess.run([sys.executable, "tools_server.py"])
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Dashboard stopped[/yellow]")
+
+
+@cli.command()
 @click.argument("trace_file", type=click.Path(exists=True))
 def analyze(trace_file: str):
     """Analyze a trace file and display statistics.
@@ -340,6 +514,29 @@ def examples():
 Run a simple collaboration with 3 agents:
 ```bash
 agentmind run --task "Design a REST API for a todo app" --agents 3
+```
+
+## Create New Project
+
+Create a new agent team project:
+```bash
+agentmind new my-research-team --llm ollama --agents 5 --template research
+```
+
+## Run Built-in Examples
+
+Run pre-built examples:
+```bash
+agentmind example research
+agentmind example code-review
+agentmind example customer-support
+```
+
+## Launch Dashboard
+
+Start the web dashboard:
+```bash
+agentmind dashboard
 ```
 
 ## Custom Configuration

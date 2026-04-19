@@ -51,9 +51,6 @@ updates:
     # Rebase strategy for PRs
     rebase-strategy: "auto"
 
-    # Target branch for PRs
-    target-branch: "main"
-
   # GitHub Actions dependencies
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -79,7 +76,6 @@ updates:
         patterns:
           - "*"
     rebase-strategy: "auto"
-    target-branch: "main"
 
 # Dependabot will:
 # 1. Check for dependency updates weekly on Mondays at 9 AM UTC

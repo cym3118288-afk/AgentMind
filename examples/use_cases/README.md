@@ -147,6 +147,380 @@ Comprehensive financial analysis and investment advisory system:
 
 ---
 
+### 6. Medical Diagnosis Assistant (`medical_diagnosis.py`)
+
+AI-powered medical diagnosis support system for healthcare professionals:
+
+**Features:**
+- Symptom analysis and pattern recognition
+- Differential diagnosis generation
+- Diagnostic test recommendations
+- Treatment suggestions
+- Medical knowledge base integration
+- Urgency assessment
+
+**Agents:**
+- Symptom Analyzer: Analyzes patient symptoms
+- Diagnosis Specialist: Generates differential diagnoses
+- Test Recommender: Suggests diagnostic tests
+- Treatment Advisor: Recommends treatment approaches
+
+**Run:** `python medical_diagnosis.py`
+
+**Use Cases:**
+- Clinical decision support
+- Symptom triage
+- Diagnostic assistance
+- Treatment planning
+- Medical education
+
+**DISCLAIMER:** For educational purposes only. Not for actual medical use.
+
+---
+
+### 7. Legal Document Analysis (`legal_document_analysis.py`)
+
+Comprehensive legal document analysis and review system:
+
+**Features:**
+- Contract clause extraction
+- Risk identification and assessment
+- Compliance checking
+- Legal precedent research
+- Clause-by-clause analysis
+- Recommendations for improvements
+
+**Agents:**
+- Document Analyzer: Extracts and categorizes clauses
+- Risk Assessor: Identifies legal risks
+- Compliance Specialist: Checks regulatory compliance
+- Legal Researcher: Searches precedents
+- Legal Advisor: Provides strategic recommendations
+
+**Run:** `python legal_document_analysis.py`
+
+**Use Cases:**
+- Contract review
+- Due diligence
+- Compliance audits
+- Legal risk assessment
+- Document drafting assistance
+
+**DISCLAIMER:** For educational purposes only. Not for actual legal advice.
+
+---
+
+### 8. Scientific Research Automation (`scientific_research.py`)
+
+Automated scientific research system for researchers and academics:
+
+**Features:**
+- Literature review and synthesis
+- Hypothesis generation
+- Experiment design
+- Data analysis and statistics
+- Research report generation
+- Methodology planning
+
+**Agents:**
+- Literature Reviewer: Searches and analyzes papers
+- Hypothesis Generator: Formulates testable hypotheses
+- Experiment Designer: Designs rigorous experiments
+- Data Analyst: Performs statistical analysis
+- Research Writer: Writes research reports
+
+**Run:** `python scientific_research.py`
+
+**Use Cases:**
+- Research planning
+- Literature reviews
+- Experiment design
+- Data analysis
+- Grant proposal writing
+- Academic publishing
+
+---
+
+### 9. Game AI Development (`game_ai_development.py`)
+
+Intelligent game AI design and development system:
+
+**Features:**
+- Behavior tree generation
+- Difficulty balancing
+- Player behavior analysis
+- Strategy optimization
+- Adaptive AI systems
+- Multi-agent coordination
+
+**Agents:**
+- Behavior Designer: Creates AI behaviors
+- Difficulty Balancer: Adjusts challenge levels
+- Player Analyst: Analyzes play styles
+- Strategy Optimizer: Develops AI strategies
+- AI Architect: Designs overall AI system
+
+**Run:** `python game_ai_development.py`
+
+**Use Cases:**
+- Game AI design
+- NPC behavior creation
+- Boss fight design
+- Difficulty tuning
+- Player engagement optimization
+- Competitive AI development
+
+---
+
+### 10. IoT Device Management (`iot_device_management.py`)
+
+Comprehensive IoT device monitoring and management system:
+
+**Features:**
+- Real-time device monitoring
+- Anomaly detection
+- Predictive maintenance
+- Energy optimization
+- Security monitoring
+- Automated control
+
+**Agents:**
+- Device Monitor: Tracks device health
+- Anomaly Detector: Identifies unusual behavior
+- Maintenance Predictor: Predicts failures
+- Energy Optimizer: Reduces consumption
+- Security Monitor: Detects threats
+
+**Run:** `python iot_device_management.py`
+
+**Use Cases:**
+- Smart home automation
+- Industrial IoT monitoring
+- Predictive maintenance
+- Energy management
+- Security monitoring
+- Fleet management
+
+---
+
+### 11. Supply Chain Optimization (`supply_chain_optimization.py`)
+
+End-to-end supply chain optimization and management system:
+
+**Features:**
+- Demand forecasting
+- Inventory optimization
+- Route planning and logistics
+- Supplier evaluation
+- Risk assessment
+- Cost optimization
+
+**Agents:**
+- Demand Forecaster: Predicts future demand
+- Inventory Optimizer: Optimizes stock levels
+- Logistics Coordinator: Optimizes routes
+- Supplier Manager: Evaluates suppliers
+- Risk Analyst: Assesses supply chain risks
+
+**Run:** `python supply_chain_optimization.py`
+
+**Use Cases:**
+- Inventory management
+- Logistics optimization
+- Supplier selection
+- Demand planning
+- Risk mitigation
+- Cost reduction
+
+---
+
+### 6. Medical Diagnosis Assistant (`medical_diagnosis.py`)
+
+AI-powered medical diagnosis support system for healthcare professionals:
+
+**Features:**
+- Symptom analysis and pattern recognition
+- Differential diagnosis generation
+- Diagnostic test recommendations
+- Treatment suggestions
+- Medical knowledge base integration
+- Urgency assessment
+
+**Agents:**
+- Symptom Analyzer: Analyzes patient symptoms
+- Diagnosis Specialist: Generates differential diagnoses
+- Test Recommender: Suggests diagnostic tests
+- Treatment Advisor: Recommends treatment approaches
+
+**Run:** `python medical_diagnosis.py`
+
+**Use Cases:**
+- Clinical decision support
+- Symptom triage
+- Diagnostic assistance
+- Treatment planning
+- Medical education
+
+**DISCLAIMER:** For educational purposes only. Not for actual medical use.
+
+---
+
+### 7. Legal Document Analysis (`legal_document_analysis.py`)
+
+Comprehensive legal document analysis and review system:
+
+**Features:**
+- Contract clause extraction
+- Risk identification and assessment
+- Compliance checking
+- Legal precedent research
+- Clause-by-clause analysis
+- Recommendations for improvements
+
+**Agents:**
+- Document Analyzer: Extracts and categorizes clauses
+- Risk Assessor: Identifies legal risks
+- Compliance Specialist: Checks regulatory compliance
+- Legal Researcher: Searches precedents
+- Legal Advisor: Provides strategic recommendations
+
+**Run:** `python legal_document_analysis.py`
+
+**Use Cases:**
+- Contract review
+- Due diligence
+- Compliance audits
+- Legal risk assessment
+- Document drafting assistance
+
+**DISCLAIMER:** For educational purposes only. Not for actual legal advice.
+
+---
+
+### 8. Scientific Research Automation (`scientific_research.py`)
+
+Automated scientific research system for researchers and academics:
+
+**Features:**
+- Literature review and synthesis
+- Hypothesis generation
+- Experiment design
+- Data analysis and statistics
+- Research report generation
+- Methodology planning
+
+**Agents:**
+- Literature Reviewer: Searches and analyzes papers
+- Hypothesis Generator: Formulates testable hypotheses
+- Experiment Designer: Designs rigorous experiments
+- Data Analyst: Performs statistical analysis
+- Research Writer: Writes research reports
+
+**Run:** `python scientific_research.py`
+
+**Use Cases:**
+- Research planning
+- Literature reviews
+- Experiment design
+- Data analysis
+- Grant proposal writing
+- Academic publishing
+
+---
+
+### 9. Game AI Development (`game_ai_development.py`)
+
+Intelligent game AI design and development system:
+
+**Features:**
+- Behavior tree generation
+- Difficulty balancing
+- Player behavior analysis
+- Strategy optimization
+- Adaptive AI systems
+- Multi-agent coordination
+
+**Agents:**
+- Behavior Designer: Creates AI behaviors
+- Difficulty Balancer: Adjusts challenge levels
+- Player Analyst: Analyzes play styles
+- Strategy Optimizer: Develops AI strategies
+- AI Architect: Designs overall AI system
+
+**Run:** `python game_ai_development.py`
+
+**Use Cases:**
+- Game AI design
+- NPC behavior creation
+- Boss fight design
+- Difficulty tuning
+- Player engagement optimization
+- Competitive AI development
+
+---
+
+### 10. IoT Device Management (`iot_device_management.py`)
+
+Comprehensive IoT device monitoring and management system:
+
+**Features:**
+- Real-time device monitoring
+- Anomaly detection
+- Predictive maintenance
+- Energy optimization
+- Security monitoring
+- Automated control
+
+**Agents:**
+- Device Monitor: Tracks device health
+- Anomaly Detector: Identifies unusual behavior
+- Maintenance Predictor: Predicts failures
+- Energy Optimizer: Reduces consumption
+- Security Monitor: Detects threats
+
+**Run:** `python iot_device_management.py`
+
+**Use Cases:**
+- Smart home automation
+- Industrial IoT monitoring
+- Predictive maintenance
+- Energy management
+- Security monitoring
+- Fleet management
+
+---
+
+### 11. Supply Chain Optimization (`supply_chain_optimization.py`)
+
+End-to-end supply chain optimization and management system:
+
+**Features:**
+- Demand forecasting
+- Inventory optimization
+- Route planning and logistics
+- Supplier evaluation
+- Risk assessment
+- Cost optimization
+
+**Agents:**
+- Demand Forecaster: Predicts future demand
+- Inventory Optimizer: Optimizes stock levels
+- Logistics Coordinator: Optimizes routes
+- Supplier Manager: Evaluates suppliers
+- Risk Analyst: Assesses supply chain risks
+
+**Run:** `python supply_chain_optimization.py`
+
+**Use Cases:**
+- Inventory management
+- Logistics optimization
+- Supplier selection
+- Demand planning
+- Risk mitigation
+- Cost reduction
+
+---
+
 ## Quick Start
 
 1. Install AgentMind:

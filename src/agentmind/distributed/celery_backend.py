@@ -180,9 +180,7 @@ class DistributedMind:
         llm_config: Dict[str, Any],
     ) -> str:
         """Submit an agent task for distributed execution"""
-        result = execute_agent_task.apply_async(
-            args=[agent_config, task_input, llm_config]
-        )
+        result = execute_agent_task.apply_async(args=[agent_config, task_input, llm_config])
         task_id = result.id
         self.tasks[task_id] = result
         return task_id

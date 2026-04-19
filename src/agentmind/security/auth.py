@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 class APIKey(BaseModel):
     """API key model."""
+
     key: str = Field(..., description="API key")
     name: str = Field(..., description="Key name")
     user_id: str = Field(..., description="User ID")
@@ -24,6 +25,7 @@ class APIKey(BaseModel):
 
 class User(BaseModel):
     """User model."""
+
     user_id: str = Field(..., description="User ID")
     username: str = Field(..., description="Username")
     email: Optional[str] = Field(None, description="Email address")
@@ -52,7 +54,7 @@ class AuthManager:
         user_id: str,
         name: str,
         permissions: Optional[List[str]] = None,
-        expires_in: Optional[float] = None
+        expires_in: Optional[float] = None,
     ) -> str:
         """Generate a new API key.
 
@@ -79,7 +81,7 @@ class AuthManager:
             name=name,
             user_id=user_id,
             permissions=permissions or [],
-            expires_at=expires_at
+            expires_at=expires_at,
         )
 
         self._api_keys[key] = api_key
@@ -162,7 +164,7 @@ class AuthManager:
         user_id: str,
         username: str,
         email: Optional[str] = None,
-        roles: Optional[List[str]] = None
+        roles: Optional[List[str]] = None,
     ) -> User:
         """Create a new user.
 
@@ -175,12 +177,7 @@ class AuthManager:
         Returns:
             Created user
         """
-        user = User(
-            user_id=user_id,
-            username=username,
-            email=email,
-            roles=roles or ["user"]
-        )
+        user = User(user_id=user_id, username=username, email=email, roles=roles or ["user"])
 
         # Assign permissions based on roles
         permissions = set()
@@ -230,10 +227,7 @@ class AuthManager:
         return True
 
     def check_permission(
-        self,
-        user_id: str,
-        permission: str,
-        api_key: Optional[str] = None
+        self, user_id: str, permission: str, api_key: Optional[str] = None
     ) -> bool:
         """Check if user has permission.
 
@@ -285,10 +279,7 @@ class AuthManager:
             salt = secrets.token_hex(16)
 
         hashed = hashlib.pbkdf2_hmac(
-            "sha256",
-            password.encode("utf-8"),
-            salt.encode("utf-8"),
-            100000
+            "sha256", password.encode("utf-8"), salt.encode("utf-8"), 100000
         )
 
         return hashed.hex(), salt

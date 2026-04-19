@@ -74,10 +74,7 @@ class PluginRegistry:
         """
         return self._metadata.get(plugin_name)
 
-    def list_plugins(
-        self,
-        plugin_type: Optional[PluginType] = None
-    ) -> List[PluginMetadata]:
+    def list_plugins(self, plugin_type: Optional[PluginType] = None) -> List[PluginMetadata]:
         """List all registered plugins.
 
         Args:
@@ -90,14 +87,11 @@ class PluginRegistry:
             return list(self._metadata.values())
 
         return [
-            metadata for metadata in self._metadata.values()
-            if metadata.plugin_type == plugin_type
+            metadata for metadata in self._metadata.values() if metadata.plugin_type == plugin_type
         ]
 
     def create_instance(
-        self,
-        plugin_name: str,
-        config: Optional[Dict[str, Any]] = None
+        self, plugin_name: str, config: Optional[Dict[str, Any]] = None
     ) -> Optional[Plugin]:
         """Create plugin instance.
 
@@ -265,9 +259,7 @@ class PluginLoader:
             return 0
 
 
-def auto_discover_plugins(
-    search_paths: Optional[List[Path]] = None
-) -> PluginRegistry:
+def auto_discover_plugins(search_paths: Optional[List[Path]] = None) -> PluginRegistry:
     """Auto-discover and load plugins.
 
     Args:

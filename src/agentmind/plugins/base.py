@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 
 class PluginType(str, Enum):
     """Types of plugins supported by AgentMind."""
+
     TOOL = "tool"
     INTEGRATION = "integration"
     MEMORY = "memory"
@@ -19,6 +20,7 @@ class PluginType(str, Enum):
 
 class PluginMetadata(BaseModel):
     """Metadata for a plugin."""
+
     name: str = Field(..., description="Plugin name")
     version: str = Field(..., description="Plugin version")
     description: str = Field(..., description="Plugin description")
@@ -228,12 +230,7 @@ class OrchestrationPlugin(Plugin):
     """Base class for orchestration strategy plugins."""
 
     @abstractmethod
-    async def orchestrate(
-        self,
-        agents: List[Any],
-        task: str,
-        **kwargs
-    ) -> Any:
+    async def orchestrate(self, agents: List[Any], task: str, **kwargs) -> Any:
         """Orchestrate agent collaboration.
 
         Args:

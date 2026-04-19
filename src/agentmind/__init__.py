@@ -8,6 +8,10 @@ a focus on simplicity, control, and local-first design. It provides:
 - Local-first design with Ollama support
 - Type-safe with Pydantic models
 - Async-first architecture
+- Plugin system with entry_points support
+- Advanced orchestration modes
+- Multi-modal support
+- State machine and checkpointing
 
 Example:
     >>> from agentmind import Agent, AgentMind, Message
@@ -39,31 +43,74 @@ from .core.types import (
     ToolDefinition,
 )
 
+# Enhanced classes (optional imports)
+try:
+    from .core.enhanced_agent import EnhancedAgent, AgentState
+    from .core.enhanced_mind import EnhancedAgentMind, SystemState, TaskPriority
+
+    __all_enhanced__ = [
+        "EnhancedAgent",
+        "AgentState",
+        "EnhancedAgentMind",
+        "SystemState",
+        "TaskPriority",
+    ]
+except ImportError:
+    __all_enhanced__ = []
+
+# Plugin system
+try:
+    from .plugins.discovery import discover_plugins, load_plugin, list_plugins
+    from .plugins.interfaces import (
+        LLMProvider as LLMProviderInterface,
+        MemoryBackend as MemoryBackendInterface,
+        ToolRegistry as ToolRegistryInterface,
+        Orchestrator as OrchestratorInterface,
+        Observer as ObserverInterface,
+    )
+
+    __all_plugins__ = [
+        "discover_plugins",
+        "load_plugin",
+        "list_plugins",
+        "LLMProviderInterface",
+        "MemoryBackendInterface",
+        "ToolRegistryInterface",
+        "OrchestratorInterface",
+        "ObserverInterface",
+    ]
+except ImportError:
+    __all_plugins__ = []
+
 __version__ = "0.2.0"
 __author__ = "Terry Carson"
 __email__ = "cym3118288@gmail.com"
 
-__all__ = [
-    # Core classes
-    "Agent",
-    "AgentMind",
-    # Message types
-    "Message",
-    "MessageRole",
-    # Configuration
-    "AgentConfig",
-    "AgentRole",
-    # Results
-    "CollaborationResult",
-    "CollaborationStrategy",
-    # Memory and tools
-    "MemoryEntry",
-    "ToolDefinition",
-    # Metadata
-    "__version__",
-    "__author__",
-    "__email__",
-]
+__all__ = (
+    [
+        # Core classes
+        "Agent",
+        "AgentMind",
+        # Message types
+        "Message",
+        "MessageRole",
+        # Configuration
+        "AgentConfig",
+        "AgentRole",
+        # Results
+        "CollaborationResult",
+        "CollaborationStrategy",
+        # Memory and tools
+        "MemoryEntry",
+        "ToolDefinition",
+        # Metadata
+        "__version__",
+        "__author__",
+        "__email__",
+    ]
+    + __all_enhanced__
+    + __all_plugins__
+)
 
 
 def create_mind(**kwargs) -> AgentMind:

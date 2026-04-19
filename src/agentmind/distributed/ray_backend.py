@@ -185,9 +185,7 @@ class RayDistributedMind:
         # Submit all tasks
         futures = []
         for agent_config in agents_config:
-            future = self.execute_agent_remote.remote(
-                agent_config, task_input, llm_config
-            )
+            future = self.execute_agent_remote.remote(agent_config, task_input, llm_config)
             futures.append(future)
 
         # Wait for all results
@@ -241,9 +239,7 @@ class RayActorPool:
             actor = AgentActor.remote(self.llm_config)
             self.actors.append(actor)
 
-    def submit_task(
-        self, agent_config: Dict[str, Any], task_input: str
-    ) -> ray.ObjectRef:
+    def submit_task(self, agent_config: Dict[str, Any], task_input: str) -> ray.ObjectRef:
         """Submit task to actor pool"""
         # Simple round-robin scheduling
         actor = self.actors[len(self.futures) % len(self.actors)]
@@ -269,9 +265,7 @@ class AgentActor:
             temperature=llm_config.get("temperature", 0.7),
         )
 
-    def execute(
-        self, agent_config: Dict[str, Any], task_input: str
-    ) -> Dict[str, Any]:
+    def execute(self, agent_config: Dict[str, Any], task_input: str) -> Dict[str, Any]:
         """Execute agent task"""
         from agentmind import Agent, AgentMind
 
@@ -331,9 +325,7 @@ class FaultTolerantExecutor:
 
         for attempt in range(self.max_retries):
             try:
-                task_id = self.mind.submit_agent_task(
-                    agent_config, task_input, llm_config
-                )
+                task_id = self.mind.submit_agent_task(agent_config, task_input, llm_config)
                 result = self.mind.get_result(task_id, timeout=300)
 
                 if result.get("success"):

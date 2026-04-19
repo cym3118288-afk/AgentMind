@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 class SanitizationLevel(str, Enum):
     """Sanitization strictness levels."""
+
     NONE = "none"
     BASIC = "basic"
     MODERATE = "moderate"
@@ -106,7 +107,7 @@ class InputSanitizer:
         text: str,
         max_length: Optional[int] = None,
         min_length: Optional[int] = None,
-        allowed_chars: Optional[str] = None
+        allowed_chars: Optional[str] = None,
     ) -> bool:
         """Validate input text.
 
@@ -210,9 +211,7 @@ class InputSanitizer:
         return filename
 
     def sanitize_dict(
-        self,
-        data: Dict[str, Any],
-        keys_to_sanitize: Optional[List[str]] = None
+        self, data: Dict[str, Any], keys_to_sanitize: Optional[List[str]] = None
     ) -> Dict[str, Any]:
         """Sanitize dictionary values.
 

@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class AuditEventType(str, Enum):
     """Types of audit events."""
+
     AUTH_SUCCESS = "auth_success"
     AUTH_FAILURE = "auth_failure"
     API_KEY_CREATED = "api_key_created"
@@ -33,6 +34,7 @@ class AuditEventType(str, Enum):
 
 class AuditEvent(BaseModel):
     """Audit event model."""
+
     event_id: str = Field(..., description="Unique event ID")
     event_type: AuditEventType = Field(..., description="Event type")
     timestamp: float = Field(default_factory=time.time, description="Event timestamp")
@@ -49,10 +51,7 @@ class AuditLogger:
     """Logger for security audit events."""
 
     def __init__(
-        self,
-        log_file: Optional[Path] = None,
-        console_output: bool = True,
-        json_format: bool = True
+        self, log_file: Optional[Path] = None, console_output: bool = True, json_format: bool = True
     ):
         """Initialize audit logger.
 
@@ -78,7 +77,7 @@ class AuditLogger:
         action: Optional[str] = None,
         status: str = "success",
         message: Optional[str] = None,
-        **metadata
+        **metadata,
     ) -> AuditEvent:
         """Log an audit event.
 
@@ -106,7 +105,7 @@ class AuditLogger:
             action=action,
             status=status,
             message=message,
-            metadata=metadata
+            metadata=metadata,
         )
 
         self._events.append(event)
@@ -180,10 +179,7 @@ class AuditLogger:
         return " ".join(parts)
 
     def log_auth_success(
-        self,
-        user_id: str,
-        ip_address: Optional[str] = None,
-        method: str = "api_key"
+        self, user_id: str, ip_address: Optional[str] = None, method: str = "api_key"
     ) -> AuditEvent:
         """Log successful authentication.
 
@@ -200,14 +196,14 @@ class AuditLogger:
             user_id=user_id,
             ip_address=ip_address,
             action="authenticate",
-            message=f"Authentication successful via {method}"
+            message=f"Authentication successful via {method}",
         )
 
     def log_auth_failure(
         self,
         user_id: Optional[str] = None,
         ip_address: Optional[str] = None,
-        reason: str = "invalid_credentials"
+        reason: str = "invalid_credentials",
     ) -> AuditEvent:
         """Log failed authentication.
 
@@ -225,15 +221,11 @@ class AuditLogger:
             ip_address=ip_address,
             action="authenticate",
             status="failure",
-            message=f"Authentication failed: {reason}"
+            message=f"Authentication failed: {reason}",
         )
 
     def log_permission_denied(
-        self,
-        user_id: str,
-        resource: str,
-        action: str,
-        ip_address: Optional[str] = None
+        self, user_id: str, resource: str, action: str, ip_address: Optional[str] = None
     ) -> AuditEvent:
         """Log permission denied.
 
@@ -253,14 +245,11 @@ class AuditLogger:
             resource=resource,
             action=action,
             status="denied",
-            message=f"Permission denied for {action} on {resource}"
+            message=f"Permission denied for {action} on {resource}",
         )
 
     def log_rate_limit_exceeded(
-        self,
-        user_id: str,
-        ip_address: Optional[str] = None,
-        limit: int = 0
+        self, user_id: str, ip_address: Optional[str] = None, limit: int = 0
     ) -> AuditEvent:
         """Log rate limit exceeded.
 
@@ -278,7 +267,7 @@ class AuditLogger:
             ip_address=ip_address,
             status="blocked",
             message=f"Rate limit exceeded: {limit} requests",
-            limit=limit
+            limit=limit,
         )
 
     def log_suspicious_activity(
@@ -286,7 +275,7 @@ class AuditLogger:
         user_id: Optional[str],
         ip_address: Optional[str],
         activity: str,
-        details: Optional[Dict] = None
+        details: Optional[Dict] = None,
     ) -> AuditEvent:
         """Log suspicious activity.
 
@@ -305,15 +294,11 @@ class AuditLogger:
             ip_address=ip_address,
             status="warning",
             message=f"Suspicious activity detected: {activity}",
-            **(details or {})
+            **(details or {}),
         )
 
     def log_data_access(
-        self,
-        user_id: str,
-        resource: str,
-        action: str = "read",
-        ip_address: Optional[str] = None
+        self, user_id: str, resource: str, action: str = "read", ip_address: Optional[str] = None
     ) -> AuditEvent:
         """Log data access.
 
@@ -332,7 +317,7 @@ class AuditLogger:
             ip_address=ip_address,
             resource=resource,
             action=action,
-            message=f"Data access: {action} on {resource}"
+            message=f"Data access: {action} on {resource}",
         )
 
     def get_events(
@@ -341,7 +326,7 @@ class AuditLogger:
         user_id: Optional[str] = None,
         start_time: Optional[float] = None,
         end_time: Optional[float] = None,
-        limit: Optional[int] = None
+        limit: Optional[int] = None,
     ) -> List[AuditEvent]:
         """Get audit events with filters.
 
@@ -375,9 +360,7 @@ class AuditLogger:
         return events
 
     def get_statistics(
-        self,
-        start_time: Optional[float] = None,
-        end_time: Optional[float] = None
+        self, start_time: Optional[float] = None, end_time: Optional[float] = None
     ) -> Dict[str, Any]:
         """Get audit statistics.
 

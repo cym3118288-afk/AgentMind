@@ -8,12 +8,14 @@ from typing import Optional, Union
 
 try:
     import speech_recognition as sr
+
     SR_AVAILABLE = True
 except ImportError:
     SR_AVAILABLE = False
 
 try:
     from pydub import AudioSegment
+
     PYDUB_AVAILABLE = True
 except ImportError:
     PYDUB_AVAILABLE = False
@@ -21,6 +23,7 @@ except ImportError:
 
 class AudioFormat(str, Enum):
     """Supported audio formats."""
+
     WAV = "wav"
     MP3 = "mp3"
     OGG = "ogg"
@@ -54,10 +57,7 @@ class AudioProcessor:
         return audio
 
     def speech_to_text(
-        self,
-        audio: Union[sr.AudioData, str, Path],
-        language: str = "en-US",
-        engine: str = "google"
+        self, audio: Union[sr.AudioData, str, Path], language: str = "en-US", engine: str = "google"
     ) -> str:
         """Convert speech to text.
 
@@ -88,9 +88,7 @@ class AudioProcessor:
             raise RuntimeError(f"Speech recognition error: {e}")
 
     def record_audio(
-        self,
-        duration: Optional[int] = None,
-        timeout: Optional[int] = None
+        self, duration: Optional[int] = None, timeout: Optional[int] = None
     ) -> sr.AudioData:
         """Record audio from microphone.
 
@@ -146,7 +144,7 @@ class AudioProcessor:
         self,
         input_path: Union[str, Path],
         output_path: Union[str, Path],
-        output_format: AudioFormat
+        output_format: AudioFormat,
     ) -> None:
         """Convert audio file format.
 
@@ -157,8 +155,7 @@ class AudioProcessor:
         """
         if not PYDUB_AVAILABLE:
             raise ImportError(
-                "pydub is required for audio format conversion. "
-                "Install with: pip install pydub"
+                "pydub is required for audio format conversion. " "Install with: pip install pydub"
             )
 
         audio = AudioSegment.from_file(str(input_path))
@@ -175,8 +172,7 @@ class AudioProcessor:
         """
         if not PYDUB_AVAILABLE:
             raise ImportError(
-                "pydub is required for audio info. "
-                "Install with: pip install pydub"
+                "pydub is required for audio info. " "Install with: pip install pydub"
             )
 
         audio = AudioSegment.from_file(str(path))
@@ -189,10 +185,7 @@ class AudioProcessor:
         }
 
     def text_to_speech(
-        self,
-        text: str,
-        output_path: Union[str, Path],
-        language: str = "en"
+        self, text: str, output_path: Union[str, Path], language: str = "en"
     ) -> None:
         """Convert text to speech (requires gTTS).
 
@@ -205,8 +198,7 @@ class AudioProcessor:
             from gtts import gTTS
         except ImportError:
             raise ImportError(
-                "gTTS is required for text-to-speech. "
-                "Install with: pip install gTTS"
+                "gTTS is required for text-to-speech. " "Install with: pip install gTTS"
             )
 
         tts = gTTS(text=text, lang=language)
@@ -216,7 +208,7 @@ class AudioProcessor:
         self,
         audio: Union[sr.AudioData, str, Path],
         transcribe: bool = True,
-        language: str = "en-US"
+        language: str = "en-US",
     ) -> dict:
         """Prepare audio for LLM input.
 
@@ -230,10 +222,7 @@ class AudioProcessor:
         """
         result = {
             "type": "audio",
-            "source": {
-                "type": "base64",
-                "data": self.audio_to_base64(audio)
-            }
+            "source": {"type": "base64", "data": self.audio_to_base64(audio)},
         }
 
         if transcribe:

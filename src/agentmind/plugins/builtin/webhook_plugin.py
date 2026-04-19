@@ -40,12 +40,12 @@ class WebhookPlugin(IntegrationPlugin):
                 "properties": {
                     "url": {"type": "string", "description": "Webhook URL"},
                     "headers": {"type": "object", "description": "HTTP headers"},
-                    "method": {"type": "string", "description": "HTTP method (POST/PUT)"}
-                }
+                    "method": {"type": "string", "description": "HTTP method (POST/PUT)"},
+                },
             },
             tags=["webhook", "http", "integration"],
             homepage="https://github.com/agentmind/plugins/webhook",
-            license="MIT"
+            license="MIT",
         )
 
     async def initialize(self) -> None:
@@ -55,12 +55,12 @@ class WebhookPlugin(IntegrationPlugin):
 
         try:
             import aiohttp
+
             self._session = aiohttp.ClientSession()
             logger.info("Webhook plugin initialized")
         except ImportError:
             raise ImportError(
-                "aiohttp is required for Webhook plugin. "
-                "Install with: pip install aiohttp"
+                "aiohttp is required for Webhook plugin. " "Install with: pip install aiohttp"
             )
 
     async def shutdown(self) -> None:
@@ -89,11 +89,7 @@ class WebhookPlugin(IntegrationPlugin):
         """Disconnect (no-op for webhooks)."""
         logger.info("Webhook disconnected")
 
-    async def send_message(
-        self,
-        message: str,
-        **kwargs
-    ) -> Any:
+    async def send_message(self, message: str, **kwargs) -> Any:
         """Send message to webhook.
 
         Args:
@@ -106,10 +102,7 @@ class WebhookPlugin(IntegrationPlugin):
         if not self._session:
             raise RuntimeError("Plugin not initialized")
 
-        payload = {
-            "message": message,
-            **kwargs
-        }
+        payload = {"message": message, **kwargs}
 
         return await self.send_json(payload)
 
@@ -129,10 +122,7 @@ class WebhookPlugin(IntegrationPlugin):
             headers = {**self.headers, "Content-Type": "application/json"}
 
             async with self._session.request(
-                self.method,
-                self.url,
-                json=data,
-                headers=headers
+                self.method, self.url, json=data, headers=headers
             ) as response:
                 response.raise_for_status()
 
@@ -158,10 +148,7 @@ class WebhookPlugin(IntegrationPlugin):
 
         try:
             async with self._session.request(
-                self.method,
-                self.url,
-                data=data,
-                headers=self.headers
+                self.method, self.url, data=data, headers=self.headers
             ) as response:
                 response.raise_for_status()
 
@@ -177,7 +164,7 @@ class WebhookPlugin(IntegrationPlugin):
         self,
         file_path: str,
         field_name: str = "file",
-        additional_data: Optional[Dict[str, Any]] = None
+        additional_data: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Send file to webhook.
 
@@ -199,11 +186,7 @@ class WebhookPlugin(IntegrationPlugin):
 
             # Add file
             with open(file_path, "rb") as f:
-                data.add_field(
-                    field_name,
-                    f,
-                    filename=file_path.split("/")[-1]
-                )
+                data.add_field(field_name, f, filename=file_path.split("/")[-1])
 
             # Add additional data
             if additional_data:
@@ -211,10 +194,7 @@ class WebhookPlugin(IntegrationPlugin):
                     data.add_field(key, str(value))
 
             async with self._session.request(
-                self.method,
-                self.url,
-                data=data,
-                headers=self.headers
+                self.method, self.url, data=data, headers=self.headers
             ) as response:
                 response.raise_for_status()
 
@@ -239,11 +219,7 @@ class WebhookPlugin(IntegrationPlugin):
             raise RuntimeError("Plugin not initialized")
 
         try:
-            async with self._session.get(
-                self.url,
-                params=params,
-                headers=self.headers
-            ) as response:
+            async with self._session.get(self.url, params=params, headers=self.headers) as response:
                 response.raise_for_status()
 
                 if response.content_type == "application/json":

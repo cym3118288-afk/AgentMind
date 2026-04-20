@@ -1,12 +1,12 @@
 """
-Real-world Use Case: Supply Chain Optimization
+Real - world Use Case: Supply Chain Optimization
 
 This example demonstrates a supply chain optimization system using AgentMind.
 The system optimizes inventory, logistics, demand forecasting, and supplier
 management for efficient supply chain operations.
 
 Features:
-- Multi-agent supply chain coordination
+- Multi - agent supply chain coordination
 - Demand forecasting
 - Inventory optimization
 - Route planning and logistics
@@ -15,10 +15,10 @@ Features:
 """
 
 import asyncio
-from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass, field
+from typing import Dict, List, Optional
+from dataclasses import dataclass
 from enum import Enum
-from datetime import datetime, timedelta
+from datetime import datetime
 import random
 
 from agentmind import Agent, AgentMind
@@ -80,7 +80,7 @@ class Supplier:
     supplier_id: str
     name: str
     location: str
-    reliability_score: float  # 0-1
+    reliability_score: float  # 0 - 1
     lead_time_days: int
     products: List[str]
 
@@ -166,8 +166,8 @@ class DemandForecastTool(Tool):
         if len(data) < 7:
             return {"detected": False}
 
-        # Simple day-of-week pattern detection
-        weekly_avg = sum(data) / len(data)
+        # Simple day - of - week pattern detection
+        sum(data) / len(data)
         return {
             "detected": True,
             "pattern": "weekly",
@@ -201,7 +201,7 @@ class InventoryOptimizerTool(Tool):
         }
 
         current_stock = inventory.get("current_stock", 0)
-        reorder_point = inventory.get("reorder_point", 100)
+        inventory.get("reorder_point", 100)
         forecasted_demand = demand_forecast.get("forecasted_total_demand", 0)
         lead_time = inventory.get("lead_time_days", 7)
 
@@ -273,7 +273,7 @@ class RouteOptimizerTool(Tool):
                 "shipment_id": shipment.get("shipment_id"),
                 "destination": destination,
                 "distance_km": round(distance, 1),
-                "estimated_time_hours": round(distance / 60, 1),  # Assuming 60 km/h avg
+                "estimated_time_hours": round(distance / 60, 1),  # Assuming 60 km / h avg
                 "estimated_cost": round(distance * constraints["cost_per_km"], 2),
                 "priority": shipment.get("priority", "normal"),
             }
@@ -288,7 +288,7 @@ class RouteOptimizerTool(Tool):
             "total_cost": sum(r["estimated_cost"] for r in routes),
             "total_time_hours": sum(r["estimated_time_hours"] for r in routes),
             "routes": routes[:5],  # Top 5 routes
-            "optimization_savings": "15-20% vs unoptimized routes",
+            "optimization_savings": "15 - 20% vs unoptimized routes",
         }
 
         return f"Route Optimization: {optimization}"
@@ -394,7 +394,7 @@ class RiskAssessmentTool(Tool):
                 {
                     "risk_type": "supplier_concentration",
                     "level": "high",
-                    "description": "Over-reliance on few suppliers",
+                    "description": "Over - reliance on few suppliers",
                     "mitigation": "Diversify supplier base",
                 }
             )
@@ -482,7 +482,7 @@ async def create_supply_chain_system(llm_provider) -> AgentMind:
         4. Coordinate shipments efficiently
         5. Handle logistics disruptions
 
-        Get products where they need to be, on time and cost-effectively.""",
+        Get products where they need to be, on time and cost - effectively.""",
         tools=[RouteOptimizerTool()],
     )
 
@@ -532,7 +532,7 @@ async def optimize_supply_chain(
     """Optimize supply chain operations"""
 
     print(f"\n{'='*60}")
-    print(f"Optimizing Supply Chain")
+    print("Optimizing Supply Chain")
     print(f"Products: {len(products)}, Warehouses: {len(set(i.warehouse_id for i in inventory))}")
     print(f"{'='*60}\n")
 
@@ -540,7 +540,7 @@ async def optimize_supply_chain(
     mind = await create_supply_chain_system(llm_provider)
 
     # Format the optimization request
-    optimization_request = f"""
+    optimization_request = """
 Supply Chain Optimization Analysis:
 
 Products: {len(products)} SKUs across {len(set(p.category for p in products))} categories
@@ -548,7 +548,7 @@ Inventory Locations: {len(set(i.warehouse_id for i in inventory))} warehouses
 Suppliers: {len(suppliers)} active suppliers
 
 Current Situation:
-- Total inventory value: ${sum(i.current_stock * next((p.unit_cost for p in products if p.product_id == i.product_id), 0) for i in inventory):,.2f}
+- Total inventory value: ${sum(i.current_stock * next((p.unit_cost for p in products if p.product_id == i.product_id), 0) for i in inventory):,.2f}  # noqa: E501
 - Low stock items: {sum(1 for i in inventory if i.current_stock < i.reorder_point)}
 - Average supplier lead time: {sum(s.lead_time_days for s in suppliers) / len(suppliers):.1f} days
 
@@ -608,20 +608,20 @@ Provide actionable recommendations to improve efficiency and reduce costs.
 
 
 async def example_ecommerce_supply_chain():
-    """Example: E-commerce supply chain"""
+    """Example: E - commerce supply chain"""
 
     products = [
         Product("PROD001", "Laptop", ProductCategory.ELECTRONICS, 800, 14, 10),
         Product("PROD002", "Smartphone", ProductCategory.ELECTRONICS, 500, 10, 20),
-        Product("PROD003", "T-Shirt", ProductCategory.CLOTHING, 15, 7, 100),
+        Product("PROD003", "T - Shirt", ProductCategory.CLOTHING, 15, 7, 100),
         Product("PROD004", "Jeans", ProductCategory.CLOTHING, 40, 7, 50),
     ]
 
     inventory = [
-        Inventory("PROD001", "WH-EAST", 45, 50, 200, 8.5),
-        Inventory("PROD002", "WH-EAST", 120, 100, 500, 15.2),
-        Inventory("PROD003", "WH-WEST", 850, 500, 2000, 125.0),
-        Inventory("PROD004", "WH-WEST", 320, 300, 1000, 42.0),
+        Inventory("PROD001", "WH - EAST", 45, 50, 200, 8.5),
+        Inventory("PROD002", "WH - EAST", 120, 100, 500, 15.2),
+        Inventory("PROD003", "WH - WEST", 850, 500, 2000, 125.0),
+        Inventory("PROD004", "WH - WEST", 320, 300, 1000, 42.0),
     ]
 
     suppliers = [
@@ -645,9 +645,9 @@ async def example_manufacturing_supply_chain():
     ]
 
     inventory = [
-        Inventory("RM001", "PLANT-A", 450, 500, 2000, 65.0),
-        Inventory("RM002", "PLANT-A", 280, 300, 1500, 42.0),
-        Inventory("RM003", "PLANT-B", 1200, 1000, 5000, 180.0),
+        Inventory("RM001", "PLANT - A", 450, 500, 2000, 65.0),
+        Inventory("RM002", "PLANT - A", 280, 300, 1500, 42.0),
+        Inventory("RM003", "PLANT - B", 1200, 1000, 5000, 180.0),
     ]
 
     suppliers = [
@@ -667,8 +667,8 @@ async def main():
     print("Supply Chain Optimization System")
     print("=" * 60)
 
-    # Example 1: E-commerce
-    print("\n\nExample 1: E-commerce Supply Chain")
+    # Example 1: E - commerce
+    print("\n\nExample 1: E - commerce Supply Chain")
     await example_ecommerce_supply_chain()
 
     # Example 2: Manufacturing

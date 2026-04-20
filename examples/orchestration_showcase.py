@@ -1,12 +1,12 @@
 """Orchestration Showcase - Demonstrating all orchestration modes.
 
-This example demonstrates all production-ready orchestration modes:
+This example demonstrates all production - ready orchestration modes:
 1. Sequential - Chain of responsibility
-2. Hierarchical - 3-tier architecture
-3. Debate - Multi-round deliberation with voting
-4. Consensus - Agreement-based decision making
+2. Hierarchical - 3 - tier architecture
+3. Debate - Multi - round deliberation with voting
+4. Consensus - Agreement - based decision making
 5. Swarm - Dynamic scaling
-6. Graph - DAG-based workflows
+6. Graph - DAG - based workflows
 7. Hybrid - Combined modes
 
 Each mode is demonstrated with realistic scenarios.
@@ -17,7 +17,6 @@ import logging
 from typing import List
 
 from agentmind.core import Agent, AgentConfig
-from agentmind.core.types import Message
 from agentmind.orchestration.advanced_modes import (
     OrchestrationMode,
     SequentialOrchestrator,
@@ -27,7 +26,6 @@ from agentmind.orchestration.advanced_modes import (
     SwarmOrchestrator,
     GraphOrchestrator,
     HybridOrchestrator,
-    create_orchestrator,
     recommend_mode,
 )
 
@@ -72,7 +70,7 @@ async def demo_sequential():
 
     task = """Review this product specification document:
 
-Product: AI-powered task manager
+Product: AI - powered task manager
 Features: Natural language input, smart scheduling, team collaboration
 Target: Small to medium businesses
 
@@ -90,7 +88,7 @@ Each reviewer should focus on their specialty and pass findings to the next."""
     print(f"Rounds: {result.total_rounds}")
     print(f"Messages: {result.total_messages}")
     print(f"Duration: {result.metadata.get('duration', 0):.2f}s")
-    print(f"\nAgent Contributions:")
+    print("\nAgent Contributions:")
     for agent, count in result.agent_contributions.items():
         print(f"  {agent}: {count} messages")
 
@@ -115,9 +113,9 @@ async def demo_hierarchical():
     orchestrator = HierarchicalOrchestrator()
 
     task = """Develop a user authentication system with:
-- Email/password login
+- Email / password login
 - OAuth integration (Google, GitHub)
-- Two-factor authentication
+- Two - factor authentication
 - Session management
 
 Manager: Break down into tasks
@@ -190,7 +188,7 @@ Consider:
         f"Debate Rounds: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('debate_rounds', 0)}"
     )
     print(
-        f"Final Convergence: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('final_convergence', 0):.2f}"
+        f"Final Convergence: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('final_convergence', 0):.2f}"  # noqa: E501
     )
     print(
         f"Vote Result: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('vote_result', {})}"
@@ -233,10 +231,10 @@ Reach consensus through iterative refinement."""
         f"Iterations: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('iterations', 0)}"
     )
     print(
-        f"Consensus Reached: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('consensus_reached', False)}"
+        f"Consensus Reached: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('consensus_reached', False)}"  # noqa: E501
     )
     print(
-        f"Final Score: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('final_consensus_score', 0):.2f}"
+        f"Final Score: {result.metadata.get('metrics', {}).get('custom_metrics', {}).get('final_consensus_score', 0):.2f}"  # noqa: E501
     )
 
 
@@ -290,7 +288,7 @@ async def demo_graph():
     print("\n" + "=" * 80)
     print("GRAPH ORCHESTRATION DEMO")
     print("=" * 80)
-    print("Scenario: CI/CD pipeline workflow")
+    print("Scenario: CI / CD pipeline workflow")
     print()
 
     # Create agents for different pipeline stages
@@ -327,7 +325,7 @@ async def demo_graph():
     orchestrator.add_edge("stage_deploy", "smoke_test")
     orchestrator.add_edge("smoke_test", "prod_deploy")
 
-    task = "Execute CI/CD pipeline for release v2.1.0"
+    task = "Execute CI / CD pipeline for release v2.1.0"
 
     result = await orchestrator.orchestrate(
         agents,
@@ -420,7 +418,7 @@ async def demo_mode_recommendation():
             "has_hierarchy": True,
         },
         {
-            "name": "Large-scale data processing",
+            "name": "Large - scale data processing",
             "num_agents": 12,
             "complexity": "high",
             "requires_consensus": False,
@@ -455,7 +453,7 @@ async def main():
     """Run all orchestration demos."""
     print("=" * 80)
     print("AGENTMIND ORCHESTRATION SHOWCASE")
-    print("Production-Ready Multi-Agent Orchestration Patterns")
+    print("Production - Ready Multi - Agent Orchestration Patterns")
     print("=" * 80)
 
     demos = [

@@ -9,12 +9,12 @@ Estimated time: 15 minutes
 
 What you'll learn:
 - Implementing hierarchical collaboration strategies
-- Creating supervisor-subordinate agent relationships
-- Coordinating specialized agents for decision-making
+- Creating supervisor - subordinate agent relationships
+- Coordinating specialized agents for decision - making
 - Using different collaboration strategies
 
 Expected Output:
-- Supervisor (CEO) coordinates the decision-making process
+- Supervisor (CEO) coordinates the decision - making process
 - DataAnalyst provides quantitative insights
 - MarketResearcher offers market intelligence
 - RiskManager identifies potential risks
@@ -43,10 +43,10 @@ async def hierarchical_debate() -> None:
     try:
         provider = OllamaProvider(model="llama3.2", temperature=0.7)
         if not await provider.check_model_available():
-            print("[!] Ollama not available, using template-based responses")
+            print("[!] Ollama not available, using template - based responses")
             provider = None
     except Exception:
-        print("[!] Using template-based responses")
+        print("[!] Using template - based responses")
         provider = None
 
     # Create AgentMind with hierarchical strategy
@@ -55,7 +55,7 @@ async def hierarchical_debate() -> None:
     # Create supervisor
     supervisor = Agent(name="CEO", role=AgentRole.SUPERVISOR.value, llm_provider=provider)
 
-    # Create specialized sub-agents
+    # Create specialized sub - agents
     analyst = Agent(name="DataAnalyst", role=AgentRole.ANALYST.value, llm_provider=provider)
 
     researcher = Agent(

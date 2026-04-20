@@ -1,20 +1,19 @@
 """
-Advanced Example: Self-Improving Agent
+Advanced Example: Self - Improving Agent
 
 This example demonstrates an agent that learns from experience and improves over time:
 - Performance tracking and analysis
 - Strategy adaptation
 - Knowledge accumulation
-- Self-reflection and improvement
-- Meta-learning capabilities
+- Self - reflection and improvement
+- Meta - learning capabilities
 
 Estimated time: 30 minutes
 Difficulty: Advanced
 """
 
 import asyncio
-import json
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from datetime import datetime
 from agentmind import Agent, Message
 from agentmind.llm import OllamaProvider
@@ -251,7 +250,7 @@ async def example_1_basic_learning():
     tasks = [
         "Analyze the benefits of renewable energy",
         "Analyze the impact of AI on healthcare",
-        "Analyze market trends in e-commerce",
+        "Analyze market trends in e - commerce",
     ]
 
     for task in tasks:
@@ -262,26 +261,26 @@ async def example_1_basic_learning():
 
     # Show learning progress
     summary = agent.get_learning_summary()
-    print(f"Learning Summary:")
+    print("Learning Summary:")
     print(f"  Knowledge items: {summary['total_knowledge_items']}")
     print(f"  Performance: {summary['performance']['success_rate']:.2%}\n")
 
 
 async def example_2_self_reflection():
-    """Example 2: Self-reflection and improvement"""
-    print("\n=== Example 2: Self-Reflection ===\n")
+    """Example 2: Self - reflection and improvement"""
+    print("\n=== Example 2: Self - Reflection ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
     agent = SelfImprovingAgent(name="reflective", role="analyst", llm_provider=llm)
 
     # Process tasks
     for i in range(5):
-        task = f"Analyze topic {i+1}"
+        task = f"Analyze topic {i + 1}"
         await agent.process_with_learning(task)
 
-    # Perform self-reflection
+    # Perform self - reflection
     reflection = await agent.self_reflect()
-    print("Self-Reflection Results:")
+    print("Self - Reflection Results:")
     print(f"  Insights: {reflection['insights']}")
     print(f"  Improvements identified: {len(reflection['improvements_identified'])}")
     print(f"  Action items: {len(reflection['action_plan'])}\n")
@@ -298,7 +297,7 @@ async def example_3_strategy_adaptation():
 
     # Simulate performance decline
     for i in range(3):
-        task = f"Complex task {i+1}"
+        task = f"Complex task {i + 1}"
         await agent.process_with_learning(task)
 
     # Adapt strategy
@@ -346,11 +345,11 @@ async def example_5_continuous_improvement():
 
         # Process tasks
         for i in range(3):
-            task = f"Task {i+1} in cycle {cycle+1}"
+            task = f"Task {i + 1} in cycle {cycle + 1}"
             await agent.process_with_learning(task)
 
         # Reflect and adapt
-        reflection = await agent.self_reflect()
+        await agent.self_reflect()
         await agent.adapt_strategy()
 
         summary = agent.get_learning_summary()
@@ -361,7 +360,7 @@ async def example_5_continuous_improvement():
 async def main():
     """Run all examples"""
     print("=" * 60)
-    print("Advanced Example: Self-Improving Agent")
+    print("Advanced Example: Self - Improving Agent")
     print("=" * 60)
 
     await example_1_basic_learning()
@@ -376,9 +375,9 @@ async def main():
     print("\nKey Concepts:")
     print("1. Performance tracking enables learning")
     print("2. Knowledge accumulation improves future performance")
-    print("3. Self-reflection identifies improvement areas")
+    print("3. Self - reflection identifies improvement areas")
     print("4. Strategy adaptation responds to performance trends")
-    print("5. Continuous improvement cycles drive long-term growth")
+    print("5. Continuous improvement cycles drive long - term growth")
 
 
 if __name__ == "__main__":

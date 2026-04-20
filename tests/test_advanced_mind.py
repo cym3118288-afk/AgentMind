@@ -10,7 +10,6 @@ Tests:
 """
 
 import asyncio
-import json
 from pathlib import Path
 
 import pytest
@@ -23,7 +22,7 @@ from agentmind.core.mind import (
     CoordinationStrategy,
     ConflictResolutionStrategy,
 )
-from agentmind.core.types import CollaborationStrategy, Message, MessageRole
+from agentmind.core.types import CollaborationStrategy
 
 
 class TestTaskManagement:
@@ -220,7 +219,7 @@ class TestObservability:
 
     @pytest.mark.asyncio
     async def test_get_real_time_metrics(self):
-        """Test getting real-time metrics."""
+        """Test getting real - time metrics."""
         mind = AgentMind()
         mind.add_agent(Agent(name="agent1", role="analyst"))
         mind.add_task("task1", "Test task")
@@ -396,7 +395,7 @@ class TestDeadlockDetection:
         mind.add_task("task2", "Task 2", dependencies=["task1"])
 
         # Try to resolve
-        resolved = await mind._resolve_deadlock()
+        await mind._resolve_deadlock()
 
         # Should cancel task2 since task1 failed
         assert mind.tasks["task2"].status == TaskStatus.CANCELLED
@@ -508,11 +507,11 @@ class TestIntegration:
         mind.add_task(
             "retry_task",
             "Task with retry",
-            retry_policy={"max_retries": 2, "backoff": 0.1},
+            retry_policy={"max_retries": 2, "backof": 0.1},
             timeout=0.001,  # Will timeout and retry
         )
 
-        results = await mind.execute_task_queue()
+        await mind.execute_task_queue()
 
         # Should have attempted retries
         task = mind.tasks["retry_task"]

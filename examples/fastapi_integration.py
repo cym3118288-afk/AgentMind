@@ -6,7 +6,6 @@ This example shows a practical API for content generation with multiple agents.
 Use case: Content creation API with research, writing, and editing agents.
 """
 
-from typing import Optional
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -16,7 +15,7 @@ from agentmind.core.types import CollaborationStrategy
 from agentmind.llm import OllamaProvider
 
 
-# Request/Response models
+# Request / Response models
 class ContentRequest(BaseModel):
     """Request model for content generation."""
 
@@ -37,7 +36,7 @@ class ContentResponse(BaseModel):
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="AgentMind Content API", description="Multi-agent content generation API", version="1.0.0"
+    title="AgentMind Content API", description="Multi - agent content generation API", version="1.0.0"
 )
 
 
@@ -62,19 +61,19 @@ def get_content_team(model: str = "llama3.2") -> AgentMind:
     # Create LLM provider
     llm = OllamaProvider(model=model)
 
-    # Create team with round-robin strategy
+    # Create team with round - robin strategy
     mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN, llm_provider=llm)
 
     # Researcher agent
     researcher = Agent(name="Researcher", role="analyst", llm_provider=llm)
     researcher.config.system_prompt = """You are a research specialist.
 Find key facts, statistics, and insights about topics.
-Provide accurate, well-sourced information."""
+Provide accurate, well - sourced information."""
 
     # Writer agent
     writer = Agent(name="Writer", role="creative", llm_provider=llm)
     writer.config.system_prompt = """You are a professional writer.
-Create engaging, well-structured content.
+Create engaging, well - structured content.
 Adapt your style based on requirements."""
 
     # Editor agent
@@ -109,7 +108,7 @@ async def health_check():
 
 @app.post("/generate", response_model=ContentResponse)
 async def generate_content(request: ContentRequest):
-    """Generate content using multi-agent collaboration.
+    """Generate content using multi - agent collaboration.
 
     Args:
         request: Content generation request
@@ -125,7 +124,7 @@ async def generate_content(request: ContentRequest):
         mind = get_content_team(request.model)
 
         # Create task prompt
-        task = f"""Create content about: {request.topic}
+        task = """Create content about: {request.topic}
 Style: {request.style}
 
 Requirements:
@@ -189,6 +188,6 @@ if __name__ == "__main__":
     import uvicorn
 
     print("Starting AgentMind Content API...")
-    print("API docs available at: http://localhost:8000/docs")
+    print("API docs available at: http://localhost:8000 / docs")
 
     uvicorn.run(app, host="0.0.0.0", port=8000)

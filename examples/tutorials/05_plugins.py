@@ -15,7 +15,7 @@ Difficulty: Advanced
 
 import asyncio
 from typing import Any, Dict, List, Optional
-from agentmind import Agent, AgentMind
+from agentmind import Agent
 from agentmind.llm import LLMProvider, LLMResponse, LLMMessage
 from agentmind.tools import Tool, ToolRegistry
 
@@ -24,7 +24,7 @@ from agentmind.tools import Tool, ToolRegistry
 class CustomLLMProvider(LLMProvider):
     """Example custom LLM provider plugin"""
 
-    def __init__(self, model: str = "custom-model", **kwargs):
+    def __init__(self, model: str = "custom - model", **kwargs):
         self.model = model
         self.config = kwargs
 
@@ -117,7 +117,7 @@ class WebScraperTool(Tool):
 
     async def execute(self, url: str, selector: str = "body") -> str:
         """Execute web scraping (mock implementation)"""
-        # In a real plugin, this would use requests/beautifulsoup/playwright
+        # In a real plugin, this would use requests / beautifulsoup / playwright
         return f"[Scraped content from {url} using selector '{selector}']"
 
 
@@ -215,7 +215,7 @@ async def example_1_custom_llm_provider():
     print("\n=== Example 1: Custom LLM Provider ===\n")
 
     # Create custom provider
-    custom_llm = CustomLLMProvider(model="my-custom-model", api_key="test")
+    custom_llm = CustomLLMProvider(model="my - custom - model", api_key="test")
 
     # Create agent with custom provider
     agent = Agent(name="assistant", role="assistant", llm_provider=custom_llm)
@@ -298,7 +298,7 @@ async def example_5_plugin_registry():
         print(f"  {category}: {', '.join(names)}")
 
     # Get plugin instance
-    llm = registry.get_llm_provider("custom", model="test-model")
+    llm = registry.get_llm_provider("custom", model="test - model")
     print(f"\nCreated LLM provider: {llm.model}\n")
 
 
@@ -307,14 +307,14 @@ async def example_6_plugin_composition():
     print("\n=== Example 6: Plugin Composition ===\n")
 
     # Create components
-    llm = CustomLLMProvider(model="composed-model")
+    llm = CustomLLMProvider(model="composed - model")
     memory = CustomMemoryBackend(max_size=100)
-    observer = MetricsObserver()
+    MetricsObserver()
 
     print("Created plugin composition:")
     print(f"  - LLM Provider: {llm.model}")
     print(f"  - Memory Backend: max_size={memory.max_size}")
-    print(f"  - Observer: MetricsObserver")
+    print("  - Observer: MetricsObserver")
     print("\nPlugins can work together in an agent system\n")
 
 

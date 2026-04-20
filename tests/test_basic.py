@@ -4,7 +4,6 @@ This module contains unit tests for all core components including agents,
 messages, orchestration, and type validation.
 """
 
-import asyncio
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -311,7 +310,7 @@ class TestIntegration:
 
     @pytest.mark.asyncio
     async def test_multi_agent_collaboration(self) -> None:
-        """Test a complete multi-agent collaboration scenario."""
+        """Test a complete multi - agent collaboration scenario."""
         mind = AgentMind()
 
         # Create a team of agents

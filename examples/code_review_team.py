@@ -1,4 +1,4 @@
-"""Code Review Team Example - Multi-agent code review and testing.
+"""Code Review Team Example - Multi - agent code review and testing.
 
 This example demonstrates a team of agents working together to review and test code:
 - Reviewer: Analyzes code for bugs, style issues, and improvements
@@ -182,10 +182,10 @@ async def main():
 
     # Verify calculations with calculator tool
     print("[*] Verifying calculations with calculator tool...")
-    calc_result = await calculator.execute(expression="(1+2+3+4+5)/5")
-    print(f"[Calculator] (1+2+3+4+5)/5 = {calc_result.output}")
-    calc_result2 = await calculator.execute(expression="(10+20+30)/3")
-    print(f"[Calculator] (10+20+30)/3 = {calc_result2.output}")
+    calc_result = await calculator.execute(expression="(1 + 2 + 3 + 4 + 5)/5")
+    print(f"[Calculator] (1 + 2 + 3 + 4 + 5)/5 = {calc_result.output}")
+    calc_result2 = await calculator.execute(expression="(10 + 20 + 30)/3")
+    print(f"[Calculator] (10 + 20 + 30)/3 = {calc_result2.output}")
     print()
 
     # Full collaboration
@@ -238,7 +238,7 @@ async def main():
     test2 = await code_executor.execute(
         code="""
 numbers = [1, 2, 3, 4, 5]
-squared = [n**2 for n in numbers]
+squared = [n ** 2 for n in numbers]
 print(f"Original: {numbers}")
 print(f"Squared: {squared}")
 """

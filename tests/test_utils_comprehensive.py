@@ -4,8 +4,6 @@ Comprehensive tests for utils modules (exceptions, observability, retry)
 
 import pytest
 import asyncio
-from datetime import datetime
-from unittest.mock import Mock, patch, AsyncMock
 
 from agentmind.utils.exceptions import (
     AgentMindError,
@@ -19,7 +17,7 @@ from agentmind.utils.exceptions import (
     validate_max_rounds,
     validate_model_name,
 )
-from agentmind.utils.observability import Tracer, CostEstimate, TokenUsage, TraceEvent
+from agentmind.utils.observability import Tracer, CostEstimate, TokenUsage
 from agentmind.utils.retry import (
     RetryConfig,
     retry_with_backoff,
@@ -132,12 +130,12 @@ class TestTracer:
 
     def test_tracer_initialization(self):
         """Test tracer initialization"""
-        tracer = Tracer(session_id="test-session")
-        assert tracer.session_id == "test-session"
+        tracer = Tracer(session_id="test - session")
+        assert tracer.session_id == "test - session"
 
     def test_tracer_start_end(self):
         """Test tracer start and end"""
-        tracer = Tracer(session_id="test-session")
+        tracer = Tracer(session_id="test - session")
         tracer.start()
         assert tracer.trace.start_time is not None
 
@@ -146,7 +144,7 @@ class TestTracer:
 
     def test_tracer_log_event(self):
         """Test logging events"""
-        tracer = Tracer(session_id="test-session")
+        tracer = Tracer(session_id="test - session")
         tracer.start()
 
         tracer.log_event("test_event", agent_name="test_agent", data={"key": "value"})
@@ -156,14 +154,14 @@ class TestTracer:
 
     def test_tracer_get_summary(self):
         """Test getting tracer summary"""
-        tracer = Tracer(session_id="test-session")
+        tracer = Tracer(session_id="test - session")
         tracer.start()
         tracer.log_event("event1", data={})
         tracer.log_event("event2", data={})
         tracer.end()
 
         summary = tracer.get_summary()
-        assert summary["session_id"] == "test-session"
+        assert summary["session_id"] == "test - session"
         assert len(summary["events"]) == 2
 
 
@@ -190,11 +188,11 @@ class TestCostEstimate:
 
     def test_cost_estimate_initialization(self):
         """Test cost estimate initialization"""
-        cost = CostEstimate(prompt_cost=0.01, completion_cost=0.02, total_cost=0.03, model="gpt-4")
+        cost = CostEstimate(prompt_cost=0.01, completion_cost=0.02, total_cost=0.03, model="gpt - 4")
         assert cost.prompt_cost == 0.01
         assert cost.completion_cost == 0.02
         assert cost.total_cost == 0.03
-        assert cost.model == "gpt-4"
+        assert cost.model == "gpt - 4"
 
     def test_cost_estimate_defaults(self):
         """Test cost estimate defaults"""

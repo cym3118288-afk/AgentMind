@@ -1,5 +1,5 @@
 """
-Advanced Example: Human-in-the-Loop Agent
+Advanced Example: Human - in - the - Loop Agent
 
 This example demonstrates agents with human oversight:
 - Approval workflows
@@ -71,7 +71,7 @@ class HumanFeedback:
         feedback_id: str,
         agent_name: str,
         action: str,
-        rating: int,  # 1-5
+        rating: int,  # 1 - 5
         comments: Optional[str] = None,
         suggestions: Optional[str] = None,
     ):
@@ -103,20 +103,20 @@ class HumanInterface:
         print(f"Action: {request.action}")
         print(f"Risk Level: {request.risk_level.value}")
         print(f"Context: {request.context}")
-        print(f"\nOptions:")
+        print("\nOptions:")
         print("  1. Approve")
         print("  2. Reject")
         print("  3. Modify")
         print(f"{'='*60}\n")
 
         # Simulate human decision (in production, this would be actual user input)
-        # For demo purposes, auto-approve low risk, escalate high risk
+        # For demo purposes, auto - approve low risk, escalate high risk
         if request.risk_level in [EscalationLevel.LOW, EscalationLevel.MEDIUM]:
             decision = ApprovalStatus.APPROVED
-            print(f"[Simulated Human Decision: APPROVED]\n")
+            print("[Simulated Human Decision: APPROVED]\n")
         else:
             decision = ApprovalStatus.PENDING
-            print(f"[Simulated Human Decision: PENDING - Requires review]\n")
+            print("[Simulated Human Decision: PENDING - Requires review]\n")
 
         request.status = decision
         request.resolved_at = datetime.now()
@@ -126,12 +126,12 @@ class HumanInterface:
     async def get_feedback(self, agent_name: str, action: str, result: str) -> HumanFeedback:
         """Get human feedback on action"""
         print(f"\n{'='*60}")
-        print(f"FEEDBACK REQUEST")
+        print("FEEDBACK REQUEST")
         print(f"{'='*60}")
         print(f"Agent: {agent_name}")
         print(f"Action: {action}")
         print(f"Result: {result[:100]}...")
-        print(f"\nPlease rate (1-5) and provide feedback:")
+        print("\nPlease rate (1 - 5) and provide feedback:")
         print(f"{'='*60}\n")
 
         # Simulate feedback (in production, get actual user input)
@@ -167,7 +167,7 @@ class HumanInterface:
 
 
 class HumanInLoopAgent(Agent):
-    """Agent with human-in-the-loop capabilities"""
+    """Agent with human - in - the - loop capabilities"""
 
     def __init__(
         self,
@@ -284,8 +284,8 @@ async def example_1_approval_workflow():
 
 
 async def example_2_risk_based_escalation():
-    """Example 2: Risk-based escalation"""
-    print("\n=== Example 2: Risk-Based Escalation ===\n")
+    """Example 2: Risk - based escalation"""
+    print("\n=== Example 2: Risk - Based Escalation ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
     human_interface = HumanInterface()
@@ -379,7 +379,7 @@ async def example_5_approval_statistics():
     print(f"  Total requests: {stats['total']}")
     print(f"  Approved: {stats['approved']}")
     print(f"  Approval rate: {stats['approval_rate']:.1%}")
-    print(f"\nAgent Statistics:")
+    print("\nAgent Statistics:")
     print(f"  Approval requests: {agent_stats['approval_requests']}")
     print(f"  Feedback received: {agent_stats['feedback_received']}\n")
 
@@ -387,7 +387,7 @@ async def example_5_approval_statistics():
 async def main():
     """Run all examples"""
     print("=" * 60)
-    print("Advanced Example: Human-in-the-Loop Agent")
+    print("Advanced Example: Human - in - the - Loop Agent")
     print("=" * 60)
 
     await example_1_approval_workflow()
@@ -401,10 +401,10 @@ async def main():
     print("=" * 60)
     print("\nKey Concepts:")
     print("1. Human approval ensures oversight of critical actions")
-    print("2. Risk-based escalation prioritizes human attention")
+    print("2. Risk - based escalation prioritizes human attention")
     print("3. Feedback loops enable continuous improvement")
     print("4. Collaborative refinement produces better results")
-    print("5. Statistics track human-agent interaction patterns")
+    print("5. Statistics track human - agent interaction patterns")
 
 
 if __name__ == "__main__":

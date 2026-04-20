@@ -3,9 +3,9 @@ Advanced Example: Adversarial Debate System
 
 This example demonstrates agents engaging in structured debates:
 - Multiple perspectives and viewpoints
-- Argument construction and counter-arguments
-- Evidence-based reasoning
-- Moderator-guided discussion
+- Argument construction and counter - arguments
+- Evidence - based reasoning
+- Moderator - guided discussion
 - Consensus building
 - Critical thinking and analysis
 
@@ -17,7 +17,7 @@ import asyncio
 from typing import Dict, List, Any, Optional
 from enum import Enum
 from datetime import datetime
-from agentmind import Agent, AgentMind, Message
+from agentmind import Agent, Message
 from agentmind.llm import OllamaProvider
 
 
@@ -127,7 +127,7 @@ class DebateAgent(Agent):
         self, topic: str, argument_type: ArgumentType, context: Optional[str]
     ) -> str:
         """Construct debate prompt"""
-        position_text = "in favor of" if self.position == DebatePosition.FOR else "against"
+        position_text = "in favor o" if self.position == DebatePosition.FOR else "against"
 
         if argument_type == ArgumentType.OPENING:
             prompt = f"Make an opening argument {position_text} the following topic: {topic}"
@@ -187,7 +187,7 @@ class Moderator(Agent):
         self, arguments_for: List[Argument], arguments_against: List[Argument]
     ) -> Dict[str, Any]:
         """Analyze arguments and provide assessment"""
-        prompt = f"""Analyze these debate arguments and provide an assessment:
+        prompt = """Analyze these debate arguments and provide an assessment:
 
 Arguments FOR: {len(arguments_for)} arguments
 Arguments AGAINST: {len(arguments_against)} arguments
@@ -279,7 +279,7 @@ class DebateSystem:
     async def _final_assessment(self):
         """Provide final debate assessment"""
         print(f"\n{'='*60}")
-        print(f"FINAL ASSESSMENT")
+        print("FINAL ASSESSMENT")
         print(f"{'='*60}\n")
 
         # Collect all arguments
@@ -312,7 +312,7 @@ class DebateSystem:
 
 
 async def example_1_simple_debate():
-    """Example 1: Simple two-sided debate"""
+    """Example 1: Simple two - sided debate"""
     print("\n=== Example 1: Simple Debate ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
@@ -348,8 +348,8 @@ async def example_1_simple_debate():
 
 
 async def example_2_multi_perspective_debate():
-    """Example 2: Multi-perspective debate"""
-    print("\n=== Example 2: Multi-Perspective Debate ===\n")
+    """Example 2: Multi - perspective debate"""
+    print("\n=== Example 2: Multi - Perspective Debate ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
 
@@ -373,14 +373,14 @@ async def example_2_multi_perspective_debate():
 
     # Show statistics
     stats = debate.get_debate_stats()
-    print(f"\nDebate Statistics:")
+    print("\nDebate Statistics:")
     print(f"  Total rounds: {stats['rounds']}")
     print(f"  Total arguments: {stats['total_arguments']}\n")
 
 
 async def example_3_evidence_based_debate():
-    """Example 3: Evidence-based debate"""
-    print("\n=== Example 3: Evidence-Based Debate ===\n")
+    """Example 3: Evidence - based debate"""
+    print("\n=== Example 3: Evidence - Based Debate ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
 
@@ -401,16 +401,16 @@ async def example_3_evidence_based_debate():
         expertise=["research", "statistics"],
     )
 
-    # Make evidence-based arguments
+    # Make evidence - based arguments
     topic = "Climate change requires immediate action"
 
     arg_pro = await proponent.make_argument(topic, ArgumentType.EVIDENCE)
-    print(f"Evidence FOR:")
+    print("Evidence FOR:")
     print(f"  {arg_pro.content[:150]}...")
     print(f"  Evidence types: {arg_pro.evidence}\n")
 
     arg_con = await opponent.make_argument(topic, ArgumentType.EVIDENCE)
-    print(f"Evidence AGAINST:")
+    print("Evidence AGAINST:")
     print(f"  {arg_con.content[:150]}...")
     print(f"  Evidence types: {arg_con.evidence}\n")
 
@@ -431,7 +431,7 @@ async def main():
     print("\nKey Concepts:")
     print("1. Structured debates explore multiple perspectives")
     print("2. Moderators guide discussion and maintain structure")
-    print("3. Evidence-based arguments strengthen positions")
+    print("3. Evidence - based arguments strengthen positions")
     print("4. Rebuttals challenge opposing viewpoints")
     print("5. Critical analysis leads to better understanding")
 

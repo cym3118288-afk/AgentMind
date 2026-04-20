@@ -1,12 +1,12 @@
 """
-Real-world Use Case: Game AI Development
+Real - world Use Case: Game AI Development
 
 This example demonstrates a game AI development system using AgentMind.
 The system creates intelligent game agents with different behaviors, strategies,
-and decision-making capabilities for various game genres.
+and decision - making capabilities for various game genres.
 
 Features:
-- Multi-agent game AI design
+- Multi - agent game AI design
 - Behavior tree generation
 - Strategy optimization
 - Difficulty balancing
@@ -15,10 +15,9 @@ Features:
 """
 
 import asyncio
-from typing import Dict, List, Optional, Tuple
-from dataclasses import dataclass, field
+from typing import Dict, List, Tuple
+from dataclasses import dataclass
 from enum import Enum
-import random
 
 from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider
@@ -173,7 +172,7 @@ class DifficultyBalancerTool(Tool):
 
         # Analyze player performance
         win_rate = player_stats.get("win_rate", 0.5)
-        avg_completion_time = player_stats.get("avg_completion_time", 300)
+        player_stats.get("avg_completion_time", 300)
         deaths = player_stats.get("deaths", 5)
 
         # Calculate difficulty adjustment
@@ -420,7 +419,7 @@ async def design_game_ai(
     """Design complete game AI system"""
 
     print(f"\n{'='*60}")
-    print(f"Designing Game AI")
+    print("Designing Game AI")
     print(f"Genre: {game_genre.value}")
     print(f"{'='*60}\n")
 
@@ -428,7 +427,7 @@ async def design_game_ai(
     mind = await create_game_ai_system(llm_provider)
 
     # Format the design request
-    design_request = f"""
+    design_request = """
 Game AI Design Project:
 
 Game Genre: {game_genre.value}
@@ -438,7 +437,7 @@ Please design a comprehensive game AI system including:
 
 1. AI BEHAVIOR DESIGN
    - Design behavior trees for different AI types
-   - Create personality and decision-making patterns
+   - Create personality and decision - making patterns
    - Ensure variety and unpredictability
 
 2. DIFFICULTY BALANCING
@@ -509,7 +508,7 @@ async def example_strategy_game_ai():
     """Example: Strategy game AI"""
 
     game_description = """
-    Real-time strategy game. Need AI that:
+    Real - time strategy game. Need AI that:
     - Manages economy and resources
     - Builds bases strategically
     - Commands armies tactically
@@ -527,7 +526,7 @@ async def example_fps_enemy_ai():
     """Example: FPS enemy AI"""
 
     game_description = """
-    First-person shooter. Need enemy AI that:
+    First - person shooter. Need enemy AI that:
     - Uses cover intelligently
     - Flanks and coordinates with teammates
     - Varies tactics based on situation

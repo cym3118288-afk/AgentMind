@@ -6,13 +6,12 @@ from typing import Any, Dict, List
 from agentmind import Agent, AgentMind
 from agentmind.llm import LLMProvider, LLMResponse
 from agentmind.tools import Tool, ToolResult
-from agentmind.core import CollaborationStrategy
 
 
 class MockLLMProvider(LLMProvider):
     """Mock LLM provider for testing."""
 
-    def __init__(self, model="mock-model", **kwargs):
+    def __init__(self, model="mock - model", **kwargs):
         super().__init__(model, **kwargs)
 
     async def generate(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -90,13 +89,13 @@ class TestToolWrapperPattern:
         external = ExternalTool()
         wrapper = ExternalToolWrapper(external)
 
-        result = await wrapper.execute(expression="2+2")
+        result = await wrapper.execute(expression="2 + 2")
         assert result.success is True
         assert result.output == "4"
 
 
 class TestChainCompatibility:
-    """Test chain/pipeline compatibility patterns."""
+    """Test chain / pipeline compatibility patterns."""
 
     @pytest.mark.asyncio
     async def test_agentmind_as_chain(self):
@@ -177,7 +176,7 @@ class TestChainCompatibility:
 
 
 class TestRAGIntegration:
-    """Test RAG (Retrieval-Augmented Generation) integration patterns."""
+    """Test RAG (Retrieval - Augmented Generation) integration patterns."""
 
     @pytest.mark.asyncio
     async def test_document_retriever_tool(self):
@@ -208,7 +207,7 @@ class TestRAGIntegration:
 
         # Create documents
         docs = [
-            Document("AgentMind is a multi-agent framework", {"source": "docs"}),
+            Document("AgentMind is a multi - agent framework", {"source": "docs"}),
             Document("It supports multiple LLM providers", {"source": "docs"}),
             Document("Python is a programming language", {"source": "other"}),
         ]
@@ -218,7 +217,7 @@ class TestRAGIntegration:
         result = await retriever.execute(query="AgentMind")
 
         assert result.success is True
-        assert "multi-agent" in result.output
+        assert "multi - agent" in result.output
         assert "Python" not in result.output
 
     @pytest.mark.asyncio
@@ -255,7 +254,7 @@ class TestRAGIntegration:
         provider = MockLLMProvider()
         mind = AgentMind(llm_provider=provider)
 
-        retriever = DocumentRetriever(docs)
+        DocumentRetriever(docs)
         rag_agent = Agent(name="rag_agent", role="rag_specialist", llm_provider=provider)
 
         mind.add_agent(rag_agent)
@@ -268,7 +267,7 @@ class TestRAGIntegration:
 
 
 class TestAsyncCompatibility:
-    """Test async/await compatibility with external frameworks."""
+    """Test async / await compatibility with external frameworks."""
 
     @pytest.mark.asyncio
     async def test_async_tool_execution(self):
@@ -326,7 +325,7 @@ class TestStreamingCompatibility:
 
         class StreamingProvider(LLMProvider):
             def __init__(self):
-                super().__init__(model="streaming-model")
+                super().__init__(model="streaming - model")
 
             async def generate(self, messages, **kwargs):
                 return LLMResponse(
@@ -437,7 +436,7 @@ class TestConfigurationCompatibility:
         """Test mapping configurations between frameworks."""
 
         # AgentMind config
-        am_config = {"model": "gpt-4", "temperature": 0.7, "max_tokens": 1000}
+        am_config = {"model": "gpt - 4", "temperature": 0.7, "max_tokens": 1000}
 
         # Map to external format (e.g., OpenAI)
         external_config = {
@@ -446,7 +445,7 @@ class TestConfigurationCompatibility:
             "max_tokens": am_config["max_tokens"],
         }
 
-        assert external_config["model"] == "gpt-4"
+        assert external_config["model"] == "gpt - 4"
         assert external_config["temperature"] == 0.7
 
     def test_agent_config_export(self):

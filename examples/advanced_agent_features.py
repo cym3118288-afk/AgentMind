@@ -2,9 +2,9 @@
 
 Demonstrates:
 - Advanced state machine with transitions and hooks
-- Multi-modal message support
-- Human-in-the-loop workflows
-- Sub-agent management and delegation
+- Multi - modal message support
+- Human - in - the - loop workflows
+- Sub - agent management and delegation
 - Learning and adaptation
 - State persistence and recovery
 """
@@ -13,18 +13,18 @@ import asyncio
 from pathlib import Path
 
 from agentmind.core.agent import Agent, AgentState, ApprovalPolicy, ContentType
-from agentmind.core.types import AgentConfig, Message, MessageRole
+from agentmind.core.types import Message, MessageRole
 
 
 # Human callback for approval
 def human_approval_callback(approval_request):
     """Simulate human approval."""
-    print(f"\n[HUMAN] Approval requested:")
+    print("\n[HUMAN] Approval requested:")
     print(f"  Agent: {approval_request['agent']}")
     print(f"  Action: {approval_request['action']}")
     print(f"  Context: {approval_request['context']}")
 
-    # Auto-approve for demo (in real scenario, would prompt user)
+    # Auto - approve for demo (in real scenario, would prompt user)
     return True
 
 
@@ -66,14 +66,14 @@ async def demo_state_management():
 
 
 async def demo_multimodal():
-    """Demonstrate multi-modal support."""
+    """Demonstrate multi - modal support."""
     print("\n" + "=" * 60)
-    print("DEMO 2: Multi-Modal Support")
+    print("DEMO 2: Multi - Modal Support")
     print("=" * 60)
 
     agent = Agent(name="multimodal_agent", role="analyst")
 
-    # Enable multi-modal support
+    # Enable multi - modal support
     agent.enable_multimodal(
         content_types=[ContentType.TEXT, ContentType.IMAGE, ContentType.DOCUMENT],
         streaming=False,
@@ -99,9 +99,9 @@ async def demo_multimodal():
 
 
 async def demo_human_in_loop():
-    """Demonstrate human-in-the-loop workflows."""
+    """Demonstrate human - in - the - loop workflows."""
     print("\n" + "=" * 60)
-    print("DEMO 3: Human-in-the-Loop")
+    print("DEMO 3: Human - in - the - Loop")
     print("=" * 60)
 
     agent = Agent(
@@ -115,7 +115,7 @@ async def demo_human_in_loop():
     # Request approval for an action
     approved = await agent.request_human_approval(
         action="Execute critical operation",
-        context={"risk_level": "high", "impact": "system-wide"},
+        context={"risk_level": "high", "impact": "system - wide"},
     )
 
     print(f"\nApproval result: {approved}")
@@ -133,25 +133,25 @@ async def demo_human_in_loop():
 
 
 async def demo_sub_agents():
-    """Demonstrate sub-agent management."""
+    """Demonstrate sub - agent management."""
     print("\n" + "=" * 60)
-    print("DEMO 4: Sub-Agent Management")
+    print("DEMO 4: Sub - Agent Management")
     print("=" * 60)
 
     # Create parent agent
     parent = Agent(name="supervisor", role="supervisor")
 
-    # Create sub-agents
+    # Create sub - agents
     analyst = Agent(name="analyst_sub", role="analyst")
     researcher = Agent(name="researcher_sub", role="researcher")
 
-    # Add sub-agents
+    # Add sub - agents
     parent.add_sub_agent(analyst)
     parent.add_sub_agent(researcher)
 
-    print(f"\nParent agent has {len(parent.sub_agents)} sub-agents")
+    print(f"\nParent agent has {len(parent.sub_agents)} sub - agents")
 
-    # Delegate task to sub-agent
+    # Delegate task to sub - agent
     task = Message(
         content="Research the latest AI trends",
         sender="supervisor",
@@ -161,7 +161,7 @@ async def demo_sub_agents():
     response = await parent.delegate_task("researcher_sub", task)
     print(f"\nDelegation response: {response.content if response else 'None'}")
 
-    # Broadcast to all sub-agents
+    # Broadcast to all sub - agents
     broadcast_msg = Message(
         content="What are your thoughts on this?",
         sender="supervisor",
@@ -171,9 +171,9 @@ async def demo_sub_agents():
     responses = await parent.broadcast_to_sub_agents(broadcast_msg)
     print(f"\nBroadcast received {len(responses)} responses")
 
-    # Check sub-agent health
+    # Check sub - agent health
     health = parent.get_sub_agent_health()
-    print("\nSub-agent health:")
+    print("\nSub - agent health:")
     for agent_name, status in health.items():
         print(f"  {agent_name}: {status}")
 
@@ -213,7 +213,7 @@ async def demo_learning():
     for suggestion in suggestions:
         print(f"  - {suggestion}")
 
-    # Start A/B test
+    # Start A / B test
     agent.start_ab_test(
         "temperature_test",
         variant_a={"temperature": 0.5},
@@ -226,9 +226,9 @@ async def demo_learning():
     agent.record_ab_result("temperature_test", False)
     agent.record_ab_result("temperature_test", True)
 
-    # Get A/B test results
+    # Get A / B test results
     ab_results = agent.get_ab_test_results("temperature_test")
-    print("\nA/B Test Results:")
+    print("\nA / B Test Results:")
     print(f"  Variant A success rate: {ab_results['variant_a_success_rate']:.1%}")
     print(f"  Variant B success rate: {ab_results['variant_b_success_rate']:.1%}")
 
@@ -244,7 +244,7 @@ async def demo_persistence():
 
     for i in range(3):
         msg = Message(
-            content=f"Message {i+1}",
+            content=f"Message {i + 1}",
             sender="user",
             role=MessageRole.USER,
         )

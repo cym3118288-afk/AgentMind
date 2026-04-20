@@ -1,6 +1,5 @@
 """Tests for tool system."""
 
-import asyncio
 import tempfile
 import time
 from pathlib import Path
@@ -8,7 +7,6 @@ from pathlib import Path
 import pytest
 
 from agentmind.tools import (
-    Tool,
     ToolResult,
     ToolRegistry,
     tool,
@@ -191,7 +189,7 @@ class TestFileIO:
             file_io = FileIO(base_dir=tmpdir)
 
             # Try to access parent directory
-            result = await file_io.execute(operation="read", path="../../../etc/passwd")
+            result = await file_io.execute(operation="read", path="../../../etc / passwd")
             assert result.success is False
             assert "denied" in result.error.lower()
 
@@ -315,7 +313,7 @@ class TestToolDecorator:
 
     @pytest.mark.asyncio
     async def test_tool_auto_wrap(self):
-        """Test that decorator auto-wraps return values."""
+        """Test that decorator auto - wraps return values."""
 
         @tool(name="adder")
         async def add(a: int, b: int):
@@ -397,7 +395,7 @@ class TestCalculatorAdvanced:
     async def test_security_eval_blocked(self):
         """Test that eval is blocked."""
         calc = Calculator()
-        result = await calc.execute(expression="eval('1+1')")
+        result = await calc.execute(expression="eval('1 + 1')")
         assert result.success is False
 
     @pytest.mark.asyncio
@@ -487,10 +485,10 @@ class TestFileIOAdvanced:
         with tempfile.TemporaryDirectory() as tmpdir:
             file_io = FileIO(base_dir=tmpdir)
             result = await file_io.execute(
-                operation="write", path="subdir/nested/file.txt", content="test content"
+                operation="write", path="subdir / nested / file.txt", content="test content"
             )
             assert result.success is True
-            assert Path(tmpdir, "subdir/nested/file.txt").exists()
+            assert Path(tmpdir, "subdir / nested / file.txt").exists()
 
     @pytest.mark.asyncio
     async def test_overwrite_existing_file(self):
@@ -562,7 +560,7 @@ class TestFileIOAdvanced:
             file_io = FileIO(base_dir=tmpdir)
 
             dangerous_paths = [
-                "../../../etc/passwd",
+                "../../../etc / passwd",
                 "..\\..\\..\\windows\\system32",
                 "./../../sensitive.txt",
                 "subdir/../../outside.txt",
@@ -617,7 +615,7 @@ class TestToolRegistryAdvanced:
 
     @pytest.mark.asyncio
     async def test_parallel_mixed_success_failure(self):
-        """Test parallel execution with mixed success/failure."""
+        """Test parallel execution with mixed success / failure."""
         registry = ToolRegistry()
         calc = Calculator()
         registry.register(calc)
@@ -732,7 +730,7 @@ class TestToolErrorRecovery:
         # Registry should still work
         calc = Calculator()
         registry.register(calc)
-        result = await registry.execute("calculator", expression="2+2")
+        result = await registry.execute("calculator", expression="2 + 2")
         assert result.success is True
 
     @pytest.mark.asyncio

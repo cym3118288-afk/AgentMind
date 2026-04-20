@@ -1,8 +1,8 @@
-"""Example: Self-improvement mechanisms."""
+"""Example: Self - improvement mechanisms."""
 
 import asyncio
 
-from agentmind.core import Agent, AgentMind
+from agentmind.core import Agent
 from agentmind.improvement import DebateImprover, FeedbackLoop, PromptOptimizer
 from agentmind.llm import OllamaProvider
 
@@ -53,9 +53,9 @@ async def demo_prompt_optimization():
 
 
 async def demo_debate_improvement():
-    """Demonstrate debate-based improvement."""
+    """Demonstrate debate - based improvement."""
     print("\n" + "=" * 60)
-    print("DEBATE-BASED IMPROVEMENT DEMO")
+    print("DEBATE - BASED IMPROVEMENT DEMO")
     print("=" * 60)
 
     llm = OllamaProvider(model="llama3.2")
@@ -70,7 +70,7 @@ async def demo_debate_improvement():
     improver = DebateImprover(llm)
 
     # Run debate
-    topic = "Should companies adopt a 4-day work week?"
+    topic = "Should companies adopt a 4 - day work week?"
 
     print(f"\nDebate Topic: {topic}")
     print("\nRunning debate with 2 rounds...")
@@ -83,7 +83,7 @@ async def demo_debate_improvement():
     )
 
     print(f"\nDebate completed with {len(result['transcript'])} exchanges")
-    print(f"\nConsensus:")
+    print("\nConsensus:")
     print(result["consensus"][:200] + "...")
 
     # Improve an output through criticism
@@ -99,10 +99,10 @@ async def demo_debate_improvement():
         improvement_rounds=2,
     )
 
-    print(f"\nOriginal Output:")
+    print("\nOriginal Output:")
     print(original_output)
 
-    print(f"\nImproved Output:")
+    print("\nImproved Output:")
     print(improvement_result["final"][:200] + "...")
 
 
@@ -177,14 +177,14 @@ async def demo_feedback_loop():
     # Get improvement suggestions
     suggestions = loop.get_improvement_suggestions(agent.name)
 
-    print(f"\nImprovement Suggestions:")
+    print("\nImprovement Suggestions:")
     for suggestion in suggestions:
         print(f"  - {suggestion}")
 
 
 async def main():
     """Run all demos."""
-    print("AgentMind Self-Improvement Mechanisms")
+    print("AgentMind Self - Improvement Mechanisms")
     print("=" * 60)
 
     await demo_prompt_optimization()

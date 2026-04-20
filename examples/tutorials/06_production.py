@@ -48,7 +48,7 @@ class ResilientAgent(Agent):
                 logger.error(f"Attempt {attempt + 1} failed: {str(e)}")
 
                 if attempt < self.max_retries - 1:
-                    wait_time = 2**attempt  # Exponential backoff
+                    wait_time = 2 ** attempt  # Exponential backoff
                     logger.info(f"Retrying in {wait_time} seconds...")
                     await asyncio.sleep(wait_time)
                 else:
@@ -105,7 +105,7 @@ class CircuitBreaker:
         self.timeout = timeout
         self.failure_count = 0
         self.last_failure_time: Optional[float] = None
-        self.state = "closed"  # closed, open, half-open
+        self.state = "closed"  # closed, open, half - open
 
     def call(self, func):
         """Decorator for circuit breaker"""
@@ -113,14 +113,14 @@ class CircuitBreaker:
         async def wrapper(*args, **kwargs):
             if self.state == "open":
                 if time.time() - self.last_failure_time > self.timeout:
-                    self.state = "half-open"
-                    logger.info("Circuit breaker: half-open")
+                    self.state = "half - open"
+                    logger.info("Circuit breaker: half - open")
                 else:
                     raise Exception("Circuit breaker is open")
 
             try:
                 result = await func(*args, **kwargs)
-                if self.state == "half-open":
+                if self.state == "half - open":
                     self.state = "closed"
                     self.failure_count = 0
                     logger.info("Circuit breaker: closed")
@@ -230,7 +230,7 @@ async def example_2_performance_monitoring():
     from agentmind import Message
 
     for i in range(3):
-        msg = Message(content=f"Test message {i+1}", sender="user", role="user")
+        msg = Message(content=f"Test message {i + 1}", sender="user", role="user")
         await agent.process_message(msg)
 
     # Get metrics
@@ -247,7 +247,7 @@ async def example_3_circuit_breaker():
 
     breaker = CircuitBreaker(failure_threshold=3, timeout=60)
 
-    print(f"Circuit breaker configured:")
+    print("Circuit breaker configured:")
     print(f"  Failure threshold: {breaker.failure_threshold}")
     print(f"  Timeout: {breaker.timeout}s")
     print(f"  Current state: {breaker.state}\n")
@@ -259,7 +259,7 @@ async def example_4_rate_limiting():
 
     limiter = RateLimiter(max_calls=5, time_window=60)
 
-    print(f"Rate limiter configured:")
+    print("Rate limiter configured:")
     print(f"  Max calls: {limiter.max_calls}")
     print(f"  Time window: {limiter.time_window}s")
 
@@ -267,9 +267,9 @@ async def example_4_rate_limiting():
     for i in range(7):
         allowed = await limiter.acquire()
         if allowed:
-            print(f"  Call {i+1}: Allowed")
+            print(f"  Call {i + 1}: Allowed")
         else:
-            print(f"  Call {i+1}: Rate limited")
+            print(f"  Call {i + 1}: Rate limited")
 
 
 async def example_5_health_checks():
@@ -329,7 +329,7 @@ async def example_7_security_considerations():
         "API key management (environment variables)",
         "Rate limiting to prevent abuse",
         "Audit logging for sensitive operations",
-        "Secure communication (HTTPS/TLS)",
+        "Secure communication (HTTPS / TLS)",
         "Access control and authentication",
         "Data encryption at rest and in transit",
         "Regular security updates",
@@ -358,7 +358,7 @@ async def example_8_scaling_strategies():
         ],
         "Caching": ["Cache LLM responses", "Cache tool results", "Memory optimization"],
         "Async Processing": [
-            "Non-blocking operations",
+            "Non - blocking operations",
             "Parallel agent execution",
             "Background tasks",
         ],
@@ -391,7 +391,7 @@ async def main():
     print("Tutorial Complete!")
     print("=" * 60)
     print("\nKey Takeaways:")
-    print("1. Implement retry logic with exponential backoff")
+    print("1. Implement retry logic with exponential backo")
     print("2. Monitor performance metrics continuously")
     print("3. Use circuit breakers for fault tolerance")
     print("4. Apply rate limiting to prevent abuse")

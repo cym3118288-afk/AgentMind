@@ -25,15 +25,15 @@ class MockLLMProvider(LLMProvider):
 
 def test_llm_provider_initialization():
     """Test LLM provider initialization."""
-    provider = MockLLMProvider(model="test-model", temperature=0.5, max_tokens=500)
-    assert provider.model == "test-model"
+    provider = MockLLMProvider(model="test - model", temperature=0.5, max_tokens=500)
+    assert provider.model == "test - model"
     assert provider.temperature == 0.5
     assert provider.max_tokens == 500
 
 
 def test_llm_provider_build_messages():
     """Test message building."""
-    provider = MockLLMProvider(model="test-model")
+    provider = MockLLMProvider(model="test - model")
 
     # Test with system prompt and user message
     messages = provider.build_messages(
@@ -58,20 +58,20 @@ def test_llm_provider_build_messages():
 @pytest.mark.asyncio
 async def test_mock_provider_generate():
     """Test mock provider generation."""
-    provider = MockLLMProvider(model="test-model")
+    provider = MockLLMProvider(model="test - model")
     messages = [{"role": "user", "content": "Test"}]
 
     response = await provider.generate(messages)
     assert isinstance(response, LLMResponse)
     assert response.content == "Mock response"
-    assert response.model == "test-model"
+    assert response.model == "test - model"
     assert response.usage["total_tokens"] == 15
 
 
 @pytest.mark.asyncio
 async def test_mock_provider_stream():
     """Test mock provider streaming."""
-    provider = MockLLMProvider(model="test-model")
+    provider = MockLLMProvider(model="test - model")
     messages = [{"role": "user", "content": "Test"}]
 
     chunks = []
@@ -92,8 +92,8 @@ def test_ollama_provider_initialization():
 
 def test_ollama_provider_custom_url():
     """Test Ollama provider with custom URL."""
-    provider = OllamaProvider(model="llama3.2", base_url="http://custom-host:8080")
-    assert provider.base_url == "http://custom-host:8080"
+    provider = OllamaProvider(model="llama3.2", base_url="http://custom - host:8080")
+    assert provider.base_url == "http://custom - host:8080"
 
 
 def test_litellm_provider_list_models():
@@ -114,12 +114,12 @@ def test_llm_response_model():
     """Test LLMResponse Pydantic model."""
     response = LLMResponse(
         content="Test content",
-        model="test-model",
+        model="test - model",
         usage={"total_tokens": 100},
         metadata={"test": True},
     )
     assert response.content == "Test content"
-    assert response.model == "test-model"
+    assert response.model == "test - model"
     assert response.usage["total_tokens"] == 100
     assert response.metadata["test"] is True
 

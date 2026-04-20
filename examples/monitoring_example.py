@@ -74,7 +74,7 @@ async def example_opentelemetry_tracing():
     print("\n=== OpenTelemetry Tracing Example ===\n")
 
     try:
-        tracer = OpenTelemetryTracer(service_name="agentmind-example")
+        tracer = OpenTelemetryTracer(service_name="agentmind - example")
 
         llm = OllamaProvider(model="llama3.2")
         mind = AgentMind(llm_provider=llm)

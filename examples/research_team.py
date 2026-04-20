@@ -1,4 +1,4 @@
-"""Research Team Example - Multi-agent collaboration for research and writing.
+"""Research Team Example - Multi - agent collaboration for research and writing.
 
 This example demonstrates a team of agents working together:
 - Researcher: Searches for information and gathers data
@@ -18,7 +18,7 @@ async def main():
     """Run the research team collaboration example."""
 
     print("=" * 60)
-    print("Research Team Example - Multi-Agent Collaboration")
+    print("Research Team Example - Multi - Agent Collaboration")
     print("=" * 60)
     print()
 
@@ -51,7 +51,7 @@ async def main():
     writer_config = AgentConfig(
         name="writer",
         role="assistant",
-        backstory="Professional writer who synthesizes information into clear, well-structured reports.",
+        backstory="Professional writer who synthesizes information into clear, well - structured reports.",
         temperature=0.8,
         max_tokens=600,
         tools=[],
@@ -118,7 +118,7 @@ async def main():
     print("[Phase 3] Writing Phase")
     print("-" * 60)
     write_msg = Message(
-        content=f"Write a comprehensive report based on the research and critique. Research: {research_response.content}. Critique: {critique_response.content}",
+        content=f"Write a comprehensive report based on the research and critique. Research: {research_response.content}. Critique: {critique_response.content}",  # noqa: E501
         sender="system",
         role=MessageRole.SYSTEM,
     )

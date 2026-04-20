@@ -2,14 +2,13 @@
 
 import asyncio
 import pytest
-from unittest.mock import Mock, AsyncMock, patch
+from unittest.mock import Mock, AsyncMock
 
 from agentmind.performance.cache import (
     InMemoryCache,
     CacheManager,
-    RedisCache,
 )
-from agentmind.performance.batch import BatchProcessor, BatchResult
+from agentmind.performance.batch import BatchProcessor
 from agentmind.performance.memory_optimizer import (
     MemoryOptimizer,
     ConversationCompressor,
@@ -19,7 +18,7 @@ from agentmind.core.types import Message
 
 
 class TestInMemoryCache:
-    """Test in-memory cache implementation."""
+    """Test in - memory cache implementation."""
 
     @pytest.mark.asyncio
     async def test_basic_operations(self):
@@ -30,7 +29,7 @@ class TestInMemoryCache:
         await cache.set("key1", "value1")
         assert await cache.get("key1") == "value1"
 
-        # Test non-existent key
+        # Test non - existent key
         assert await cache.get("nonexistent") is None
 
         # Test exists
@@ -361,7 +360,7 @@ class TestConnectionPool:
 
         # Acquire connections
         conn1 = await pool.acquire(create_connection)
-        conn2 = await pool.acquire(create_connection)
+        await pool.acquire(create_connection)
 
         stats = pool.get_stats()
         assert stats["in_use"] == 2
@@ -406,7 +405,7 @@ class TestConnectionPool:
 
         # Acquire max connections
         conn1 = await pool.acquire(create_connection)
-        conn2 = await pool.acquire(create_connection)
+        await pool.acquire(create_connection)
 
         # Try to acquire one more - should block
         acquire_task = asyncio.create_task(pool.acquire(create_connection))

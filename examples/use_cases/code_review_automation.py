@@ -1,5 +1,5 @@
 """
-Real-world Use Case: Code Review Automation
+Real - world Use Case: Code Review Automation
 
 This example demonstrates an automated code review system using AgentMind.
 Multiple specialized agents collaborate to review code for:
@@ -10,14 +10,14 @@ Multiple specialized agents collaborate to review code for:
 - Test coverage
 
 Features:
-- Multi-agent code analysis
+- Multi - agent code analysis
 - Automated issue detection
 - Prioritized recommendations
 - Detailed review reports
 """
 
 import asyncio
-from typing import List, Dict, Optional
+from typing import List, Optional
 from dataclasses import dataclass
 from enum import Enum
 
@@ -52,7 +52,7 @@ class CodeReview:
     file_path: str
     language: str
     issues: List[CodeIssue]
-    overall_score: int  # 0-100
+    overall_score: int  # 0 - 100
     summary: str
     recommendations: List[str]
 
@@ -75,7 +75,7 @@ class StaticAnalysisTool(Tool):
         if "eval(" in code:
             issues.append("CRITICAL: Use of eval() detected - security risk")
         if "TODO" in code or "FIXME" in code:
-            issues.append("INFO: TODO/FIXME comments found")
+            issues.append("INFO: TODO / FIXME comments found")
         if code.count("\n") > 100:
             issues.append("MEDIUM: Function too long (>100 lines)")
         if "except:" in code or "except Exception:" in code:
@@ -156,7 +156,7 @@ class ComplexityAnalysisTool(Tool):
 
 
 async def create_code_review_system() -> AgentMind:
-    """Create the code review multi-agent system"""
+    """Create the code review multi - agent system"""
 
     llm = OllamaProvider(model="llama3.2")
     mind = AgentMind(llm_provider=llm)
@@ -244,7 +244,7 @@ async def create_code_review_system() -> AgentMind:
 
 
 async def review_code(mind: AgentMind, file_path: str, code: str, language: str) -> CodeReview:
-    """Review code using the multi-agent system"""
+    """Review code using the multi - agent system"""
 
     print(f"\n{'='*60}")
     print(f"Reviewing: {file_path}")
@@ -253,7 +253,7 @@ async def review_code(mind: AgentMind, file_path: str, code: str, language: str)
     print(f"{'='*60}\n")
 
     # Create review context
-    context = f"""
+    context = """
     Please review this {language} code:
 
     File: {file_path}
@@ -315,8 +315,8 @@ def process_user_data(user_input):
 
 
 async def example_secure_code():
-    """Example 2: Review secure, well-written code"""
-    print("\n=== Example 2: Well-Written Code Review ===\n")
+    """Example 2: Review secure, well - written code"""
+    print("\n=== Example 2: Well - Written Code Review ===\n")
 
     mind = await create_code_review_system()
 
@@ -332,7 +332,7 @@ def calculate_discount(price: float, discount_percent: float) -> float:
 
     Args:
         price: Original price
-        discount_percent: Discount percentage (0-100)
+        discount_percent: Discount percentage (0 - 100)
 
     Returns:
         Discounted price

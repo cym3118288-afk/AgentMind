@@ -45,10 +45,10 @@ class TestLLMProviderBase:
 
     def test_provider_repr(self) -> None:
         """Test provider string representation."""
-        provider = MockLLMProvider(model="test-model", temperature=0.5, max_tokens=500)
+        provider = MockLLMProvider(model="test - model", temperature=0.5, max_tokens=500)
         repr_str = repr(provider)
         assert "MockLLMProvider" in repr_str
-        assert "test-model" in repr_str
+        assert "test - model" in repr_str
         assert "0.5" in repr_str
 
     def test_build_messages_empty(self) -> None:
@@ -306,7 +306,7 @@ class TestLiteLLMProvider:
                 from agentmind.llm import LiteLLMProvider
 
                 with pytest.raises(ImportError) as exc_info:
-                    LiteLLMProvider(model="gpt-4")
+                    LiteLLMProvider(model="gpt - 4")
                 assert "litellm is not installed" in str(exc_info.value)
 
     def test_list_models_without_litellm(self) -> None:
@@ -323,9 +323,9 @@ class TestLLMResponse:
 
     def test_response_with_minimal_data(self) -> None:
         """Test LLMResponse with minimal required data."""
-        response = LLMResponse(content="Test", model="test-model")
+        response = LLMResponse(content="Test", model="test - model")
         assert response.content == "Test"
-        assert response.model == "test-model"
+        assert response.model == "test - model"
         assert response.usage == {}
         assert response.metadata == {}
 
@@ -333,7 +333,7 @@ class TestLLMResponse:
         """Test LLMResponse with all fields."""
         response = LLMResponse(
             content="Test content",
-            model="test-model",
+            model="test - model",
             usage={"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30},
             metadata={"id": "123", "created": 1234567890},
         )
@@ -343,10 +343,10 @@ class TestLLMResponse:
 
     def test_response_serialization(self) -> None:
         """Test LLMResponse can be serialized."""
-        response = LLMResponse(content="Test", model="test-model", usage={"total_tokens": 100})
+        response = LLMResponse(content="Test", model="test - model", usage={"total_tokens": 100})
         data = response.model_dump()
         assert data["content"] == "Test"
-        assert data["model"] == "test-model"
+        assert data["model"] == "test - model"
         assert data["usage"]["total_tokens"] == 100
 
 

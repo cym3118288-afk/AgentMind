@@ -1,7 +1,7 @@
-"""Example: Multi-modal agent with audio processing.
+"""Example: Multi - modal agent with audio processing.
 
 This example demonstrates how to use AgentMind with audio capabilities
-for speech-to-text, text-to-speech, and audio analysis.
+for speech - to - text, text - to - speech, and audio analysis.
 """
 
 import asyncio
@@ -14,14 +14,14 @@ from agentmind.llm import LiteLLMProvider
 
 async def example_speech_to_text():
     """Convert speech to text."""
-    print("=== Speech-to-Text Example ===\n")
+    print("=== Speech - to - Text Example ===\n")
 
     processor = AudioProcessor()
 
-    audio_path = "path/to/audio.wav"
+    audio_path = "path / to / audio.wav"
     if Path(audio_path).exists():
         # Transcribe audio
-        text = processor.speech_to_text(audio_path, language="en-US")
+        text = processor.speech_to_text(audio_path, language="en - US")
         print(f"Transcription: {text}\n")
     else:
         print(f"Audio file not found: {audio_path}\n")
@@ -29,11 +29,11 @@ async def example_speech_to_text():
 
 async def example_text_to_speech():
     """Convert text to speech."""
-    print("=== Text-to-Speech Example ===\n")
+    print("=== Text - to - Speech Example ===\n")
 
     processor = AudioProcessor()
 
-    text = "Hello! This is a test of the text-to-speech system."
+    text = "Hello! This is a test of the text - to - speech system."
     output_path = "output_speech.mp3"
 
     processor.text_to_speech(text, output_path, language="en")
@@ -46,7 +46,7 @@ async def example_audio_transcription_agent():
 
     # Initialize components
     audio_processor = AudioProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     # Create transcription agent
@@ -57,7 +57,7 @@ async def example_audio_transcription_agent():
     )
     mind.add_agent(transcriber)
 
-    audio_path = "path/to/meeting_recording.wav"
+    audio_path = "path / to / meeting_recording.wav"
     if Path(audio_path).exists():
         # Transcribe audio
         transcription = audio_processor.speech_to_text(audio_path)
@@ -79,7 +79,7 @@ async def example_audio_format_conversion():
 
     processor = AudioProcessor()
 
-    input_path = "path/to/audio.wav"
+    input_path = "path / to / audio.wav"
     output_path = "output_audio.mp3"
 
     if Path(input_path).exists():
@@ -95,10 +95,10 @@ async def example_audio_info():
 
     processor = AudioProcessor()
 
-    audio_path = "path/to/audio.wav"
+    audio_path = "path / to / audio.wav"
     if Path(audio_path).exists():
         info = processor.get_audio_info(audio_path)
-        print(f"Audio information:")
+        print("Audio information:")
         for key, value in info.items():
             print(f"  {key}: {value}")
         print()
@@ -107,11 +107,11 @@ async def example_audio_info():
 
 
 async def example_voice_assistant():
-    """Create a voice-enabled assistant."""
+    """Create a voice - enabled assistant."""
     print("=== Voice Assistant Example ===\n")
 
     audio_processor = AudioProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     assistant = Agent(
@@ -125,8 +125,8 @@ async def example_voice_assistant():
     print("Voice Assistant: Ready to help!")
     print("(In a real scenario, this would record from microphone)\n")
 
-    # Example: Process pre-recorded question
-    question_audio = "path/to/question.wav"
+    # Example: Process pre - recorded question
+    question_audio = "path / to / question.wav"
     if Path(question_audio).exists():
         # Transcribe question
         question = audio_processor.speech_to_text(question_audio)
@@ -147,18 +147,18 @@ async def example_voice_assistant():
 
 async def example_multi_language_transcription():
     """Transcribe audio in multiple languages."""
-    print("=== Multi-Language Transcription Example ===\n")
+    print("=== Multi - Language Transcription Example ===\n")
 
     processor = AudioProcessor()
 
     languages = {
-        "english.wav": "en-US",
-        "spanish.wav": "es-ES",
-        "chinese.wav": "zh-CN",
+        "english.wav": "en - US",
+        "spanish.wav": "es - ES",
+        "chinese.wav": "zh - CN",
     }
 
     for audio_file, language in languages.items():
-        audio_path = f"path/to/{audio_file}"
+        audio_path = f"path / to/{audio_file}"
         if Path(audio_path).exists():
             text = processor.speech_to_text(audio_path, language=language)
             print(f"{language}: {text}")
@@ -172,7 +172,7 @@ async def example_meeting_summarizer():
     print("=== Meeting Summarizer Example ===\n")
 
     audio_processor = AudioProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     # Create specialized agents
@@ -191,14 +191,14 @@ async def example_meeting_summarizer():
     mind.add_agent(transcriber)
     mind.add_agent(summarizer)
 
-    meeting_audio = "path/to/meeting.wav"
+    meeting_audio = "path / to / meeting.wav"
     if Path(meeting_audio).exists():
         # Transcribe
         raw_transcription = audio_processor.speech_to_text(meeting_audio)
 
         # Process with agents
         result = await mind.collaborate(
-            f"Clean up and summarize this meeting transcription, "
+            "Clean up and summarize this meeting transcription, "
             f"including key points and action items:\n\n{raw_transcription}",
             max_rounds=2,
         )

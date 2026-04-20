@@ -1,7 +1,7 @@
 """
 Financial Analysis and Reporting System
 
-A multi-agent system for comprehensive financial analysis, risk assessment,
+A multi - agent system for comprehensive financial analysis, risk assessment,
 and automated report generation.
 
 Features:
@@ -12,13 +12,13 @@ Features:
 - Investment recommendations
 
 Usage:
-    python examples/use_cases/financial_analysis.py
+    python examples / use_cases / financial_analysis.py
 """
 
 import asyncio
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 import random
 
@@ -340,7 +340,7 @@ async def analyze_investment(ticker: str, investment_amount: float) -> Dict[str,
     mind.add_agent(investment_advisor)
 
     # Create analysis task
-    task = f"""Perform comprehensive investment analysis for {ticker}.
+    task = """Perform comprehensive investment analysis for {ticker}.
 
     Investment Amount: ${investment_amount:,.2f}
 
@@ -395,7 +395,7 @@ async def generate_portfolio_report(tickers: List[str]) -> Dict[str, Any]:
 
     mind.add_agent(portfolio_analyst)
 
-    task = f"""Analyze portfolio containing: {', '.join(tickers)}
+    task = """Analyze portfolio containing: {', '.join(tickers)}
 
     Provide:
     1. Individual holding analysis
@@ -405,7 +405,7 @@ async def generate_portfolio_report(tickers: List[str]) -> Dict[str, Any]:
     5. Performance outlook"""
 
     print(f"\n{'='*60}")
-    print(f"Portfolio Analysis")
+    print("Portfolio Analysis")
     print(f"Holdings: {', '.join(tickers)}")
     print(f"{'='*60}\n")
 
@@ -448,7 +448,7 @@ if __name__ == "__main__":
     ╔══════════════════════════════════════════════════════════╗
     ║   Financial Analysis System - AgentMind Demo            ║
     ║                                                          ║
-    ║   Multi-agent system for investment analysis            ║
+    ║   Multi - agent system for investment analysis            ║
     ╚══════════════════════════════════════════════════════════╝
     """
     )

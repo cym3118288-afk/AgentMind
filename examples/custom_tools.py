@@ -19,13 +19,12 @@ Expected Output:
 - Weather tool provides city weather information (mock data)
 - Database tool performs data queries
 - Time tool provides current timestamp
-- Demonstrates tool integration in multi-agent workflows
+- Demonstrates tool integration in multi - agent workflows
 """
 
 import asyncio
 import json
 from datetime import datetime
-from typing import Dict, List
 
 from agentmind import Agent, AgentMind
 from agentmind.core.types import CollaborationStrategy
@@ -156,7 +155,7 @@ async def demo_basic_tools():
 
     # Test text analysis
     print("Testing text analysis tool:")
-    result = analyze_text("AgentMind is a lightweight multi-agent framework.")
+    result = analyze_text("AgentMind is a lightweight multi - agent framework.")
     print(f"  {result}\n")
 
 
@@ -177,7 +176,7 @@ async def demo_agent_with_tools():
     analyst.config.system_prompt = """You are a data analyst with access to tools.
 Use the calculator tool for computations.
 Use the analyze_text tool to analyze text data.
-Provide clear, data-driven insights."""
+Provide clear, data - driven insights."""
 
     # Register tools with agent
     analyst.tool_registry.register(calculator)
@@ -205,7 +204,7 @@ Provide clear, data-driven insights."""
 async def demo_multi_agent_tools():
     """Demonstrate multiple agents with different tools."""
     print("\n" + "=" * 60)
-    print("DEMO 3: Multi-Agent Tool Collaboration")
+    print("DEMO 3: Multi - Agent Tool Collaboration")
     print("=" * 60 + "\n")
 
     llm = OllamaProvider(model="llama3.2")
@@ -237,7 +236,7 @@ Provide clear, actionable recommendations."""
 
     task = """Plan a trip to London:
 1. Check the weather
-2. Calculate budget: (hotel $150/night * 3 nights) + (meals $50/day * 3 days)
+2. Calculate budget: (hotel $150 / night * 3 nights) + (meals $50 / day * 3 days)
 3. Provide recommendations"""
 
     print("Task:", task)

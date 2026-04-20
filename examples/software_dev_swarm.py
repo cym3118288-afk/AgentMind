@@ -1,7 +1,7 @@
 # Software Development Swarm Example
 
 """
-Software Development Swarm - Multi-agent collaboration for software development.
+Software Development Swarm - Multi - agent collaboration for software development.
 
 This example demonstrates:
 - System architecture design
@@ -26,7 +26,7 @@ async def run_software_dev_swarm(project_description: str, requirements: list):
     """Run a software development planning session."""
 
     print(f"\n{'='*80}")
-    print(f"Software Development Swarm")
+    print("Software Development Swarm")
     print(f"{'='*80}\n")
     print(f"Project: {project_description}\n")
     print("Requirements:")
@@ -73,12 +73,12 @@ async def run_software_dev_swarm(project_description: str, requirements: list):
 
         Your expertise includes:
         - Clean code and design patterns
-        - Test-driven development
+        - Test - driven development
         - Code review and refactoring
         - Framework and library selection
         - Technical documentation
 
-        You write high-quality, maintainable code that follows best practices.
+        You write high - quality, maintainable code that follows best practices.
         Focus on code quality, testing, and documentation.""",
         llm_provider=llm,
     )
@@ -103,11 +103,11 @@ async def run_software_dev_swarm(project_description: str, requirements: list):
     devops_engineer = Agent(
         name="DevOps Engineer",
         role="devops",
-        system_prompt="""You are a DevOps Engineer specializing in CI/CD and infrastructure.
+        system_prompt="""You are a DevOps Engineer specializing in CI / CD and infrastructure.
 
         Your expertise includes:
         - Container orchestration (Docker, Kubernetes)
-        - CI/CD pipeline design
+        - CI / CD pipeline design
         - Infrastructure as Code
         - Monitoring and observability
         - Cloud platforms (AWS, GCP, Azure)
@@ -149,7 +149,7 @@ async def run_software_dev_swarm(project_description: str, requirements: list):
 
     # Define development task
     requirements_text = "\n".join([f"- {req}" for req in requirements])
-    task = f"""
+    task = """
     Design and plan the development of: {project_description}
 
     Requirements:
@@ -186,7 +186,7 @@ async def run_software_dev_swarm(project_description: str, requirements: list):
     print("=" * 80 + "\n")
     print(f"Total Messages: {len(mind.conversation_history)}")
     print(f"Rounds Completed: {len(mind.conversation_history) // 5}")
-    print(f"Agents Participated: 5")
+    print("Agents Participated: 5")
 
     return result
 
@@ -194,22 +194,22 @@ async def run_software_dev_swarm(project_description: str, requirements: list):
 async def main():
     """Main entry point."""
 
-    # Example 1: E-commerce Platform
+    # Example 1: E - commerce Platform
     print("\n" + "=" * 80)
-    print("EXAMPLE 1: E-commerce Platform")
+    print("EXAMPLE 1: E - commerce Platform")
     print("=" * 80)
 
     await run_software_dev_swarm(
-        project_description="Modern e-commerce platform with real-time inventory",
+        project_description="Modern e - commerce platform with real - time inventory",
         requirements=[
             "User authentication and authorization",
             "Product catalog with search and filtering",
             "Shopping cart and checkout process",
             "Payment gateway integration",
-            "Real-time inventory management",
+            "Real - time inventory management",
             "Order tracking and notifications",
             "Admin dashboard for management",
-            "Mobile-responsive design",
+            "Mobile - responsive design",
             "Support for 10,000+ concurrent users",
             "PCI DSS compliance",
         ],
@@ -221,12 +221,12 @@ async def main():
     print("=" * 80)
 
     await run_software_dev_swarm(
-        project_description="HIPAA-compliant healthcare data API",
+        project_description="HIPAA - compliant healthcare data API",
         requirements=[
             "RESTful API with versioning",
             "Patient data management",
             "Medical records storage and retrieval",
-            "Role-based access control",
+            "Role - based access control",
             "Audit logging for all operations",
             "Data encryption at rest and in transit",
             "HIPAA compliance requirements",

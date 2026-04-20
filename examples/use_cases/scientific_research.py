@@ -1,12 +1,12 @@
 """
-Real-world Use Case: Scientific Research Automation
+Real - world Use Case: Scientific Research Automation
 
 This example demonstrates a scientific research automation system using AgentMind.
 The system assists researchers by analyzing papers, designing experiments,
 analyzing data, and generating research reports.
 
 Features:
-- Multi-agent research collaboration
+- Multi - agent research collaboration
 - Literature review and synthesis
 - Experiment design and methodology
 - Data analysis and visualization
@@ -15,10 +15,9 @@ Features:
 """
 
 import asyncio
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 from dataclasses import dataclass, field
 from enum import Enum
-from datetime import datetime
 
 from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider
@@ -127,7 +126,7 @@ class LiteratureSearchTool(Tool):
                 year=2024,
                 journal="Science",
                 citations=89,
-                key_findings=["Successful in vitro trials", "Minimal off-target effects"],
+                key_findings=["Successful in vitro trials", "Minimal off - target effects"],
             ),
             ResearchPaper(
                 title="Quantum Computing for Drug Discovery",
@@ -223,10 +222,10 @@ class ExperimentDesignTool(Tool):
 
     def _estimate_duration(self, field: str) -> str:
         durations = {
-            "biology": "6-12 months",
-            "chemistry": "3-6 months",
-            "physics": "3-9 months",
-            "computer_science": "2-4 months",
+            "biology": "6 - 12 months",
+            "chemistry": "3 - 6 months",
+            "physics": "3 - 9 months",
+            "computer_science": "2 - 4 months",
         }
         return durations.get(field, "6 months")
 
@@ -279,7 +278,7 @@ class DataAnalysisTool(Tool):
         n = len(values)
         mean = sum(values) / n
         variance = sum((x - mean) ** 2 for x in values) / n
-        std_dev = variance**0.5
+        std_dev = variance ** 0.5
         min_val = min(values)
         max_val = max(values)
 
@@ -295,8 +294,8 @@ class DataAnalysisTool(Tool):
 
         # Hypothesis testing (simplified)
         if analysis_type == "hypothesis_test":
-            # Simple t-test simulation
-            t_statistic = mean / (std_dev / (n**0.5)) if std_dev > 0 else 0
+            # Simple t - test simulation
+            t_statistic = mean / (std_dev / (n ** 0.5)) if std_dev > 0 else 0
             analysis["t_statistic"] = round(t_statistic, 3)
             analysis["significant"] = abs(t_statistic) > 2.0  # Simplified
 
@@ -402,7 +401,7 @@ async def create_research_system(llm_provider) -> AgentMind:
         4. Assess statistical significance
         5. Visualize results effectively
 
-        Use rigorous statistical methods. Report confidence intervals and p-values.""",
+        Use rigorous statistical methods. Report confidence intervals and p - values.""",
         tools=[DataAnalysisTool()],
     )
 
@@ -444,7 +443,7 @@ async def conduct_research_project(
     mind = await create_research_system(llm_provider)
 
     # Format the research request
-    research_request = f"""
+    research_request = """
 Scientific Research Project:
 
 Research Question: {research_question}
@@ -477,7 +476,7 @@ Please conduct a comprehensive research project including:
    - Discuss implications
    - Suggest future work
 
-Provide a complete, publication-ready research plan.
+Provide a complete, publication - ready research plan.
 """
 
     # Collaborate to conduct research
@@ -510,7 +509,7 @@ Provide a complete, publication-ready research plan.
 async def example_protein_folding():
     """Example: Protein folding research"""
 
-    research_question = "Can machine learning predict protein folding patterns more accurately than traditional methods?"
+    research_question = "Can machine learning predict protein folding patterns more accurately than traditional methods?"  # noqa: E501
     field = ResearchField.BIOLOGY
 
     llm = OllamaProvider(model="llama3.2")
@@ -522,7 +521,7 @@ async def example_drug_discovery():
     """Example: Drug discovery research"""
 
     research_question = (
-        "What novel compounds show promise for treating antibiotic-resistant bacteria?"
+        "What novel compounds show promise for treating antibiotic - resistant bacteria?"
     )
     field = ResearchField.CHEMISTRY
 

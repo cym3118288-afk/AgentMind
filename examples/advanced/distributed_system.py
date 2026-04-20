@@ -1,11 +1,11 @@
 """
 Advanced Example: Distributed Agent System
 
-This example demonstrates a distributed multi-agent system:
+This example demonstrates a distributed multi - agent system:
 - Distributed task allocation
 - Load balancing across agents
 - Fault tolerance and recovery
-- Inter-agent communication
+- Inter - agent communication
 - Scalable architecture
 - Coordination protocols
 
@@ -14,11 +14,10 @@ Difficulty: Advanced
 """
 
 import asyncio
-import random
 from typing import Dict, List, Any, Optional
 from enum import Enum
 from datetime import datetime
-from agentmind import Agent, AgentMind, Message
+from agentmind import Agent, Message
 from agentmind.llm import OllamaProvider
 
 
@@ -210,7 +209,7 @@ class DistributedAgent(Agent):
 
 
 class DistributedSystem:
-    """Distributed multi-agent system coordinator"""
+    """Distributed multi - agent system coordinator"""
 
     def __init__(self):
         self.agents: Dict[str, DistributedAgent] = {}
@@ -348,7 +347,7 @@ async def example_2_load_balancing():
 
 
 async def example_3_priority_queue():
-    """Example 3: Priority-based task queue"""
+    """Example 3: Priority - based task queue"""
     print("\n=== Example 3: Priority Queue ===\n")
 
     # Create task queue
@@ -382,7 +381,7 @@ async def example_4_fault_tolerance():
     agent = DistributedAgent(name="resilient_agent", role="worker", llm_provider=llm)
 
     # Simulate task execution
-    task = DistributedTask("task_1", "Test task")
+    DistributedTask("task_1", "Test task")
 
     print(f"Agent status: {agent.status.value}")
     print("System handles failures gracefully:")
@@ -473,7 +472,7 @@ async def main():
     print("2. Load balancing optimizes resource utilization")
     print("3. Priority queues ensure critical tasks execute first")
     print("4. Fault tolerance maintains system reliability")
-    print("5. Capability-based routing matches tasks to agents")
+    print("5. Capability - based routing matches tasks to agents")
     print("6. Horizontal scaling supports growing workloads")
 
 

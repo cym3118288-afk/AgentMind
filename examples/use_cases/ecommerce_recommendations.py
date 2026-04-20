@@ -1,18 +1,18 @@
 """
-E-commerce Recommendation System
+E - commerce Recommendation System
 
-A production-ready multi-agent system for personalized product recommendations.
+A production - ready multi - agent system for personalized product recommendations.
 Combines user behavior analysis, inventory management, and personalization.
 
 Features:
 - User preference analysis
 - Product matching and ranking
-- Inventory-aware recommendations
-- A/B testing support
-- Real-time personalization
+- Inventory - aware recommendations
+- A / B testing support
+- Real - time personalization
 
 Usage:
-    python examples/use_cases/ecommerce_recommendations.py
+    python examples / use_cases / ecommerce_recommendations.py
 """
 
 import asyncio
@@ -61,7 +61,7 @@ PRODUCTS = [
         50,
         4.5,
         ["audio", "wireless", "bluetooth"],
-        "High-quality wireless headphones with noise cancellation",
+        "High - quality wireless headphones with noise cancellation",
     ),
     Product(
         "P002",
@@ -91,7 +91,7 @@ PRODUCTS = [
         100,
         4.6,
         ["fitness", "yoga", "exercise"],
-        "Non-slip yoga mat with carrying strap",
+        "Non - slip yoga mat with carrying strap",
     ),
     Product(
         "P005",
@@ -121,7 +121,7 @@ PRODUCTS = [
         40,
         4.2,
         ["kitchen", "appliance", "smoothie"],
-        "High-speed blender for smoothies and soups",
+        "High - speed blender for smoothies and soups",
     ),
     Product(
         "P008",
@@ -258,7 +258,7 @@ class UserHistoryTool(Tool):
 
 async def generate_recommendations(user_profile: UserProfile, context: str = "") -> Dict[str, Any]:
     """
-    Generate personalized product recommendations using multi-agent system
+    Generate personalized product recommendations using multi - agent system
 
     Args:
         user_profile: User profile with history and preferences
@@ -280,7 +280,7 @@ async def generate_recommendations(user_profile: UserProfile, context: str = "")
     analyst = Agent(
         name="UserAnalyst",
         role="user_behavior_analyst",
-        system_prompt="""You are a user behavior analyst for an e-commerce platform.
+        system_prompt="""You are a user behavior analyst for an e - commerce platform.
         Analyze user purchase history, browsing patterns, and preferences to understand
         their needs and interests. Identify patterns and make insights about what products
         they might be interested in.""",
@@ -292,7 +292,7 @@ async def generate_recommendations(user_profile: UserProfile, context: str = "")
         role="product_specialist",
         system_prompt="""You are a product specialist who knows the entire catalog.
         Search for products that match user preferences, considering categories, tags,
-        price ranges, and ratings. Focus on high-quality products that fit the user's needs.""",
+        price ranges, and ratings. Focus on high - quality products that fit the user's needs.""",
         tools=[search_tool],
     )
 
@@ -300,8 +300,8 @@ async def generate_recommendations(user_profile: UserProfile, context: str = "")
         name="InventoryManager",
         role="inventory_specialist",
         system_prompt="""You are an inventory manager who ensures recommended products
-        are actually available. Check stock levels and prioritize in-stock items.
-        Flag low-stock items and suggest alternatives if needed.""",
+        are actually available. Check stock levels and prioritize in - stock items.
+        Flag low - stock items and suggest alternatives if needed.""",
         tools=[inventory_tool],
     )
 
@@ -310,7 +310,7 @@ async def generate_recommendations(user_profile: UserProfile, context: str = "")
         role="recommendation_engine",
         system_prompt="""You are the final recommendation engine. Synthesize insights
         from the analyst, product matches from the expert, and inventory data to create
-        a final ranked list of 3-5 product recommendations. Provide clear reasoning for
+        a final ranked list of 3 - 5 product recommendations. Provide clear reasoning for
         each recommendation and explain why it fits the user's needs.""",
         tools=[],
     )
@@ -322,7 +322,7 @@ async def generate_recommendations(user_profile: UserProfile, context: str = "")
     mind.add_agent(recommender)
 
     # Create task
-    task = f"""Generate personalized product recommendations for the user.
+    task = """Generate personalized product recommendations for the user.
 
     Context: {context if context else 'General recommendations'}
 
@@ -332,7 +332,7 @@ async def generate_recommendations(user_profile: UserProfile, context: str = "")
     3. Verify inventory availability for recommended products
     4. Create final ranked recommendations with reasoning
 
-    Provide 3-5 specific product recommendations with clear explanations."""
+    Provide 3 - 5 specific product recommendations with clear explanations."""
 
     # Collaborate
     print(f"\n{'='*60}")
@@ -399,9 +399,9 @@ if __name__ == "__main__":
     print(
         """
     ╔══════════════════════════════════════════════════════════╗
-    ║   E-commerce Recommendation System - AgentMind Demo     ║
+    ║   E - commerce Recommendation System - AgentMind Demo     ║
     ║                                                          ║
-    ║   Multi-agent system for personalized recommendations   ║
+    ║   Multi - agent system for personalized recommendations   ║
     ╚══════════════════════════════════════════════════════════╝
     """
     )

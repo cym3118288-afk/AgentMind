@@ -1,7 +1,7 @@
 """Example demonstrating Wave 1 Core Architecture features.
 
 This example showcases:
-- EnhancedAgent with multi-modal support and sub-agents
+- EnhancedAgent with multi - modal support and sub - agents
 - EnhancedAgentMind with state machine
 - Advanced orchestration modes
 - Hybrid memory backend
@@ -11,8 +11,8 @@ This example showcases:
 
 import asyncio
 from agentmind import Agent
-from agentmind.core.enhanced_agent import EnhancedAgent, AgentState
-from agentmind.core.enhanced_mind import EnhancedAgentMind, SystemState, TaskPriority
+from agentmind.core.enhanced_agent import EnhancedAgent
+from agentmind.core.enhanced_mind import EnhancedAgentMind, TaskPriority
 from agentmind.orchestration.advanced_modes import (
     create_orchestrator,
     OrchestrationMode,
@@ -27,9 +27,9 @@ async def demo_enhanced_agent():
     """Demonstrate EnhancedAgent features."""
     print("\n=== Enhanced Agent Demo ===\n")
 
-    # Create enhanced agent with human-in-the-loop
+    # Create enhanced agent with human - in - the - loop
     def human_approval(agent_name: str, message: Message) -> bool:
-        print(f"[Human] Approve action from {agent_name}? (auto-approved)")
+        print(f"[Human] Approve action from {agent_name}? (auto - approved)")
         return True
 
     agent = EnhancedAgent(
@@ -39,7 +39,7 @@ async def demo_enhanced_agent():
         human_callback=human_approval,
     )
 
-    # Add sub-agents
+    # Add sub - agents
     analyst = Agent(name="analyst", role="analyst")
     executor = Agent(name="executor", role="executor")
 
@@ -47,14 +47,14 @@ async def demo_enhanced_agent():
     agent.add_sub_agent(executor)
 
     print(f"Agent: {agent}")
-    print(f"Sub-agents: {[a.name for a in agent.sub_agents]}")
+    print(f"Sub - agents: {[a.name for a in agent.sub_agents]}")
 
     # Process message
     msg = Message(content="Analyze market trends", sender="user", role=MessageRole.USER)
     response = await agent.process_multimodal_message(msg)
     print(f"Response: {response.content}")
 
-    # Delegate to sub-agent
+    # Delegate to sub - agent
     task = Message(content="Execute analysis", sender="manager", role=MessageRole.AGENT)
     result = await agent.delegate_to_sub_agent("analyst", task)
     print(f"Delegation result: {result.content if result else 'None'}")
@@ -190,7 +190,7 @@ async def demo_hybrid_memory():
 
     # Create hybrid memory
     memory = HybridMemoryBackend(
-        db_path=".demo_memory/hybrid.db",
+        db_path=".demo_memory / hybrid.db",
         enable_vector=False,  # Disable for demo (requires chromadb)
         enable_compression=True,
     )

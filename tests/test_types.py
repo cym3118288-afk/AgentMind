@@ -1,7 +1,6 @@
 """Test suite for type definitions and Pydantic models."""
 
 import sys
-from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -9,7 +8,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from agentmind.core.types import (
-    AgentConfig,
     AgentRole,
     CollaborationResult,
     CollaborationStrategy,

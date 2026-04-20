@@ -1,15 +1,12 @@
 """Integration tests for AgentMind features."""
 
-import asyncio
 import pytest
-from unittest.mock import Mock, AsyncMock, patch
 
 from agentmind.core.agent import Agent
 from agentmind.core.mind import AgentMind
 from agentmind.core.types import Message, AgentConfig
 from agentmind.llm.provider import LLMProvider, LLMResponse
-from agentmind.memory.manager import MemoryManager
-from agentmind.tools import ToolRegistry, tool
+from agentmind.tools import ToolRegistry
 from agentmind.performance.cache import CacheManager
 from agentmind.performance.batch import BatchProcessor
 
@@ -18,7 +15,7 @@ class MockLLMProvider(LLMProvider):
     """Mock LLM provider for testing."""
 
     def __init__(self, responses=None, **kwargs):
-        super().__init__(model="mock-model", **kwargs)
+        super().__init__(model="mock - model", **kwargs)
         self.responses = responses or []
         self.call_count = 0
 
@@ -95,7 +92,7 @@ class TestAgentIntegration:
         llm = MockLLMProvider(responses=["Response 1", "Response 2", "Response 3"])
         agent = Agent(name="test_agent", role="assistant", llm_provider=llm)
 
-        # Process multiple messages using LLM (think_and_respond auto-stores in memory)
+        # Process multiple messages using LLM (think_and_respond auto - stores in memory)
         for i in range(3):
             message = Message(role="user", content=f"Message {i}", sender="user")
             await agent.think_and_respond(message)
@@ -111,7 +108,7 @@ class TestAgentMindIntegration:
 
     @pytest.mark.asyncio
     async def test_multi_agent_collaboration(self):
-        """Test multi-agent collaboration."""
+        """Test multi - agent collaboration."""
         llm = MockLLMProvider(
             responses=[
                 "I'll analyze this task.",
@@ -156,7 +153,7 @@ class TestAgentMindIntegration:
         responses = [
             "Agent 1 response",
             "Agent 2 response",
-            "Agent 1 follow-up",
+            "Agent 1 follow - up",
         ]
         llm = MockLLMProvider(responses=responses)
 
@@ -250,7 +247,7 @@ class TestPerformanceIntegration:
         # Generate many messages
         for i in range(50):
             message = Message(role="user", content=f"Message {i}", sender="user")
-            await agent.think_and_respond(message)  # Auto-stores in memory
+            await agent.think_and_respond(message)  # Auto - stores in memory
 
         # Optimize memory
         optimizer = MemoryOptimizer(max_messages=20, sliding_window=10)
@@ -341,7 +338,7 @@ class TestErrorHandling:
             async def generate_stream(self, messages, **kwargs):
                 raise Exception("LLM Error")
 
-        llm = ErrorLLMProvider(model="error-model")
+        llm = ErrorLLMProvider(model="error - model")
         agent = Agent(name="test_agent", role="assistant", llm_provider=llm)
 
         message = Message(role="user", content="Hello", sender="user")
@@ -378,7 +375,7 @@ class TestErrorHandling:
 
 
 class TestEndToEnd:
-    """End-to-end integration tests."""
+    """End - to - end integration tests."""
 
     @pytest.mark.asyncio
     async def test_complete_workflow(self):
@@ -392,7 +389,7 @@ class TestEndToEnd:
             ]
         )
 
-        cache = CacheManager()
+        CacheManager()
         mind = AgentMind(llm_provider=llm)
 
         # Create specialized agents

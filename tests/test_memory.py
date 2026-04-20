@@ -1,7 +1,6 @@
 """Tests for memory backend system."""
 
 import asyncio
-import json
 import sys
 import tempfile
 import time
@@ -165,7 +164,7 @@ class TestSQLiteBackend:
 
             # Search by importance
             important = await backend.search_by_importance(min_importance=0.9, limit=20)
-            assert len(important) == 10  # Messages 90-99
+            assert len(important) == 10  # Messages 90 - 99
 
 
 class TestMemoryManager:
@@ -173,7 +172,7 @@ class TestMemoryManager:
 
     @pytest.mark.asyncio
     async def test_short_term_memory(self):
-        """Test short-term memory limit."""
+        """Test short - term memory limit."""
         manager = MemoryManager(short_term_limit=3)
 
         for i in range(5):
@@ -415,7 +414,7 @@ class TestMemoryPerformance:
             assert len(recent) == 100
             assert len(important) == 50  # Limit is 50
             # SQLite with individual inserts is slower but still reasonable
-            # More lenient on Windows where disk I/O can be slower
+            # More lenient on Windows where disk I / O can be slower
             assert add_time < 40.0
             assert get_time < 1.0
             assert search_time < 1.0
@@ -481,7 +480,7 @@ class TestMemoryLimitsAndCleanup:
 
     @pytest.mark.asyncio
     async def test_memory_manager_respects_short_term_limit(self):
-        """Test that short-term memory respects limit."""
+        """Test that short - term memory respects limit."""
         manager = MemoryManager(short_term_limit=5)
 
         for i in range(20):

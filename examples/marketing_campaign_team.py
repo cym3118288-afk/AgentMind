@@ -1,7 +1,7 @@
 # Marketing Campaign Team Example
 
 """
-Marketing Campaign Team - Multi-agent collaboration for campaign planning.
+Marketing Campaign Team - Multi - agent collaboration for campaign planning.
 
 This example demonstrates:
 - Marketing strategy development
@@ -26,7 +26,7 @@ async def run_marketing_campaign(product: str, target_audience: str, budget: str
     """Run a marketing campaign planning session."""
 
     print(f"\n{'='*80}")
-    print(f"Marketing Campaign Planning")
+    print("Marketing Campaign Planning")
     print(f"{'='*80}\n")
     print(f"Product: {product}")
     print(f"Target Audience: {target_audience}")
@@ -60,21 +60,21 @@ async def run_marketing_campaign(product: str, target_audience: str, budget: str
         - Budget allocation and optimization
 
         You develop comprehensive marketing strategies that drive customer acquisition and retention.
-        Focus on data-driven decisions and measurable outcomes.""",
+        Focus on data - driven decisions and measurable outcomes.""",
         llm_provider=llm,
     )
 
     creative_director = Agent(
         name="Creative Director",
         role="creative_direction",
-        system_prompt="""You are a Creative Director with a portfolio of award-winning campaigns.
+        system_prompt="""You are a Creative Director with a portfolio of award - winning campaigns.
 
         Your expertise includes:
         - Creative concept development
         - Brand storytelling and messaging
         - Visual identity and design direction
         - Campaign ideation
-        - Multi-channel creative execution
+        - Multi - channel creative execution
 
         You bring bold, original ideas that capture attention and resonate with audiences.
         Focus on emotional connection and brand differentiation.""",
@@ -84,7 +84,7 @@ async def run_marketing_campaign(product: str, target_audience: str, budget: str
     content_strategist = Agent(
         name="Content Strategist",
         role="content_strategy",
-        system_prompt="""You are a Content Strategist specializing in engaging, SEO-optimized content.
+        system_prompt="""You are a Content Strategist specializing in engaging, SEO - optimized content.
 
         Your expertise includes:
         - Content planning and calendaring
@@ -127,7 +127,7 @@ async def run_marketing_campaign(product: str, target_audience: str, budget: str
     print("✓ Social Media Manager - Social engagement")
 
     # Define campaign task
-    task = f"""
+    task = """
     Plan a comprehensive marketing campaign for: {product}
 
     Target Audience: {target_audience}
@@ -164,7 +164,7 @@ async def run_marketing_campaign(product: str, target_audience: str, budget: str
     print("=" * 80 + "\n")
     print(f"Total Messages: {len(mind.conversation_history)}")
     print(f"Rounds Completed: {len(mind.conversation_history) // 4}")
-    print(f"Agents Participated: 4")
+    print("Agents Participated: 4")
 
     return result
 
@@ -178,20 +178,20 @@ async def main():
     print("=" * 80)
 
     await run_marketing_campaign(
-        product="AI-powered project management tool for remote teams",
-        target_audience="Tech-savvy project managers and team leads at SMBs (25-500 employees)",
-        budget="$50,000 for 3-month campaign",
+        product="AI - powered project management tool for remote teams",
+        target_audience="Tech - savvy project managers and team leads at SMBs (25 - 500 employees)",
+        budget="$50,000 for 3 - month campaign",
     )
 
-    # Example 2: E-commerce Product
+    # Example 2: E - commerce Product
     print("\n\n" + "=" * 80)
-    print("EXAMPLE 2: E-commerce Product Launch")
+    print("EXAMPLE 2: E - commerce Product Launch")
     print("=" * 80)
 
     await run_marketing_campaign(
-        product="Sustainable, eco-friendly yoga mats made from recycled materials",
-        target_audience="Health-conscious millennials and Gen Z (25-40 years old) interested in sustainability",
-        budget="$25,000 for 2-month campaign",
+        product="Sustainable, eco - friendly yoga mats made from recycled materials",
+        target_audience="Health - conscious millennials and Gen Z (25 - 40 years old) interested in sustainability",
+        budget="$25,000 for 2 - month campaign",
     )
 
 

@@ -1,14 +1,14 @@
 """Tests for Agent with LLM integration."""
 
 import pytest
-from agentmind.core import Agent, Message, MessageRole
+from agentmind.core import Agent, Message
 from agentmind.llm import LLMProvider, LLMResponse
 
 
 class MockLLMProvider(LLMProvider):
     """Mock LLM provider for testing."""
 
-    def __init__(self, model="mock-model", **kwargs):
+    def __init__(self, model="mock - model", **kwargs):
         super().__init__(model, **kwargs)
         self.call_count = 0
 
@@ -69,7 +69,7 @@ async def test_agent_llm_error_fallback():
         async def generate_stream(self, messages, **kwargs):
             raise Exception("LLM error")
 
-    provider = ErrorLLMProvider(model="error-model")
+    provider = ErrorLLMProvider(model="error - model")
     agent = Agent(name="test_agent", role="analyst", llm_provider=provider)
 
     message = Message(content="Test", sender="user")
@@ -107,7 +107,7 @@ async def test_agent_system_prompt_generation():
 
     assert isinstance(system_prompt, str)
     assert len(system_prompt) > 0
-    # Should contain role-specific information
+    # Should contain role - specific information
     assert "analyt" in system_prompt.lower() or "data" in system_prompt.lower()
 
 
@@ -156,7 +156,7 @@ async def test_agent_llm_metadata():
 
     assert "model" in response.metadata
     assert "usage" in response.metadata
-    assert response.metadata["model"] == "mock-model"
+    assert response.metadata["model"] == "mock - model"
 
 
 @pytest.mark.asyncio

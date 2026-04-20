@@ -1,12 +1,12 @@
 """
-Real-world Use Case: Customer Support Automation
+Real - world Use Case: Customer Support Automation
 
 This example demonstrates a complete customer support automation system using AgentMind.
 The system handles customer inquiries, searches knowledge bases, escalates complex issues,
 and provides personalized responses.
 
 Features:
-- Multi-agent collaboration for support tasks
+- Multi - agent collaboration for support tasks
 - Knowledge base integration
 - Ticket classification and routing
 - Sentiment analysis
@@ -15,7 +15,7 @@ Features:
 """
 
 import asyncio
-from typing import Dict, List, Optional
+from typing import Optional
 from dataclasses import dataclass
 from enum import Enum
 
@@ -59,12 +59,12 @@ class KnowledgeBaseTool(Tool):
 
     def __init__(self):
         self.kb = {
-            "password_reset": "To reset your password: 1) Go to login page 2) Click 'Forgot Password' 3) Enter your email 4) Check your inbox for reset link",
-            "billing_issue": "For billing issues: 1) Check your account settings 2) Verify payment method 3) Contact billing@company.com if issue persists",
-            "feature_request": "We appreciate feature requests! Please submit them via our feedback portal at feedback.company.com",
-            "technical_issue": "For technical issues: 1) Clear browser cache 2) Try different browser 3) Check system status at status.company.com",
-            "account_access": "If you can't access your account: 1) Verify your credentials 2) Check if account is active 3) Contact support if locked out",
-            "refund_policy": "Our refund policy: Full refund within 30 days of purchase. Partial refund within 60 days. Contact billing for processing.",
+            "password_reset": "To reset your password: 1) Go to login page 2) Click 'Forgot Password' 3) Enter your email 4) Check your inbox for reset link",  # noqa: E501
+            "billing_issue": "For billing issues: 1) Check your account settings 2) Verify payment method 3) Contact billing@company.com if issue persists",  # noqa: E501
+            "feature_request": "We appreciate feature requests! Please submit them via our feedback portal at feedback.company.com",  # noqa: E501
+            "technical_issue": "For technical issues: 1) Clear browser cache 2) Try different browser 3) Check system status at status.company.com",  # noqa: E501
+            "account_access": "If you can't access your account: 1) Verify your credentials 2) Check if account is active 3) Contact support if locked out",  # noqa: E501
+            "refund_policy": "Our refund policy: Full refund within 30 days of purchase. Partial refund within 60 days. Contact billing for processing.",  # noqa: E501
         }
 
         super().__init__(
@@ -137,7 +137,7 @@ class EscalationTool(Tool):
 
 
 async def create_support_system() -> AgentMind:
-    """Create the customer support multi-agent system"""
+    """Create the customer support multi - agent system"""
 
     llm = OllamaProvider(model="llama3.2")
     mind = AgentMind(llm_provider=llm)
@@ -184,7 +184,7 @@ async def create_support_system() -> AgentMind:
         4. Match the tone to customer sentiment
         5. Be concise but thorough
 
-        Always be helpful and customer-focused.""",
+        Always be helpful and customer - focused.""",
     )
 
     # 4. Escalation Agent - Handles complex cases
@@ -209,7 +209,7 @@ async def create_support_system() -> AgentMind:
 
 
 async def process_ticket(mind: AgentMind, ticket: SupportTicket) -> SupportTicket:
-    """Process a support ticket through the multi-agent system"""
+    """Process a support ticket through the multi - agent system"""
 
     print(f"\n{'='*60}")
     print(f"Processing Ticket: {ticket.id}")
@@ -219,7 +219,7 @@ async def process_ticket(mind: AgentMind, ticket: SupportTicket) -> SupportTicke
     print(f"{'='*60}\n")
 
     # Create comprehensive context for agents
-    context = f"""
+    context = """
     Ticket ID: {ticket.id}
     Customer: {ticket.customer_name} ({ticket.email})
     Subject: {ticket.subject}
@@ -255,7 +255,7 @@ async def example_simple_inquiry():
     mind = await create_support_system()
 
     ticket = SupportTicket(
-        id="TICK-001",
+        id="TICK - 001",
         customer_name="John Doe",
         email="john@example.com",
         subject="Can't log in",
@@ -272,7 +272,7 @@ async def example_billing_issue():
     mind = await create_support_system()
 
     ticket = SupportTicket(
-        id="TICK-002",
+        id="TICK - 002",
         customer_name="Jane Smith",
         email="jane@example.com",
         subject="Charged twice!",
@@ -289,7 +289,7 @@ async def example_technical_issue():
     mind = await create_support_system()
 
     ticket = SupportTicket(
-        id="TICK-003",
+        id="TICK - 003",
         customer_name="Bob Johnson",
         email="bob@example.com",
         subject="App keeps crashing",
@@ -306,7 +306,7 @@ async def example_feature_request():
     mind = await create_support_system()
 
     ticket = SupportTicket(
-        id="TICK-004",
+        id="TICK - 004",
         customer_name="Alice Williams",
         email="alice@example.com",
         subject="Feature suggestion",
@@ -323,11 +323,11 @@ async def example_complex_issue():
     mind = await create_support_system()
 
     ticket = SupportTicket(
-        id="TICK-005",
+        id="TICK - 005",
         customer_name="Charlie Brown",
         email="charlie@example.com",
         subject="Data loss after update",
-        message="After the latest update, all my data is gone! I had important files stored. This is a disaster. I need this fixed ASAP or I want a full refund and compensation.",
+        message="After the latest update, all my data is gone! I had important files stored. This is a disaster. I need this fixed ASAP or I want a full refund and compensation.",  # noqa: E501
     )
 
     await process_ticket(mind, ticket)
@@ -341,13 +341,13 @@ async def example_batch_processing():
 
     tickets = [
         SupportTicket(
-            "TICK-101", "User A", "usera@example.com", "Password reset", "Need to reset my password"
+            "TICK - 101", "User A", "usera@example.com", "Password reset", "Need to reset my password"
         ),
         SupportTicket(
-            "TICK-102", "User B", "userb@example.com", "Billing question", "What's my current plan?"
+            "TICK - 102", "User B", "userb@example.com", "Billing question", "What's my current plan?"
         ),
         SupportTicket(
-            "TICK-103",
+            "TICK - 103",
             "User C",
             "userc@example.com",
             "Feature request",

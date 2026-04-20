@@ -1,4 +1,4 @@
-"""Multi-agent debate example with LLM-powered intelligence.
+"""Multi - agent debate example with LLM - powered intelligence.
 
 This example demonstrates how agents with different perspectives can debate
 a topic and reach conclusions through collaboration using real LLM reasoning.
@@ -10,7 +10,7 @@ Estimated time: 10 minutes
 What you'll learn:
 - Configuring LLM providers (Ollama or LiteLLM)
 - Creating agents with contrasting perspectives
-- Running multi-round debates
+- Running multi - round debates
 - Analyzing debate outcomes and statistics
 
 Expected Output:
@@ -22,7 +22,6 @@ Expected Output:
 """
 
 import asyncio
-import os
 import sys
 from pathlib import Path
 
@@ -30,13 +29,13 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from agentmind import Agent, AgentMind, AgentRole
-from agentmind.llm import OllamaProvider, LiteLLMProvider
+from agentmind.llm import OllamaProvider
 
 
 async def debate_example() -> None:
     """Run a debate between agents with different perspectives."""
     print("=" * 60)
-    print("AgentMind - Multi-Agent Debate Example")
+    print("AgentMind - Multi - Agent Debate Example")
     print("=" * 60)
 
     # Configure LLM provider
@@ -45,19 +44,19 @@ async def debate_example() -> None:
 
     # Option 2: Use LiteLLM for cloud models (requires API key)
     # Uncomment and set your API key:
-    # os.environ["OPENAI_API_KEY"] = "your-key-here"
-    # provider = LiteLLMProvider(model="gpt-3.5-turbo", temperature=0.8)
+    # os.environ["OPENAI_API_KEY"] = "your - key - here"
+    # provider = LiteLLMProvider(model="gpt - 3.5 - turbo", temperature=0.8)
 
     # For this demo, we'll try Ollama first, fall back to template mode
     try:
         provider = OllamaProvider(model="llama3.2", temperature=0.8)
         # Test if Ollama is available
         if not await provider.check_model_available():
-            print("[!] Ollama not available, using template-based responses")
+            print("[!] Ollama not available, using template - based responses")
             provider = None
     except Exception as e:
         print(f"[!] Could not connect to Ollama: {e}")
-        print("[!] Using template-based responses")
+        print("[!] Using template - based responses")
         provider = None
 
     # Create AgentMind instance with LLM provider
@@ -83,7 +82,7 @@ async def debate_example() -> None:
     if provider:
         print(f"\n[*] Using LLM: {provider.model}")
     else:
-        print("\n[*] Using template-based responses (no LLM)")
+        print("\n[*] Using template - based responses (no LLM)")
 
     # Start debate
     print("\n" + "=" * 60)

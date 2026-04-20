@@ -1,5 +1,5 @@
 """
-Real-world Use Case: Legal Document Analysis
+Real - world Use Case: Legal Document Analysis
 
 This example demonstrates a legal document analysis system using AgentMind.
 The system assists legal professionals by analyzing contracts, identifying risks,
@@ -9,7 +9,7 @@ DISCLAIMER: This is for educational purposes only. Not for actual legal advice.
 Always consult qualified legal professionals for legal matters.
 
 Features:
-- Multi-agent legal analysis
+- Multi - agent legal analysis
 - Contract clause extraction
 - Risk identification
 - Compliance checking
@@ -103,7 +103,7 @@ class ClauseExtractorTool(Tool):
         self.clause_patterns = {
             "termination": ["termination", "terminate", "cancellation"],
             "liability": ["liability", "indemnification", "indemnify"],
-            "confidentiality": ["confidential", "non-disclosure", "proprietary"],
+            "confidentiality": ["confidential", "non - disclosure", "proprietary"],
             "payment": ["payment", "compensation", "fee", "price"],
             "intellectual_property": ["intellectual property", "ip rights", "copyright", "patent"],
             "dispute_resolution": ["arbitration", "dispute", "litigation", "mediation"],
@@ -154,7 +154,7 @@ class RiskAnalyzerTool(Tool):
             "medium": [
                 "may terminate",
                 "reasonable efforts",
-                "as-is",
+                "as - is",
                 "no warranty",
                 "third party beneficiary",
             ],
@@ -167,12 +167,12 @@ class RiskAnalyzerTool(Tool):
         for clause in clauses:
             clause_lower = clause.lower()
 
-            # Check for high-risk terms
+            # Check for high - risk terms
             for term in self.risk_indicators["high"]:
                 if term in clause_lower:
                     risks.append({"level": "high", "term": term, "clause": clause[:100]})
 
-            # Check for medium-risk terms
+            # Check for medium - risk terms
             for term in self.risk_indicators["medium"]:
                 if term in clause_lower:
                     risks.append({"level": "medium", "term": term, "clause": clause[:100]})
@@ -253,12 +253,12 @@ class LegalPrecedentSearchTool(Tool):
                 "Smith v. Tech Corp (2020): Liability caps upheld in commercial contracts",
                 "Jones v. Services Inc (2019): Unconscionable limitation struck down",
             ],
-            "non-compete": [
-                "Brown v. Employer (2021): 2-year non-compete deemed reasonable",
+            "non - compete": [
+                "Brown v. Employer (2021): 2 - year non - compete deemed reasonable",
                 "Davis v. Company (2020): Geographic restriction too broad",
             ],
             "intellectual property": [
-                "Tech Co v. Developer (2022): Work-for-hire doctrine applied",
+                "Tech Co v. Developer (2022): Work - for - hire doctrine applied",
                 "Creator v. Platform (2021): IP assignment must be explicit",
             ],
         }
@@ -295,7 +295,7 @@ async def create_legal_analysis_system(llm_provider) -> AgentMind:
         2. Identify the document type and parties involved
         3. Extract key terms and conditions
         4. Summarize the document's purpose and scope
-        5. Note any unusual or non-standard provisions
+        5. Note any unusual or non - standard provisions
 
         Be thorough and precise. Legal language matters.""",
         tools=[ClauseExtractorTool()],
@@ -308,9 +308,9 @@ async def create_legal_analysis_system(llm_provider) -> AgentMind:
         system_prompt="""You are a legal risk assessment specialist. Your role is to:
         1. Identify potential legal risks and liabilities
         2. Assess the severity of each risk
-        3. Evaluate one-sided or unfavorable terms
+        3. Evaluate one - sided or unfavorable terms
         4. Flag ambiguous or problematic language
-        5. Consider worst-case scenarios
+        5. Consider worst - case scenarios
 
         Protect the client's interests. Be conservative in risk assessment.""",
         tools=[RiskAnalyzerTool()],
@@ -327,7 +327,7 @@ async def create_legal_analysis_system(llm_provider) -> AgentMind:
         4. Ensure regulatory requirements are met
         5. Flag potential compliance violations
 
-        Stay current with legal requirements. Compliance is non-negotiable.""",
+        Stay current with legal requirements. Compliance is non - negotiable.""",
         tools=[ComplianceCheckerTool()],
     )
 
@@ -357,7 +357,7 @@ async def create_legal_analysis_system(llm_provider) -> AgentMind:
         4. Prioritize issues by importance
         5. Offer strategic legal advice
 
-        Provide practical, business-minded legal counsel.""",
+        Provide practical, business - minded legal counsel.""",
     )
 
     # Add all agents
@@ -381,7 +381,7 @@ async def analyze_legal_document(document: LegalDocument, llm_provider) -> Docum
     mind = await create_legal_analysis_system(llm_provider)
 
     # Format the document for analysis
-    analysis_request = f"""
+    analysis_request = """
 Legal Document Analysis Request:
 
 Document Information:
@@ -395,7 +395,7 @@ Document Content:
 
 Please provide comprehensive analysis including:
 1. Document summary and key terms
-2. Clause-by-clause analysis
+2. Clause - by - clause analysis
 3. Risk assessment (identify all potential risks)
 4. Compliance review (check for required clauses)
 5. Legal precedent research (for key issues)
@@ -434,7 +434,7 @@ async def example_employment_agreement():
     """Example: Employment agreement analysis"""
 
     document = LegalDocument(
-        doc_id="DOC-001",
+        doc_id="DOC - 001",
         title="Software Engineer Employment Agreement",
         doc_type=DocumentType.EMPLOYMENT,
         parties=["TechCorp Inc.", "John Developer"],
@@ -449,7 +449,7 @@ and John Developer ("Employee").
 Employee shall serve as Senior Software Engineer and perform duties as assigned.
 
 2. COMPENSATION
-Employee shall receive annual salary of $150,000, payable bi-weekly.
+Employee shall receive annual salary of $150,000, payable bi - weekly.
 
 3. BENEFITS
 Employee is eligible for standard company benefits including health insurance,
@@ -463,16 +463,16 @@ shall be the sole property of the Company. Employee agrees to assign all rights.
 Employee agrees to maintain confidentiality of all proprietary information
 during and after employment.
 
-6. NON-COMPETE
+6. NON - COMPETE
 Employee agrees not to work for direct competitors for 18 months after termination
-within a 50-mile radius.
+within a 50 - mile radius.
 
 7. TERMINATION
 Either party may terminate employment with 2 weeks notice. Company may terminate
 immediately for cause.
 
-8. AT-WILL EMPLOYMENT
-This is at-will employment. Either party may terminate at any time for any reason.
+8. AT - WILL EMPLOYMENT
+This is at - will employment. Either party may terminate at any time for any reason.
 
 9. GOVERNING LAW
 This agreement shall be governed by California law.
@@ -485,16 +485,16 @@ This agreement shall be governed by California law.
 
 
 async def example_nda():
-    """Example: Non-disclosure agreement analysis"""
+    """Example: Non - disclosure agreement analysis"""
 
     document = LegalDocument(
-        doc_id="DOC-002",
-        title="Mutual Non-Disclosure Agreement",
+        doc_id="DOC - 002",
+        title="Mutual Non - Disclosure Agreement",
         doc_type=DocumentType.NDA,
         parties=["StartupCo", "InvestorGroup LLC"],
         jurisdiction="Delaware, US",
         content="""
-MUTUAL NON-DISCLOSURE AGREEMENT
+MUTUAL NON - DISCLOSURE AGREEMENT
 
 This Agreement is made between StartupCo ("Disclosing Party") and
 InvestorGroup LLC ("Receiving Party").
@@ -552,7 +552,7 @@ async def main():
     await example_employment_agreement()
 
     # Example 2: NDA
-    print("\n\nExample 2: Non-Disclosure Agreement Analysis")
+    print("\n\nExample 2: Non - Disclosure Agreement Analysis")
     await example_nda()
 
 

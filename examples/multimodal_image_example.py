@@ -1,4 +1,4 @@
-"""Example: Multi-modal agent with image processing.
+"""Example: Multi - modal agent with image processing.
 
 This example demonstrates how to use AgentMind with vision capabilities
 to analyze images, extract text, and answer questions about visual content.
@@ -12,14 +12,14 @@ from agentmind.llm import LiteLLMProvider
 
 
 async def example_image_analysis():
-    """Analyze an image with a vision-capable agent."""
+    """Analyze an image with a vision - capable agent."""
     print("=== Image Analysis Example ===\n")
 
     # Initialize image processor
     image_processor = ImageProcessor(max_size=(1024, 1024))
 
-    # Initialize vision LLM (using GPT-4V or Claude 3)
-    base_llm = LiteLLMProvider(model="gpt-4-vision-preview")
+    # Initialize vision LLM (using GPT - 4V or Claude 3)
+    base_llm = LiteLLMProvider(model="gpt - 4 - vision - preview")
     vision_llm = VisionLLMProvider(base_llm, image_processor)
 
     # Create vision agent
@@ -30,7 +30,7 @@ async def example_image_analysis():
     )
 
     # Analyze an image
-    image_path = "path/to/your/image.jpg"
+    image_path = "path / to / your / image.jpg"
     if Path(image_path).exists():
         response = await agent.process_with_image(
             "What do you see in this image? Provide a detailed description.", images=[image_path]
@@ -45,10 +45,10 @@ async def example_ocr():
     print("=== OCR Example ===\n")
 
     image_processor = ImageProcessor()
-    base_llm = LiteLLMProvider(model="gpt-4-vision-preview")
+    base_llm = LiteLLMProvider(model="gpt - 4 - vision - preview")
     vision_llm = VisionLLMProvider(base_llm, image_processor)
 
-    image_path = "path/to/document.jpg"
+    image_path = "path / to / document.jpg"
     if Path(image_path).exists():
         text = await vision_llm.extract_text_from_image(image_path)
         print(f"Extracted text:\n{text}\n")
@@ -61,10 +61,10 @@ async def example_image_comparison():
     print("=== Image Comparison Example ===\n")
 
     image_processor = ImageProcessor()
-    base_llm = LiteLLMProvider(model="gpt-4-vision-preview")
+    base_llm = LiteLLMProvider(model="gpt - 4 - vision - preview")
     vision_llm = VisionLLMProvider(base_llm, image_processor)
 
-    images = ["path/to/image1.jpg", "path/to/image2.jpg"]
+    images = ["path / to / image1.jpg", "path / to / image2.jpg"]
     if all(Path(img).exists() for img in images):
         comparison = await vision_llm.compare_images(
             images, prompt="Compare these two images. What are the main differences?"
@@ -79,12 +79,12 @@ async def example_image_qa():
     print("=== Image Q&A Example ===\n")
 
     image_processor = ImageProcessor()
-    base_llm = LiteLLMProvider(model="gpt-4-vision-preview")
+    base_llm = LiteLLMProvider(model="gpt - 4 - vision - preview")
     vision_llm = VisionLLMProvider(base_llm, image_processor)
 
     agent = VisionAgent(vision_provider=vision_llm, name="ImageQA")
 
-    image_path = "path/to/chart.jpg"
+    image_path = "path / to / chart.jpg"
     if Path(image_path).exists():
         # Ask multiple questions about the same image
         questions = [
@@ -107,7 +107,7 @@ async def example_image_processing():
 
     processor = ImageProcessor()
 
-    image_path = "path/to/image.jpg"
+    image_path = "path / to / image.jpg"
     if Path(image_path).exists():
         # Load and get info
         image = processor.load_image(image_path)
@@ -135,10 +135,10 @@ async def example_image_processing():
 
 async def example_multi_agent_vision():
     """Multiple agents collaborating with vision capabilities."""
-    print("=== Multi-Agent Vision Example ===\n")
+    print("=== Multi - Agent Vision Example ===\n")
 
     image_processor = ImageProcessor()
-    base_llm = LiteLLMProvider(model="gpt-4-vision-preview")
+    base_llm = LiteLLMProvider(model="gpt - 4 - vision - preview")
     vision_llm = VisionLLMProvider(base_llm, image_processor)
 
     # Create specialized vision agents
@@ -154,7 +154,7 @@ async def example_multi_agent_vision():
         system_prompt="You analyze images for patterns, trends, and insights.",
     )
 
-    image_path = "path/to/data_visualization.jpg"
+    image_path = "path / to / data_visualization.jpg"
     if Path(image_path).exists():
         # First agent describes
         description = await describer.process_with_image(
@@ -173,7 +173,7 @@ async def example_multi_agent_vision():
 
 async def main():
     """Run all examples."""
-    print("Multi-Modal Agent Examples\n")
+    print("Multi - Modal Agent Examples\n")
     print("=" * 50 + "\n")
 
     # Note: These examples require actual image files and API keys

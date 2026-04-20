@@ -4,12 +4,11 @@ Demonstrates:
 - Global orchestration with resource allocation
 - Checkpointing and recovery
 - Advanced task management with DAG dependencies
-- System observability with real-time metrics
+- System observability with real - time metrics
 - Collaboration patterns with conflict resolution
 """
 
 import asyncio
-from pathlib import Path
 
 from agentmind.core.agent import Agent
 from agentmind.core.mind import (
@@ -18,7 +17,7 @@ from agentmind.core.mind import (
     CoordinationStrategy,
     ConflictResolutionStrategy,
 )
-from agentmind.core.types import CollaborationStrategy, Message, MessageRole
+from agentmind.core.types import CollaborationStrategy
 
 
 # Observer callback
@@ -95,7 +94,7 @@ async def demo_task_management():
 
     print(f"\nCompleted {len(results)} tasks")
     for i, result in enumerate(results):
-        print(f"  Task {i+1}: Success={result.success}")
+        print(f"  Task {i + 1}: Success={result.success}")
 
 
 async def demo_resource_allocation():
@@ -192,9 +191,9 @@ async def demo_observability():
     # Add task (will trigger events)
     mind.add_task("observed_task", "Task to observe", TaskPriority.HIGH)
 
-    # Get real-time metrics
+    # Get real - time metrics
     metrics = mind.get_real_time_metrics()
-    print("\nReal-time Metrics:")
+    print("\nReal - time Metrics:")
     print(f"  Agents: {metrics['agents']}")
     print(f"  Tasks: {metrics['tasks']}")
     print(f"  Collaboration: {metrics['collaboration']}")
@@ -214,7 +213,7 @@ async def demo_observability():
     mind.profile_performance("test_operation", 0.7)
 
     profile = mind.get_performance_profile("test_operation")
-    print(f"\nPerformance profile for 'test_operation':")
+    print("\nPerformance profile for 'test_operation':")
     print(f"  Count: {profile['count']}")
     print(f"  Average: {profile['average']:.3f}s")
     print(f"  Min: {profile['min']:.3f}s")
@@ -225,7 +224,7 @@ async def demo_observability():
     mind.track_cost("observer_agent", 0.03)
 
     costs = mind.get_cost_summary()
-    print(f"\nCost summary:")
+    print("\nCost summary:")
     for agent, cost in costs.items():
         print(f"  {agent}: ${cost:.4f}")
 
@@ -245,7 +244,7 @@ async def demo_collaboration_patterns():
 
     # Shared context
     mind.set_shared_context("project_goal", "Build an AI system")
-    mind.set_shared_context("deadline", "2024-12-31")
+    mind.set_shared_context("deadline", "2024 - 12 - 31")
 
     goal = mind.get_shared_context("project_goal")
     print(f"\nShared context - Project goal: {goal}")
@@ -305,7 +304,7 @@ async def demo_deadlock_detection():
 
 
 async def demo_priority_scheduling():
-    """Demonstrate priority-based task scheduling."""
+    """Demonstrate priority - based task scheduling."""
     print("\n" + "=" * 60)
     print("DEMO 7: Priority Scheduling")
     print("=" * 60)

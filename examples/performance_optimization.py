@@ -1,7 +1,7 @@
 """Example: Performance optimization with caching and batch processing.
 
 This example demonstrates how to use AgentMind's performance features
-to optimize multi-agent systems.
+to optimize multi - agent systems.
 """
 
 import asyncio
@@ -44,7 +44,7 @@ async def example_caching():
 
     # Show statistics
     stats = cache.get_stats()
-    print(f"\nCache Statistics:")
+    print("\nCache Statistics:")
     print(f"  Hit rate: {stats['hit_rate']:.2%}")
     print(f"  Hits: {stats['hits']}")
     print(f"  Misses: {stats['misses']}")
@@ -90,7 +90,7 @@ async def example_batch_processing():
 
     # Show statistics
     stats = processor.get_stats(results)
-    print(f"\nBatch Statistics:")
+    print("\nBatch Statistics:")
     print(f"  Success rate: {stats['success_rate']:.2%}")
     print(f"  Average duration: {stats['avg_duration']:.2f}s")
     print(f"  Total duration: {stats['total_duration']:.2f}s")
@@ -121,7 +121,7 @@ async def example_memory_optimization():
 
     # Show statistics
     stats = optimizer.get_stats()
-    print(f"\nOptimization Statistics:")
+    print("\nOptimization Statistics:")
     print(f"  Messages processed: {stats['total_messages_processed']}")
     print(f"  Messages removed: {stats['total_messages_removed']}")
     print(f"  Removal rate: {stats['removal_rate']:.2%}")

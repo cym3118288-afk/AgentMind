@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 from agentmind import Agent, AgentMind, Message
-from agentmind.core.types import AgentConfig, AgentRole, CollaborationStrategy
+from agentmind.core.types import CollaborationStrategy
 
 
 def profile_agent_creation():
@@ -46,7 +46,7 @@ def profile_memory_operations():
 
 
 def profile_agentmind_collaboration():
-    """Profile multi-agent collaboration."""
+    """Profile multi - agent collaboration."""
 
     async def run_collaboration():
         mind = AgentMind(strategy=CollaborationStrategy.BROADCAST)
@@ -83,7 +83,7 @@ def profile_broadcast():
 
 
 def profile_session_save_load():
-    """Profile session save/load operations."""
+    """Profile session save / load operations."""
     import tempfile
 
     mind = AgentMind()
@@ -140,7 +140,7 @@ def benchmark_operations():
         agent = Agent(name=f"agent_{i}", role="analyst")
     agent_creation_time = time.time() - start
     print(
-        f"Agent creation (1000x): {agent_creation_time:.4f}s ({agent_creation_time/1000*1000:.2f}ms each)"
+        f"Agent creation (1000x): {agent_creation_time:.4f}s ({agent_creation_time / 1000 * 1000:.2f}ms each)"
     )
 
     # Message creation
@@ -149,7 +149,7 @@ def benchmark_operations():
         msg = Message(content=f"Message {i}", sender="user")
     message_creation_time = time.time() - start
     print(
-        f"Message creation (1000x): {message_creation_time:.4f}s ({message_creation_time/1000*1000:.2f}ms each)"
+        f"Message creation (1000x): {message_creation_time:.4f}s ({message_creation_time / 1000 * 1000:.2f}ms each)"
     )
 
     # Memory retrieval
@@ -162,16 +162,16 @@ def benchmark_operations():
         recent = agent.get_recent_memory(limit=10)
     memory_retrieval_time = time.time() - start
     print(
-        f"Memory retrieval (1000x): {memory_retrieval_time:.4f}s ({memory_retrieval_time/1000*1000:.2f}ms each)"
+        f"Memory retrieval (1000x): {memory_retrieval_time:.4f}s ({memory_retrieval_time / 1000 * 1000:.2f}ms each)"
     )
 
     # AgentMind creation
     start = time.time()
     for i in range(100):
-        mind = AgentMind()
+        AgentMind()
     agentmind_creation_time = time.time() - start
     print(
-        f"AgentMind creation (100x): {agentmind_creation_time:.4f}s ({agentmind_creation_time/100*1000:.2f}ms each)"
+        f"AgentMind creation (100x): {agentmind_creation_time:.4f}s ({agentmind_creation_time / 100 * 1000:.2f}ms each)"
     )
 
 
@@ -186,9 +186,9 @@ if __name__ == "__main__":
     run_profile(profile_agent_creation, "Agent Creation (100x)")
     run_profile(profile_message_processing, "Message Processing (50x)")
     run_profile(profile_memory_operations, "Memory Operations")
-    run_profile(profile_agentmind_collaboration, "Multi-Agent Collaboration")
+    run_profile(profile_agentmind_collaboration, "Multi - Agent Collaboration")
     run_profile(profile_broadcast, "Message Broadcasting")
-    run_profile(profile_session_save_load, "Session Save/Load")
+    run_profile(profile_session_save_load, "Session Save / Load")
 
     print("\n" + "=" * 60)
     print("PROFILING COMPLETE")
@@ -197,5 +197,5 @@ if __name__ == "__main__":
     print("1. Check for repeated object creation in hot paths")
     print("2. Look for unnecessary list copies or iterations")
     print("3. Consider caching frequently accessed data")
-    print("4. Optimize JSON serialization/deserialization")
+    print("4. Optimize JSON serialization / deserialization")
     print("5. Use slots for frequently created objects")

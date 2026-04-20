@@ -50,7 +50,7 @@ def main():
 
     print("\nLaunching dashboard...")
     print("The dashboard will open in your browser.")
-    print("Press Ctrl+C to stop the server.")
+    print("Press Ctrl + C to stop the server.")
 
     # Launch dashboard
     # Set share=True to create a public link

@@ -2,8 +2,8 @@
 Tutorial 02: Memory Systems
 
 This tutorial covers AgentMind's memory capabilities:
-- Short-term memory (conversation history)
-- Long-term memory (persistent storage)
+- Short - term memory (conversation history)
+- Long - term memory (persistent storage)
 - Memory retrieval and context
 - Memory management strategies
 
@@ -17,8 +17,8 @@ from agentmind.llm import OllamaProvider
 
 
 async def example_1_short_term_memory():
-    """Example 1: Agent with short-term memory"""
-    print("\n=== Example 1: Short-term Memory ===\n")
+    """Example 1: Agent with short - term memory"""
+    print("\n=== Example 1: Short - term Memory ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
     agent = Agent(name="assistant", role="assistant", llm_provider=llm)
@@ -26,13 +26,13 @@ async def example_1_short_term_memory():
     # First interaction
     msg1 = Message(content="My name is Alice.", sender="user", role="user")
     response1 = await agent.process_message(msg1)
-    print(f"User: My name is Alice.")
+    print("User: My name is Alice.")
     print(f"Agent: {response1.content}\n")
 
     # Second interaction - agent should remember
     msg2 = Message(content="What's my name?", sender="user", role="user")
     response2 = await agent.process_message(msg2)
-    print(f"User: What's my name?")
+    print("User: What's my name?")
     print(f"Agent: {response2.content}\n")
 
     # Check memory
@@ -80,7 +80,7 @@ async def example_3_memory_management():
 
     # Add many messages
     for i in range(10):
-        msg = Message(content=f"Message number {i+1}", sender="user", role="user")
+        msg = Message(content=f"Message number {i + 1}", sender="user", role="user")
         await agent.process_message(msg)
 
     print(f"Sent 10 messages, memory contains: {len(agent.memory)} messages")
@@ -115,7 +115,7 @@ async def example_4_shared_memory():
 
 
 async def example_5_memory_in_collaboration():
-    """Example 5: Memory in multi-agent collaboration"""
+    """Example 5: Memory in multi - agent collaboration"""
     print("\n=== Example 5: Memory in Collaboration ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")

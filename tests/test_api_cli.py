@@ -1,12 +1,9 @@
 """Tests for API server and CLI functionality."""
 
 import pytest
-import asyncio
-import json
-from typing import Dict, Any
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import Mock, patch
 
-from agentmind import Agent, AgentMind
+from agentmind import Agent
 from agentmind.llm import LLMProvider, LLMResponse
 
 # Check for optional dependencies
@@ -30,7 +27,7 @@ except ImportError:
 class MockLLMProvider(LLMProvider):
     """Mock LLM provider for testing."""
 
-    def __init__(self, model="mock-model", **kwargs):
+    def __init__(self, model="mock - model", **kwargs):
         super().__init__(model, **kwargs)
 
     async def generate(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -131,13 +128,13 @@ class TestAPIServer:
         assert response.status_code == 422
 
     def test_get_session_not_found(self, client):
-        """Test getting non-existent session."""
-        response = client.get("/session/nonexistent-id")
+        """Test getting non - existent session."""
+        response = client.get("/session / nonexistent - id")
         assert response.status_code == 404
 
     def test_delete_session_not_found(self, client):
-        """Test deleting non-existent session."""
-        response = client.delete("/session/nonexistent-id")
+        """Test deleting non - existent session."""
+        response = client.delete("/session / nonexistent - id")
         assert response.status_code == 404
 
     @patch("api_server.create_llm_provider")
@@ -175,7 +172,7 @@ class TestAPIServer:
 
 @pytest.mark.skipif(not FASTAPI_AVAILABLE, reason="FastAPI not installed")
 class TestAPIModels:
-    """Test API request/response models."""
+    """Test API request / response models."""
 
     def test_agent_config_validation(self):
         """Test AgentConfig validation."""
@@ -239,9 +236,9 @@ class TestCLICommands:
         pytest.skip("LiteLLM not installed")
         from cli import create_llm_provider
 
-        provider = create_llm_provider("openai", "gpt-4", 0.8)
+        provider = create_llm_provider("openai", "gpt - 4", 0.8)
         assert provider is not None
-        assert provider.model == "gpt-4"
+        assert provider.model == "gpt - 4"
 
     def test_create_default_agents(self):
         """Test creating default agents."""
@@ -332,7 +329,7 @@ class TestAPIHelpers:
         """Test creating LiteLLM provider."""
         from api_server import create_llm_provider
 
-        provider = create_llm_provider("openai", "gpt-4", 0.8)
+        provider = create_llm_provider("openai", "gpt - 4", 0.8)
         assert provider is not None
 
     def test_create_llm_provider_invalid(self):
@@ -369,9 +366,9 @@ class TestStreamingAPI:
             "stream": True,
         }
 
-        response = client.post("/collaborate/stream", json=request_data)
+        response = client.post("/collaborate / stream", json=request_data)
         assert response.status_code == 200
-        assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
+        assert response.headers["content - type"] == "text / event - stream; charset=utf - 8"
 
 
 @pytest.mark.skipif(not FASTAPI_AVAILABLE, reason="FastAPI not installed")

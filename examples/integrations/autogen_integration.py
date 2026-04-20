@@ -18,7 +18,7 @@ from agentmind.llm import OllamaProvider
 
 
 class AutoGenCompatAgent(Agent):
-    """AgentMind agent with AutoGen-like interface"""
+    """AgentMind agent with AutoGen - like interface"""
 
     def __init__(self, *args, system_message: str = None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,7 +28,7 @@ class AutoGenCompatAgent(Agent):
     async def generate_reply(
         self, messages: List[Dict[str, str]], sender: Optional[str] = None
     ) -> str:
-        """AutoGen-style reply generation"""
+        """AutoGen - style reply generation"""
         # Convert AutoGen message format to AgentMind format
         if messages:
             last_message = messages[-1]
@@ -50,7 +50,7 @@ class AutoGenCompatAgent(Agent):
 
 
 class GroupChatManager:
-    """AutoGen-style group chat manager"""
+    """AutoGen - style group chat manager"""
 
     def __init__(self, agents: List[AutoGenCompatAgent], max_rounds: int = 10):
         self.agents = agents
@@ -62,7 +62,7 @@ class GroupChatManager:
         self.messages = [{"role": "user", "content": initial_message, "name": "user"}]
 
         for round_num in range(self.max_rounds):
-            # Select next speaker (round-robin for simplicity)
+            # Select next speaker (round - robin for simplicity)
             speaker = self.agents[round_num % len(self.agents)]
 
             # Generate reply
@@ -84,7 +84,7 @@ class GroupChatManager:
 
 
 class CodeExecutor:
-    """AutoGen-style code execution"""
+    """AutoGen - style code execution"""
 
     def __init__(self, work_dir: str = "/tmp"):
         self.work_dir = work_dir
@@ -114,7 +114,7 @@ async def example_1_basic_autogen_compat():
 
     llm = OllamaProvider(model="llama3.2:3b")
 
-    # Create AutoGen-compatible agent
+    # Create AutoGen - compatible agent
     agent = AutoGenCompatAgent(
         name="assistant",
         role="assistant",
@@ -122,16 +122,16 @@ async def example_1_basic_autogen_compat():
         system_message="You are a helpful AI assistant.",
     )
 
-    # Use AutoGen-style interface
+    # Use AutoGen - style interface
     messages = [{"role": "user", "content": "Hello! How are you?"}]
     reply = await agent.generate_reply(messages, sender="user")
 
-    print(f"User: Hello! How are you?")
+    print("User: Hello! How are you?")
     print(f"Agent: {reply}\n")
 
 
 async def example_2_group_chat():
-    """Example 2: AutoGen-style group chat"""
+    """Example 2: AutoGen - style group chat"""
     print("\n=== Example 2: Group Chat ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
@@ -196,7 +196,7 @@ async def example_3_code_execution():
 def fibonacci(n):
     if n <= 1:
         return n
-    return fibonacci(n-1) + fibonacci(n-2)
+    return fibonacci(n - 1) + fibonacci(n - 2)
 
 print(fibonacci(10))
 """
@@ -211,7 +211,7 @@ async def example_4_autogen_to_agentmind():
 
     llm = OllamaProvider(model="llama3.2:3b")
 
-    # AutoGen-style agents
+    # AutoGen - style agents
     autogen_agents = [
         AutoGenCompatAgent(name="agent1", role="analyst", llm_provider=llm),
         AutoGenCompatAgent(name="agent2", role="writer", llm_provider=llm),
@@ -227,7 +227,7 @@ async def example_4_autogen_to_agentmind():
         "Analyze market trends and write a summary", max_rounds=2
     )
 
-    print("Using AgentMind orchestration with AutoGen-compatible agents:")
+    print("Using AgentMind orchestration with AutoGen - compatible agents:")
     print(f"Result: {result.final_output[:200]}...\n")
 
 
@@ -239,7 +239,7 @@ async def example_5_hybrid_system():
 
     # Create hybrid system
     print("Hybrid System Features:")
-    print("  - AutoGen-style agent interface")
+    print("  - AutoGen - style agent interface")
     print("  - AgentMind orchestration")
     print("  - Code execution capabilities")
     print("  - Group chat management")

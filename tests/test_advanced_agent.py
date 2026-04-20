@@ -2,21 +2,19 @@
 
 Tests:
 - State management and transitions
-- Multi-modal support
-- Human-in-the-loop workflows
-- Sub-agent management
+- Multi - modal support
+- Human - in - the - loop workflows
+- Sub - agent management
 - Learning and adaptation
 - State persistence
 """
 
-import asyncio
 import json
-from pathlib import Path
 
 import pytest
 
 from agentmind.core.agent import Agent, AgentState, ApprovalPolicy, ContentType
-from agentmind.core.types import AgentConfig, Message, MessageRole
+from agentmind.core.types import Message, MessageRole
 
 
 class TestStateManagement:
@@ -71,11 +69,11 @@ class TestStateManagement:
 
 
 class TestMultiModal:
-    """Test multi-modal support."""
+    """Test multi - modal support."""
 
     @pytest.mark.asyncio
     async def test_enable_multimodal(self):
-        """Test enabling multi-modal support."""
+        """Test enabling multi - modal support."""
         agent = Agent(name="test_agent", role="analyst")
 
         agent.enable_multimodal(
@@ -99,7 +97,7 @@ class TestMultiModal:
 
     @pytest.mark.asyncio
     async def test_process_multimodal_message(self):
-        """Test processing multi-modal messages."""
+        """Test processing multi - modal messages."""
         agent = Agent(name="test_agent", role="analyst")
 
         agent.enable_multimodal(content_types=[ContentType.TEXT, ContentType.IMAGE])
@@ -122,7 +120,7 @@ class TestMultiModal:
 
 
 class TestHumanInLoop:
-    """Test human-in-the-loop features."""
+    """Test human - in - the - loop features."""
 
     @pytest.mark.asyncio
     async def test_request_approval(self):
@@ -173,11 +171,11 @@ class TestHumanInLoop:
 
 
 class TestSubAgents:
-    """Test sub-agent management."""
+    """Test sub - agent management."""
 
     @pytest.mark.asyncio
     async def test_add_sub_agent(self):
-        """Test adding sub-agents."""
+        """Test adding sub - agents."""
         parent = Agent(name="parent", role="supervisor")
         child = Agent(name="child", role="analyst")
 
@@ -188,7 +186,7 @@ class TestSubAgents:
 
     @pytest.mark.asyncio
     async def test_remove_sub_agent(self):
-        """Test removing sub-agents."""
+        """Test removing sub - agents."""
         parent = Agent(name="parent", role="supervisor")
         child = Agent(name="child", role="analyst")
 
@@ -220,7 +218,7 @@ class TestSubAgents:
 
     @pytest.mark.asyncio
     async def test_broadcast_to_sub_agents(self):
-        """Test broadcasting to sub-agents."""
+        """Test broadcasting to sub - agents."""
         parent = Agent(name="parent", role="supervisor")
         child1 = Agent(name="child1", role="analyst")
         child2 = Agent(name="child2", role="researcher")
@@ -240,7 +238,7 @@ class TestSubAgents:
 
     @pytest.mark.asyncio
     async def test_get_sub_agent_health(self):
-        """Test getting sub-agent health."""
+        """Test getting sub - agent health."""
         parent = Agent(name="parent", role="supervisor")
         child = Agent(name="child", role="analyst")
 
@@ -253,7 +251,7 @@ class TestSubAgents:
 
     @pytest.mark.asyncio
     async def test_aggregate_results(self):
-        """Test aggregating sub-agent results."""
+        """Test aggregating sub - agent results."""
         parent = Agent(name="parent", role="supervisor")
 
         results = [
@@ -276,7 +274,7 @@ class TestLearning:
 
     @pytest.mark.asyncio
     async def test_track_success(self):
-        """Test tracking success/failure."""
+        """Test tracking success / failure."""
         agent = Agent(name="test_agent", role="analyst", enable_learning=True)
 
         agent.track_success(True, response_time=0.5)
@@ -317,7 +315,7 @@ class TestLearning:
 
     @pytest.mark.asyncio
     async def test_ab_testing(self):
-        """Test A/B testing."""
+        """Test A / B testing."""
         agent = Agent(name="test_agent", role="analyst", enable_learning=True)
 
         agent.start_ab_test(
@@ -428,10 +426,10 @@ class TestIntegration:
             enable_learning=True,
         )
 
-        # Enable multi-modal
+        # Enable multi - modal
         parent.enable_multimodal([ContentType.TEXT, ContentType.IMAGE])
 
-        # Add sub-agents
+        # Add sub - agents
         analyst = Agent(name="analyst", role="analyst")
         researcher = Agent(name="researcher", role="researcher")
 
@@ -450,7 +448,7 @@ class TestIntegration:
         assert response is not None
         assert parent.state == AgentState.IDLE
 
-        # Delegate to sub-agent
+        # Delegate to sub - agent
         task = Message(
             content="Research the topic",
             sender="supervisor",

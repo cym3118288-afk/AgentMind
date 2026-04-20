@@ -3,7 +3,7 @@ OpenAI Assistants API Compatibility Layer
 
 This module provides a compatibility layer that allows AgentMind agents to work
 with the OpenAI Assistants API interface, making it easy to migrate existing
-code or use AgentMind as a drop-in replacement.
+code or use AgentMind as a drop - in replacement.
 
 Key features:
 - Compatible with OpenAI Assistants API structure
@@ -13,7 +13,6 @@ Key features:
 """
 
 import asyncio
-import json
 import time
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
@@ -88,7 +87,7 @@ class Assistant:
         assistant.threads.messages.create(
             thread_id=thread.id,
             role="user",
-            content="What is 2+2?"
+            content="What is 2 + 2?"
         )
 
         run = assistant.threads.runs.create(thread_id=thread.id)
@@ -305,7 +304,7 @@ async def example_basic_assistant():
     # Create assistant
     assistant = Assistant(
         name="Math Tutor",
-        instructions="You are a helpful math tutor. Explain concepts clearly and provide step-by-step solutions.",
+        instructions="You are a helpful math tutor. Explain concepts clearly and provide step - by - step solutions.",
         model="llama3.2",
     )
 
@@ -338,8 +337,8 @@ async def example_basic_assistant():
 
 
 async def example_multi_turn_conversation():
-    """Multi-turn conversation example"""
-    print("\n=== Example 2: Multi-turn Conversation ===\n")
+    """Multi - turn conversation example"""
+    print("\n=== Example 2: Multi - turn Conversation ===\n")
 
     assistant = Assistant(
         name="Code Helper",

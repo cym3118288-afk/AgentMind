@@ -53,7 +53,7 @@ async def main():
     # Try another template
     print("\n\nLoading Code Generation Team:")
     print("=" * 60)
-    code_team = load_template("code-generation", llm)
+    code_team = load_template("code - generation", llm)
 
     result = await code_team.collaborate(
         "Design and implement a simple REST API for a todo list application",
@@ -67,10 +67,10 @@ async def main():
     # Try startup validator
     print("\n\nLoading Startup Validator Team:")
     print("=" * 60)
-    validator = load_template("startup-validator", llm)
+    validator = load_template("startup - validator", llm)
 
     result = await validator.collaborate(
-        "Validate this startup idea: An AI-powered personal finance assistant that automatically categorizes expenses and provides investment recommendations",
+        "Validate this startup idea: An AI - powered personal finance assistant that automatically categorizes expenses and provides investment recommendations",  # noqa: E501
         max_rounds=2,
     )
 

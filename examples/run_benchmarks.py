@@ -20,7 +20,7 @@ async def main():
     # Initialize LLM provider
     llm = OllamaProvider(model="llama3.2")
 
-    # Create a multi-agent system
+    # Create a multi - agent system
     mind = AgentMind(llm_provider=llm)
 
     # Add agents
@@ -70,7 +70,7 @@ async def main():
 
     # Print detailed results
     print("\n" + "=" * 60)
-    print("Would you like to see detailed results? (y/n)")
+    print("Would you like to see detailed results? (y / n)")
     # evaluator.print_detailed_results()
 
     # Generate Markdown report
@@ -80,10 +80,10 @@ async def main():
     for suite_name, suite_results in evaluator.get_results().items():
         reporter.add_results(suite_results, suite_name)
 
-    reporter.generate_report("benchmarks/evaluation_report.md")
+    reporter.generate_report("benchmarks / evaluation_report.md")
 
     print("\nEvaluation complete!")
-    print("Report saved to: benchmarks/evaluation_report.md")
+    print("Report saved to: benchmarks / evaluation_report.md")
 
 
 if __name__ == "__main__":

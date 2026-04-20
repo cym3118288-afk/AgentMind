@@ -3,11 +3,10 @@
 This module adds tests for all uncovered code paths in agent.py and mind.py.
 """
 
-import asyncio
 import json
 import sys
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -18,7 +17,6 @@ from agentmind.core.types import (
     AgentConfig,
     AgentRole,
     CollaborationStrategy,
-    MessageRole,
 )
 
 
@@ -106,7 +104,7 @@ class TestAgentLLMIntegration:
         mock_llm = MagicMock()
         mock_response = MagicMock()
         mock_response.content = "LLM generated response"
-        mock_response.model = "test-model"
+        mock_response.model = "test - model"
         mock_response.usage = {"tokens": 100}
         mock_llm.generate = AsyncMock(return_value=mock_response)
 
@@ -116,7 +114,7 @@ class TestAgentLLMIntegration:
         response = await agent.think_and_respond(msg)
         assert response is not None
         assert "LLM generated response" in response.content
-        assert response.metadata["model"] == "test-model"
+        assert response.metadata["model"] == "test - model"
 
     @pytest.mark.asyncio
     async def test_think_and_respond_tool_use_mode(self) -> None:
@@ -124,7 +122,7 @@ class TestAgentLLMIntegration:
         mock_llm = MagicMock()
         mock_response = MagicMock()
         mock_response.content = "Response with TOOL[calculator](x=5)"
-        mock_response.model = "test-model"
+        mock_response.model = "test - model"
         mock_response.usage = {"tokens": 100}
         mock_llm.generate = AsyncMock(return_value=mock_response)
 
@@ -161,7 +159,7 @@ class TestAgentMemory:
         assert "0 messages" in summary
 
     def test_activate_deactivate(self) -> None:
-        """Test agent activation/deactivation."""
+        """Test agent activation / deactivation."""
         agent = Agent(name="test_agent", role="analyst")
         assert agent.is_active is True
 
@@ -190,7 +188,7 @@ class TestAgentMindStrategies:
 
     @pytest.mark.asyncio
     async def test_round_robin_strategy(self) -> None:
-        """Test round-robin collaboration strategy."""
+        """Test round - robin collaboration strategy."""
         mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN)
         agent1 = Agent(name="agent1", role="analyst")
         agent2 = Agent(name="agent2", role="creative")
@@ -203,7 +201,7 @@ class TestAgentMindStrategies:
 
     @pytest.mark.asyncio
     async def test_round_robin_with_stop_condition(self) -> None:
-        """Test round-robin with stop condition."""
+        """Test round - robin with stop condition."""
         mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN)
         agent1 = Agent(name="agent1", role="analyst")
         mind.add_agent(agent1)
@@ -247,7 +245,7 @@ class TestAgentMindStrategies:
 
     @pytest.mark.asyncio
     async def test_topic_based_strategy(self) -> None:
-        """Test topic-based strategy (defaults to broadcast)."""
+        """Test topic - based strategy (defaults to broadcast)."""
         mind = AgentMind(strategy=CollaborationStrategy.TOPIC_BASED)
         agent1 = Agent(name="agent1", role="analyst")
         mind.add_agent(agent1)
@@ -287,7 +285,7 @@ class TestAgentMindStrategies:
 
 
 class TestAgentMindSessionManagement:
-    """Test session save/load functionality."""
+    """Test session save / load functionality."""
 
     def test_save_session(self, tmp_path) -> None:
         """Test saving a session."""
@@ -436,7 +434,7 @@ class TestAgentMindUtilities:
         mock_llm = MagicMock()
         mock_response = MagicMock()
         mock_response.content = "LLM response"
-        mock_response.model = "test-model"
+        mock_response.model = "test - model"
         mock_response.usage = {"tokens": 100}
         mock_llm.generate = AsyncMock(return_value=mock_response)
 

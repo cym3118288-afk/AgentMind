@@ -4,7 +4,7 @@ Comprehensive tests for plugins and security modules
 
 import pytest
 import asyncio
-from unittest.mock import Mock, patch, AsyncMock, MagicMock
+from unittest.mock import Mock, patch
 from datetime import datetime, timedelta
 
 # Skip all tests - plugin interface has changed, tests need to be updated
@@ -13,7 +13,7 @@ pytestmark = pytest.mark.skip(reason="Plugin interface changed, tests need updat
 from agentmind.plugins.base import Plugin, PluginMetadata, PluginConfig
 from agentmind.plugins.manager import PluginManager
 from agentmind.plugins.loader import PluginLoader
-from agentmind.security.auth import AuthManager, APIKey, User
+from agentmind.security.auth import AuthManager, User
 from agentmind.security.rate_limiter import RateLimiter, RateLimitConfig
 from agentmind.security.sanitizer import InputSanitizer
 from agentmind.security.audit import AuditLogger, AuditEvent
@@ -357,7 +357,7 @@ class TestInputSanitizer:
         """Test sanitizing path traversal attempts"""
         sanitizer = InputSanitizer()
 
-        dangerous = "../../etc/passwd"
+        dangerous = "../../etc / passwd"
         safe = sanitizer.sanitize_path(dangerous)
 
         assert ".." not in safe
@@ -367,7 +367,7 @@ class TestInputSanitizer:
         sanitizer = InputSanitizer()
 
         assert sanitizer.validate_email("test@example.com") is True
-        assert sanitizer.validate_email("invalid-email") is False
+        assert sanitizer.validate_email("invalid - email") is False
         assert sanitizer.validate_email("test@") is False
 
     def test_validate_url(self):
@@ -375,8 +375,8 @@ class TestInputSanitizer:
         sanitizer = InputSanitizer()
 
         assert sanitizer.validate_url("https://example.com") is True
-        assert sanitizer.validate_url("http://example.com/path") is True
-        assert sanitizer.validate_url("not-a-url") is False
+        assert sanitizer.validate_url("http://example.com / path") is True
+        assert sanitizer.validate_url("not - a-url") is False
 
     def test_sanitize_json(self):
         """Test sanitizing JSON input"""

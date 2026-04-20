@@ -1,6 +1,6 @@
-"""Property-based tests using Hypothesis for AgentMind.
+"""Property - based tests using Hypothesis for AgentMind.
 
-These tests use property-based testing to verify system behavior
+These tests use property - based testing to verify system behavior
 across a wide range of inputs and edge cases.
 """
 
@@ -14,7 +14,7 @@ try:
 except ImportError:
     HYPOTHESIS_AVAILABLE = False
 
-from agentmind.core.types import Message, AgentConfig, MessageRole
+from agentmind.core.types import Message, AgentConfig
 from agentmind.performance.cache import InMemoryCache, CacheManager
 from agentmind.performance.batch import BatchProcessor
 from agentmind.performance.memory_optimizer import MemoryOptimizer
@@ -43,7 +43,7 @@ agent_config_strategy = st.builds(
 
 
 class TestMessageProperties:
-    """Property-based tests for Message type."""
+    """Property - based tests for Message type."""
 
     @given(message_strategy)
     def test_message_creation(self, message):
@@ -78,7 +78,7 @@ class TestMessageProperties:
 
 
 class TestAgentConfigProperties:
-    """Property-based tests for AgentConfig."""
+    """Property - based tests for AgentConfig."""
 
     @given(agent_config_strategy)
     def test_agent_config_creation(self, config):
@@ -99,7 +99,7 @@ class TestAgentConfigProperties:
 
 
 class TestCacheProperties:
-    """Property-based tests for caching."""
+    """Property - based tests for caching."""
 
     @pytest.mark.asyncio
     @given(
@@ -164,7 +164,7 @@ class TestCacheProperties:
 
 
 class TestMemoryOptimizerProperties:
-    """Property-based tests for memory optimization."""
+    """Property - based tests for memory optimization."""
 
     @pytest.mark.asyncio
     @given(
@@ -205,7 +205,7 @@ class TestMemoryOptimizerProperties:
 
 
 class TestBatchProcessorProperties:
-    """Property-based tests for batch processing."""
+    """Property - based tests for batch processing."""
 
     @pytest.mark.asyncio
     @given(
@@ -316,7 +316,7 @@ class CacheStateMachine(RuleBasedStateMachine):
 
 
 class TestEdgeCases:
-    """Property-based tests for edge cases."""
+    """Property - based tests for edge cases."""
 
     @pytest.mark.asyncio
     @given(st.lists(message_strategy, min_size=0, max_size=0))

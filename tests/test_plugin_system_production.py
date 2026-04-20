@@ -1,11 +1,8 @@
-"""Comprehensive tests for production-grade plugin system."""
+"""Comprehensive tests for production - grade plugin system."""
 
 import pytest
 import asyncio
-from pathlib import Path
-from datetime import datetime, timedelta
 
-from agentmind.plugins.base import Plugin, PluginMetadata, PluginType
 from agentmind.plugins.manager import PluginManager
 from agentmind.plugins.lifecycle import PluginLifecycleManager, PluginState, HealthStatus
 from agentmind.plugins.dependencies import DependencyResolver, PluginDependency, VersionChecker
@@ -16,7 +13,7 @@ from agentmind.plugins.security import (
     ResourceLimits,
     SignatureVerifier,
 )
-from agentmind.plugins.config import ConfigManager, ConfigEnvironment
+from agentmind.plugins.config import ConfigManager
 from agentmind.plugins.marketplace import (
     PluginRegistry as MarketplaceRegistry,
     PluginManifest,
@@ -35,26 +32,26 @@ class TestPluginLifecycle:
         manager = PluginLifecycleManager()
         plugin = MockPlugin()
 
-        manager.register_plugin("test-plugin")
+        manager.register_plugin("test - plugin")
 
         # Initial state
-        assert manager.get_state("test-plugin") == PluginState.UNINITIALIZED
+        assert manager.get_state("test - plugin") == PluginState.UNINITIALIZED
 
         # Initialize
-        await manager.initialize("test-plugin", plugin)
-        assert manager.get_state("test-plugin") == PluginState.INACTIVE
+        await manager.initialize("test - plugin", plugin)
+        assert manager.get_state("test - plugin") == PluginState.INACTIVE
 
         # Activate
-        await manager.activate("test-plugin", plugin)
-        assert manager.get_state("test-plugin") == PluginState.ACTIVE
+        await manager.activate("test - plugin", plugin)
+        assert manager.get_state("test - plugin") == PluginState.ACTIVE
 
         # Deactivate
-        await manager.deactivate("test-plugin", plugin)
-        assert manager.get_state("test-plugin") == PluginState.INACTIVE
+        await manager.deactivate("test - plugin", plugin)
+        assert manager.get_state("test - plugin") == PluginState.INACTIVE
 
         # Cleanup
-        await manager.cleanup("test-plugin", plugin)
-        assert manager.get_state("test-plugin") == PluginState.UNINITIALIZED
+        await manager.cleanup("test - plugin", plugin)
+        assert manager.get_state("test - plugin") == PluginState.UNINITIALIZED
 
     @pytest.mark.asyncio
     async def test_lifecycle_hooks(self):
@@ -62,8 +59,8 @@ class TestPluginLifecycle:
         manager = PluginLifecycleManager()
         plugin = MockPlugin()
 
-        manager.register_plugin("test-plugin")
-        hooks = manager.get_hooks("test-plugin")
+        manager.register_plugin("test - plugin")
+        hooks = manager.get_hooks("test - plugin")
 
         hook_called = {"pre_init": False, "post_init": False}
 
@@ -76,7 +73,7 @@ class TestPluginLifecycle:
         hooks.register("pre_initialize", pre_init_hook)
         hooks.register("post_initialize", post_init_hook)
 
-        await manager.initialize("test-plugin", plugin)
+        await manager.initialize("test - plugin", plugin)
 
         assert hook_called["pre_init"]
         assert hook_called["post_init"]
@@ -87,11 +84,11 @@ class TestPluginLifecycle:
         manager = PluginLifecycleManager()
         plugin = MockPlugin()
 
-        manager.register_plugin("test-plugin")
-        await manager.initialize("test-plugin", plugin)
-        await manager.activate("test-plugin", plugin)
+        manager.register_plugin("test - plugin")
+        await manager.initialize("test - plugin", plugin)
+        await manager.activate("test - plugin", plugin)
 
-        status = await manager.check_health("test-plugin", plugin)
+        status = await manager.check_health("test - plugin", plugin)
 
         assert isinstance(status, HealthStatus)
         assert status.healthy
@@ -117,33 +114,33 @@ class TestDependencyResolution:
         resolver = DependencyResolver()
 
         # Add plugins with dependencies
-        resolver.add_plugin("plugin-a", "1.0.0", [])
+        resolver.add_plugin("plugin - a", "1.0.0", [])
         resolver.add_plugin(
-            "plugin-b", "1.0.0", [PluginDependency(name="plugin-a", version_spec=">=1.0.0")]
+            "plugin - b", "1.0.0", [PluginDependency(name="plugin - a", version_spec=">=1.0.0")]
         )
         resolver.add_plugin(
-            "plugin-c", "1.0.0", [PluginDependency(name="plugin-b", version_spec=">=1.0.0")]
+            "plugin - c", "1.0.0", [PluginDependency(name="plugin - b", version_spec=">=1.0.0")]
         )
 
         # Get load order
-        available = {"plugin-a": "1.0.0", "plugin-b": "1.0.0", "plugin-c": "1.0.0"}
+        available = {"plugin - a": "1.0.0", "plugin - b": "1.0.0", "plugin - c": "1.0.0"}
         load_order, errors = resolver.resolve_load_order(
-            ["plugin-a", "plugin-b", "plugin-c"], available
+            ["plugin - a", "plugin - b", "plugin - c"], available
         )
 
         assert errors == []
-        assert load_order.index("plugin-a") < load_order.index("plugin-b")
-        assert load_order.index("plugin-b") < load_order.index("plugin-c")
+        assert load_order.index("plugin - a") < load_order.index("plugin - b")
+        assert load_order.index("plugin - b") < load_order.index("plugin - c")
 
     def test_circular_dependency_detection(self):
         """Test circular dependency detection."""
         resolver = DependencyResolver()
 
         resolver.add_plugin(
-            "plugin-a", "1.0.0", [PluginDependency(name="plugin-b", version_spec="*")]
+            "plugin - a", "1.0.0", [PluginDependency(name="plugin - b", version_spec="*")]
         )
         resolver.add_plugin(
-            "plugin-b", "1.0.0", [PluginDependency(name="plugin-a", version_spec="*")]
+            "plugin - b", "1.0.0", [PluginDependency(name="plugin - a", version_spec="*")]
         )
 
         has_circular, cycle = resolver.graph.has_circular_dependency()
@@ -155,11 +152,11 @@ class TestDependencyResolution:
         resolver = DependencyResolver()
 
         resolver.add_plugin(
-            "plugin-a", "1.0.0", [PluginDependency(name="plugin-missing", version_spec=">=1.0.0")]
+            "plugin - a", "1.0.0", [PluginDependency(name="plugin - missing", version_spec=">=1.0.0")]
         )
 
-        available = {"plugin-a": "1.0.0"}
-        satisfied, missing = resolver.check_dependencies("plugin-a", available)
+        available = {"plugin - a": "1.0.0"}
+        satisfied, missing = resolver.check_dependencies("plugin - a", available)
 
         assert not satisfied
         assert len(missing) > 0
@@ -173,7 +170,7 @@ class TestPluginSecurity:
         manager = PermissionManager()
 
         permissions = PluginPermissions(
-            plugin_name="test-plugin",
+            plugin_name="test - plugin",
             allow_network=True,
             allow_filesystem=False,
             allowed_apis={"api1", "api2"},
@@ -181,10 +178,10 @@ class TestPluginSecurity:
 
         manager.register_permissions(permissions)
 
-        assert manager.check_permission("test-plugin", "network", "connect")
-        assert not manager.check_permission("test-plugin", "filesystem", "write")
-        assert manager.check_api_access("test-plugin", "api1")
-        assert not manager.check_api_access("test-plugin", "api3")
+        assert manager.check_permission("test - plugin", "network", "connect")
+        assert not manager.check_permission("test - plugin", "filesystem", "write")
+        assert manager.check_api_access("test - plugin", "api1")
+        assert not manager.check_api_access("test - plugin", "api3")
 
     @pytest.mark.asyncio
     async def test_sandbox_execution(self):
@@ -195,7 +192,7 @@ class TestPluginSecurity:
             return value * 2
 
         result = await executor.execute_sandboxed(
-            "test-plugin", test_func, ResourceLimits(max_execution_time=5.0), 5
+            "test - plugin", test_func, ResourceLimits(max_execution_time=5.0), 5
         )
 
         assert result == 10
@@ -210,7 +207,7 @@ class TestPluginSecurity:
             return "done"
 
         with pytest.raises(asyncio.TimeoutError):
-            await executor.execute_with_timeout("test-plugin", slow_func, timeout=0.1)
+            await executor.execute_with_timeout("test - plugin", slow_func, timeout=0.1)
 
     def test_signature_verification(self):
         """Test plugin signature verification."""
@@ -222,17 +219,17 @@ class TestPluginSecurity:
         from agentmind.plugins.security import PluginSignature
 
         signature = PluginSignature(
-            plugin_name="test-plugin",
+            plugin_name="test - plugin",
             version="1.0.0",
             checksum=checksum,
-            signed_by="trusted-signer",
+            signed_by="trusted - signer",
         )
 
         verifier.register_signature(signature)
-        verifier.add_trusted_signer("trusted-signer")
+        verifier.add_trusted_signer("trusted - signer")
 
-        assert verifier.verify_checksum("test-plugin", "1.0.0", content)
-        assert verifier.is_trusted("test-plugin", "1.0.0")
+        assert verifier.verify_checksum("test - plugin", "1.0.0", content)
+        assert verifier.is_trusted("test - plugin", "1.0.0")
 
 
 class TestPluginConfiguration:
@@ -248,44 +245,44 @@ class TestPluginConfiguration:
             enabled: bool = True
             api_key: str = Field(..., min_length=10)
 
-        manager.register_schema("test-plugin", TestConfigSchema)
+        manager.register_schema("test - plugin", TestConfigSchema)
 
         # Valid config
         valid_config = {"enabled": True, "api_key": "1234567890"}
-        assert manager.update_config("test-plugin", valid_config, save=False)
+        assert manager.update_config("test - plugin", valid_config, save=False)
 
         # Invalid config
         invalid_config = {"enabled": True, "api_key": "short"}
-        assert not manager.update_config("test-plugin", invalid_config, save=False)
+        assert not manager.update_config("test - plugin", invalid_config, save=False)
 
     def test_environment_configs(self, tmp_path):
-        """Test environment-specific configurations."""
+        """Test environment - specific configurations."""
         manager = ConfigManager(config_dir=tmp_path)
 
         dev_config = {"enabled": True, "debug": True}
         prod_config = {"enabled": True, "debug": False}
 
-        manager.update_config("test-plugin", dev_config, save=False)
+        manager.update_config("test - plugin", dev_config, save=False)
 
-        config = manager.get_config("test-plugin")
+        config = manager.get_config("test - plugin")
         assert config is not None
 
     @pytest.mark.asyncio
     async def test_hot_reload(self, tmp_path):
-        """Test configuration hot-reload."""
+        """Test configuration hot - reload."""
         manager = ConfigManager(config_dir=tmp_path)
         plugin = MockPlugin()
 
         # Save initial config
         initial_config = {"enabled": True, "setting": "value1"}
-        manager.save_config("test-plugin", initial_config)
+        manager.save_config("test - plugin", initial_config)
 
         # Update config
         new_config = {"enabled": True, "setting": "value2"}
-        manager.update_config("test-plugin", new_config)
+        manager.update_config("test - plugin", new_config)
 
         # Hot reload
-        success = await manager.hot_reload("test-plugin", plugin)
+        success = await manager.hot_reload("test - plugin", plugin)
         assert success
 
 
@@ -297,7 +294,7 @@ class TestPluginMarketplace:
         registry = MarketplaceRegistry(registry_file=tmp_path / "registry.json")
 
         manifest = PluginManifest(
-            name="test-plugin",
+            name="test - plugin",
             version="1.0.0",
             description="Test plugin",
             author="Test Author",
@@ -306,9 +303,9 @@ class TestPluginMarketplace:
         )
 
         assert registry.register_plugin(manifest)
-        retrieved = registry.get_plugin("test-plugin")
+        retrieved = registry.get_plugin("test - plugin")
         assert retrieved is not None
-        assert retrieved.name == "test-plugin"
+        assert retrieved.name == "test - plugin"
 
     def test_plugin_search(self, tmp_path):
         """Test plugin search functionality."""
@@ -331,7 +328,7 @@ class TestPluginMarketplace:
         assert len(tools) == 3
 
         # Search by query
-        results = registry.search_plugins(query="plugin-2")
+        results = registry.search_plugins(query="plugin - 2")
         assert len(results) == 1
 
     def test_plugin_ratings(self, tmp_path):
@@ -339,7 +336,7 @@ class TestPluginMarketplace:
         registry = MarketplaceRegistry(registry_file=tmp_path / "registry.json")
 
         manifest = PluginManifest(
-            name="test-plugin",
+            name="test - plugin",
             version="1.0.0",
             description="Test",
             author="Test",
@@ -348,11 +345,11 @@ class TestPluginMarketplace:
         registry.register_plugin(manifest)
 
         # Add ratings
-        registry.add_rating("test-plugin", "user1", 5, "Great plugin!")
-        registry.add_rating("test-plugin", "user2", 4, "Good")
-        registry.add_rating("test-plugin", "user3", 5, "Excellent")
+        registry.add_rating("test - plugin", "user1", 5, "Great plugin!")
+        registry.add_rating("test - plugin", "user2", 4, "Good")
+        registry.add_rating("test - plugin", "user3", 5, "Excellent")
 
-        plugin = registry.get_plugin("test-plugin")
+        plugin = registry.get_plugin("test - plugin")
         assert plugin.rating_count == 3
         assert plugin.average_rating == pytest.approx(4.67, 0.01)
 
@@ -366,16 +363,16 @@ class TestPluginAudit:
 
         event = logger.log_event(
             AuditEventType.PLUGIN_LOADED,
-            "test-plugin",
+            "test - plugin",
             details={"version": "1.0.0"},
             user_id="user123",
         )
 
-        assert event.plugin_name == "test-plugin"
+        assert event.plugin_name == "test - plugin"
         assert event.event_type == AuditEventType.PLUGIN_LOADED
 
         # Retrieve events
-        events = logger.get_events(plugin_name="test-plugin")
+        events = logger.get_events(plugin_name="test - plugin")
         assert len(events) == 1
 
     def test_audit_filtering(self, tmp_path):
@@ -383,12 +380,12 @@ class TestPluginAudit:
         logger = PluginAuditLogger(log_dir=tmp_path)
 
         # Log multiple events
-        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin-a", user_id="user1")
-        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin-a", success=False)
-        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin-b", user_id="user2")
+        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin - a", user_id="user1")
+        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin - a", success=False)
+        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin - b", user_id="user2")
 
         # Filter by plugin
-        plugin_a_events = logger.get_events(plugin_name="plugin-a")
+        plugin_a_events = logger.get_events(plugin_name="plugin - a")
         assert len(plugin_a_events) == 2
 
         # Filter by user
@@ -403,9 +400,9 @@ class TestPluginAudit:
         """Test audit statistics."""
         logger = PluginAuditLogger(log_dir=tmp_path)
 
-        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin-a")
-        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin-a", success=False)
-        logger.log_event(AuditEventType.PLUGIN_EXECUTED, "plugin-b")
+        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin - a")
+        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin - a", success=False)
+        logger.log_event(AuditEventType.PLUGIN_EXECUTED, "plugin - b")
 
         stats = logger.get_statistics()
 
@@ -426,18 +423,18 @@ class TestPluginManager:
         manager.registry.register(MockPlugin)
 
         # Load plugin
-        success = await manager.load_plugin("mock-plugin")
+        success = await manager.load_plugin("mock - plugin")
         assert success
 
         # Check state
-        assert manager.get_plugin_state("mock-plugin") == "active"
+        assert manager.get_plugin_state("mock - plugin") == "active"
 
         # Check health
-        health = await manager.check_plugin_health("mock-plugin")
+        health = await manager.check_plugin_health("mock - plugin")
         assert health["healthy"]
 
         # Unload
-        await manager.unload_plugin("mock-plugin")
+        await manager.unload_plugin("mock - plugin")
 
     @pytest.mark.asyncio
     async def test_plugin_execution(self):
@@ -445,10 +442,10 @@ class TestPluginManager:
         manager = PluginManager(enable_security=True)
 
         manager.registry.register(MockPlugin)
-        await manager.load_plugin("mock-plugin")
+        await manager.load_plugin("mock - plugin")
 
         # Execute plugin
-        result = await manager.execute_plugin("mock-plugin", sandboxed=True)
+        result = await manager.execute_plugin("mock - plugin", sandboxed=True)
         assert result["status"] == "success"
 
     @pytest.mark.asyncio

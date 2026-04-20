@@ -6,11 +6,10 @@ for using local models, custom pipelines, and specialized NLP tasks.
 
 Combines:
 - Hugging Face Transformers: Local models, pipelines, and NLP tasks
-- AgentMind: Multi-agent orchestration and collaboration
+- AgentMind: Multi - agent orchestration and collaboration
 """
 
 import asyncio
-from typing import Any, Dict, List, Optional
 
 from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider
@@ -48,14 +47,14 @@ async def example_sentiment_analysis():
 
         # Create sentiment analysis pipeline
         sentiment_pipeline = pipeline(
-            "sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english"
+            "sentiment - analysis", model="distilbert - base - uncased - finetuned - sst - 2 - english"
         )
 
         # Wrap as AgentMind tool
         sentiment_tool = HuggingFacePipelineTool(
             pipeline=sentiment_pipeline,
             task_name="sentiment_analysis",
-            description="Analyze the sentiment of text (positive/negative)",
+            description="Analyze the sentiment of text (positive / negative)",
         )
 
         # Create AgentMind system
@@ -99,7 +98,7 @@ async def example_ner():
         from transformers import pipeline
 
         # Create NER pipeline
-        ner_pipeline = pipeline("ner", model="dslim/bert-base-NER", aggregation_strategy="simple")
+        ner_pipeline = pipeline("ner", model="dslim / bert - base - NER", aggregation_strategy="simple")
 
         # Wrap as tool
         ner_tool = HuggingFacePipelineTool(
@@ -123,7 +122,7 @@ async def example_ner():
         mind.add_agent(extractor)
 
         # Extract entities
-        text = "Apple Inc. was founded by Steve Jobs in Cupertino, California. Microsoft is headquartered in Redmond, Washington."
+        text = "Apple Inc. was founded by Steve Jobs in Cupertino, California. Microsoft is headquartered in Redmond, Washington."  # noqa: E501
 
         print(f"Text: {text}\n")
         result = await mind.collaborate(
@@ -144,7 +143,7 @@ async def example_summarization():
         from transformers import pipeline
 
         # Create summarization pipeline
-        summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
+        summarizer = pipeline("summarization", model="facebook / bart - large - cnn")
 
         # Wrap as tool
         class SummarizationTool(Tool):
@@ -201,8 +200,8 @@ async def example_summarization():
         article = """
         Artificial intelligence has made remarkable progress in recent years, with breakthroughs in
         natural language processing, computer vision, and reinforcement learning. Large language models
-        like GPT-4 and Claude have demonstrated impressive capabilities in understanding and generating
-        human-like text. These models are trained on vast amounts of data and can perform a wide range
+        like GPT - 4 and Claude have demonstrated impressive capabilities in understanding and generating
+        human - like text. These models are trained on vast amounts of data and can perform a wide range
         of tasks, from answering questions to writing code. However, challenges remain in areas such as
         reasoning, factual accuracy, and ethical considerations. Researchers continue to work on making
         AI systems more reliable, interpretable, and aligned with human values.
@@ -216,16 +215,16 @@ async def example_summarization():
         print("Transformers not installed. Install with: pip install transformers torch")
 
 
-# Example 4: Multi-task NLP pipeline
+# Example 4: Multi - task NLP pipeline
 async def example_multi_task():
-    """Combine multiple Hugging Face tasks in a multi-agent system"""
-    print("\n=== Example 4: Multi-task NLP Pipeline ===\n")
+    """Combine multiple Hugging Face tasks in a multi - agent system"""
+    print("\n=== Example 4: Multi - task NLP Pipeline ===\n")
 
     try:
         from transformers import pipeline
 
         # Create multiple pipelines
-        sentiment_pipeline = pipeline("sentiment-analysis")
+        sentiment_pipeline = pipeline("sentiment - analysis")
         ner_pipeline = pipeline("ner", aggregation_strategy="simple")
 
         # Create tools
@@ -267,7 +266,7 @@ async def example_multi_task():
         mind.add_agent(synthesizer)
 
         # Analyze text
-        text = "Elon Musk announced that Tesla will open a new factory in Berlin. Investors are excited about the expansion."
+        text = "Elon Musk announced that Tesla will open a new factory in Berlin. Investors are excited about the expansion."  # noqa: E501
 
         print(f"Text: {text}\n")
         result = await mind.collaborate(
@@ -289,7 +288,7 @@ async def example_question_answering():
         from transformers import pipeline
 
         # Create QA pipeline
-        qa_pipeline = pipeline("question-answering", model="distilbert-base-cased-distilled-squad")
+        qa_pipeline = pipeline("question - answering", model="distilbert - base - cased - distilled - squad")
 
         # Create QA tool
         class QATool(Tool):
@@ -334,9 +333,9 @@ async def example_question_answering():
 
         # Context and questions
         context = """
-        AgentMind is a lightweight multi-agent framework for Python. It was created in 2024 and
+        AgentMind is a lightweight multi - agent framework for Python. It was created in 2024 and
         supports multiple LLM providers including Ollama, OpenAI, and Anthropic. The framework
-        features async-first architecture, built-in memory management, and an extensible tool system.
+        features async - first architecture, built - in memory management, and an extensible tool system.
         """
 
         questions = [

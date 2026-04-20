@@ -3,8 +3,7 @@ Comprehensive tests for multimodal modules
 """
 
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
+from unittest.mock import patch, MagicMock
 
 # Skip all tests if optional dependencies are not available
 pytest.importorskip("PIL")
@@ -155,7 +154,7 @@ class TestDocumentProcessor:
         mock_reader.return_value = mock_pdf
 
         processor = DocumentProcessor()
-        text = processor.extract_text_from_pdf("test.pdf")
+        text = processor.extract_text_from_pdf("test.pd")
 
         assert "Sample text" in text
 
@@ -191,7 +190,7 @@ class TestDocumentProcessor:
         """Test extracting document metadata"""
         processor = DocumentProcessor()
 
-        metadata = processor.extract_metadata("test.pdf")
+        metadata = processor.extract_metadata("test.pd")
 
         assert isinstance(metadata, dict)
         assert "file_type" in metadata or metadata == {}
@@ -213,8 +212,8 @@ class TestVisionLLM:
     def test_vision_llm_initialization(self):
         """Test vision LLM initialization"""
         with patch("agentmind.llm.LiteLLMProvider"):
-            llm = VisionLLM(model="gpt-4-vision-preview")
-            assert llm.model == "gpt-4-vision-preview"
+            llm = VisionLLM(model="gpt - 4 - vision - preview")
+            assert llm.model == "gpt - 4 - vision - preview"
 
     @pytest.mark.asyncio
     async def test_analyze_image(self):
@@ -224,7 +223,7 @@ class TestVisionLLM:
             mock_instance.generate = MagicMock(return_value="A cat sitting on a couch")
             mock_provider.return_value = mock_instance
 
-            llm = VisionLLM(model="gpt-4-vision-preview")
+            llm = VisionLLM(model="gpt - 4 - vision - preview")
 
             # Mock the analyze method
             with patch.object(llm, "analyze_image") as mock_analyze:
@@ -237,7 +236,7 @@ class TestVisionLLM:
     async def test_analyze_multiple_images(self):
         """Test analyzing multiple images"""
         with patch("agentmind.llm.LiteLLMProvider"):
-            llm = VisionLLM(model="gpt-4-vision-preview")
+            llm = VisionLLM(model="gpt - 4 - vision - preview")
 
             with patch.object(llm, "analyze_images") as mock_analyze:
                 mock_analyze.return_value = "Multiple images analyzed"
@@ -248,7 +247,7 @@ class TestVisionLLM:
     def test_vision_llm_supports_vision(self):
         """Test checking if model supports vision"""
         with patch("agentmind.llm.LiteLLMProvider"):
-            llm = VisionLLM(model="gpt-4-vision-preview")
+            llm = VisionLLM(model="gpt - 4 - vision - preview")
 
             # Vision models should be supported
             assert llm.supports_vision() is True or hasattr(llm, "supports_vision")
@@ -357,7 +356,7 @@ class TestPerformance:
             start = time.time()
 
             # Process large image
-            image = processor.load_image("large.jpg")
+            processor.load_image("large.jpg")
 
             duration = time.time() - start
 

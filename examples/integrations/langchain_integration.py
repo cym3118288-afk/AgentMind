@@ -3,7 +3,7 @@ LangChain Integration Example
 
 This example demonstrates how to use AgentMind agents with LangChain chains,
 combining the strengths of both frameworks:
-- AgentMind: Multi-agent orchestration and collaboration
+- AgentMind: Multi - agent orchestration and collaboration
 - LangChain: Rich ecosystem of chains, tools, and integrations
 """
 
@@ -52,7 +52,7 @@ class LangChainToolWrapper(Tool):
 
 class AgentMindChain:
     """
-    A LangChain-compatible chain that uses AgentMind for multi-agent collaboration.
+    A LangChain - compatible chain that uses AgentMind for multi - agent collaboration.
     Can be used within LangChain pipelines.
     """
 
@@ -116,7 +116,7 @@ async def example_langchain_tools_in_agentmind():
         print(f"Result: {result}")
 
     except ImportError:
-        print("LangChain not installed. Install with: pip install langchain langchain-community")
+        print("LangChain not installed. Install with: pip install langchain langchain - community")
 
 
 # Example 2: Using AgentMind within LangChain chains
@@ -125,10 +125,9 @@ async def example_agentmind_in_langchain():
     print("\n=== Example 2: AgentMind in LangChain Chains ===\n")
 
     try:
-        from langchain.prompts import PromptTemplate
-        from langchain.schema.runnable import RunnableSequence
+        pass
 
-        # Create AgentMind multi-agent system
+        # Create AgentMind multi - agent system
         llm = OllamaProvider(model="llama3.2")
         mind = AgentMind(llm_provider=llm)
 
@@ -162,17 +161,16 @@ async def example_agentmind_in_langchain():
 
 # Example 3: Hybrid approach - LangChain for retrieval, AgentMind for reasoning
 async def example_hybrid_rag():
-    """Combine LangChain's RAG capabilities with AgentMind's multi-agent reasoning"""
+    """Combine LangChain's RAG capabilities with AgentMind's multi - agent reasoning"""
     print("\n=== Example 3: Hybrid RAG System ===\n")
 
     try:
-        from langchain.text_splitter import RecursiveCharacterTextSplitter
         from langchain.schema import Document
 
         # Simulate document retrieval (in real scenario, use vector store)
         documents = [
             Document(
-                page_content="AgentMind is a lightweight multi-agent framework.",
+                page_content="AgentMind is a lightweight multi - agent framework.",
                 metadata={"source": "docs"},
             ),
             Document(
@@ -180,7 +178,7 @@ async def example_hybrid_rag():
                 metadata={"source": "docs"},
             ),
             Document(
-                page_content="AgentMind has built-in memory and tool systems.",
+                page_content="AgentMind has built - in memory and tool systems.",
                 metadata={"source": "docs"},
             ),
         ]
@@ -229,7 +227,7 @@ async def example_hybrid_rag():
 
 # Example 4: Sequential chain with AgentMind
 async def example_sequential_processing():
-    """Use AgentMind for complex multi-step processing within LangChain"""
+    """Use AgentMind for complex multi - step processing within LangChain"""
     print("\n=== Example 4: Sequential Processing ===\n")
 
     # Create specialized AgentMind systems for each step

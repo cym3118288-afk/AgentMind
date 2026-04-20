@@ -49,7 +49,7 @@ async def example_agent_with_slack():
     print("=== Agent with Slack Integration ===\n")
 
     # Initialize components
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     # Create agent
@@ -101,7 +101,7 @@ async def example_slack_bot():
     print("=== Slack Bot with Multiple Agents ===\n")
 
     # Initialize LLM and agents
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     # Create specialized agents

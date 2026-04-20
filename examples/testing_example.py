@@ -89,7 +89,7 @@ class TestBasicAgent(AgentTestCase):
 
 # Example 2: Collaboration testing
 class TestCollaboration(AgentTestCase):
-    """Test multi-agent collaboration."""
+    """Test multi - agent collaboration."""
 
     async def test_basic_collaboration(self):
         """Test basic collaboration between agents."""

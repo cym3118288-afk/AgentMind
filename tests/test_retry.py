@@ -3,7 +3,6 @@
 import asyncio
 import sys
 from pathlib import Path
-from unittest.mock import AsyncMock, patch
 
 import pytest
 
@@ -83,7 +82,7 @@ class TestShouldRetry:
         assert should_retry(exception, retryable) is True
 
     def test_non_retryable_exception(self) -> None:
-        """Test that non-retryable exceptions return False."""
+        """Test that non - retryable exceptions return False."""
         exception = ValueError("Invalid value")
         retryable = (ConnectionError, TimeoutError)
 
@@ -154,7 +153,7 @@ class TestRetryDecorator:
 
     @pytest.mark.asyncio
     async def test_non_retryable_exception_not_retried(self) -> None:
-        """Test that non-retryable exceptions are not retried."""
+        """Test that non - retryable exceptions are not retried."""
         call_count = 0
 
         @retry_async(config=RetryConfig(max_retries=3), retryable_exceptions=(ConnectionError,))

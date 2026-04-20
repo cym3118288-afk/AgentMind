@@ -81,9 +81,9 @@ class WeatherTool(Tool):
         """Simulate weather API call"""
         # In real implementation, this would call an actual weather API
         weather_data = {
-            "new york": {"temp_c": 22, "temp_f": 72, "condition": "Sunny"},
-            "london": {"temp_c": 15, "temp_f": 59, "condition": "Cloudy"},
-            "tokyo": {"temp_c": 25, "temp_f": 77, "condition": "Clear"},
+            "new york": {"temp_c": 22, "temp_": 72, "condition": "Sunny"},
+            "london": {"temp_c": 15, "temp_": 59, "condition": "Cloudy"},
+            "tokyo": {"temp_c": 25, "temp_": 77, "condition": "Clear"},
         }
 
         location_lower = location.lower()
@@ -91,7 +91,7 @@ class WeatherTool(Tool):
             return f"Weather data not available for {location}"
 
         data = weather_data[location_lower]
-        temp = data["temp_c"] if units == "celsius" else data["temp_f"]
+        temp = data["temp_c"] if units == "celsius" else data["temp_"]
         unit_symbol = "°C" if units == "celsius" else "°F"
 
         return f"Weather in {location}: {data['condition']}, {temp}{unit_symbol}"
@@ -194,7 +194,7 @@ async def example_2_multiple_tools():
 
 
 async def example_3_tool_in_collaboration():
-    """Example 3: Tools in multi-agent collaboration"""
+    """Example 3: Tools in multi - agent collaboration"""
     print("\n=== Example 3: Tools in Collaboration ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
@@ -306,7 +306,7 @@ async def main():
     print("3. ToolRegistry manages tool registration and discovery")
     print("4. Tools can maintain state and handle errors")
     print("5. Multiple agents can share the same tool registry")
-    print("\nNext: Tutorial 04 - Multi-Agent Orchestration")
+    print("\nNext: Tutorial 04 - Multi - Agent Orchestration")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 """Data Analysis Team Example
 
-Demonstrates a practical multi-agent system for analyzing datasets.
+Demonstrates a practical multi - agent system for analyzing datasets.
 This example shows how to use AgentMind for real data analysis tasks.
 
 Team composition:
@@ -11,7 +11,6 @@ Team composition:
 """
 
 import asyncio
-from pathlib import Path
 
 from agentmind import Agent, AgentMind
 from agentmind.core.types import CollaborationStrategy
@@ -31,7 +30,7 @@ async def analyze_dataset(dataset_description: str, model: str = "llama3.2"):
     # Initialize LLM provider
     llm = OllamaProvider(model=model)
 
-    # Create AgentMind with round-robin strategy for structured analysis
+    # Create AgentMind with round - robin strategy for structured analysis
     mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN, llm_provider=llm)
 
     # Create specialized agents
@@ -43,7 +42,7 @@ Focus on data quality, distributions, and key metrics."""
     expert = Agent(name="DomainExpert", role="expert", llm_provider=llm)
     expert.config.system_prompt = """You are a domain expert.
 Provide business context and interpret findings.
-Connect data insights to real-world implications."""
+Connect data insights to real - world implications."""
 
     visualizer = Agent(name="Visualizer", role="creative", llm_provider=llm)
     visualizer.config.system_prompt = """You are a data visualization expert.
@@ -76,17 +75,17 @@ Provide concrete next steps and recommendations."""
 async def main():
     """Run example data analysis scenarios."""
 
-    # Example 1: E-commerce sales data
-    print("\n### Example 1: E-commerce Sales Analysis ###\n")
+    # Example 1: E - commerce sales data
+    print("\n### Example 1: E - commerce Sales Analysis ###\n")
 
     dataset1 = """
-    E-commerce sales data for Q1 2024:
+    E - commerce sales data for Q1 2024:
     - 50,000 transactions
     - Average order value: $85
     - 30% increase in mobile purchases
     - Top category: Electronics (40% of revenue)
     - Cart abandonment rate: 68%
-    - Peak sales: Weekends between 2-4 PM
+    - Peak sales: Weekends between 2 - 4 PM
     """
 
     result1 = await analyze_dataset(dataset1)

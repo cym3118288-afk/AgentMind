@@ -3,9 +3,6 @@ Tests for production features: authentication, rate limiting, observability.
 """
 
 import pytest
-import asyncio
-from unittest.mock import Mock, patch
-import time
 
 # Skip all tests if fastapi is not installed
 fastapi = pytest.importorskip("fastapi")
@@ -37,7 +34,7 @@ class TestAuthentication:
 
     def test_get_token(self, client):
         """Test getting JWT token."""
-        response = client.post("/auth/token?username=test&password=test")
+        response = client.post("/auth / token?username=test&password=test")
         assert response.status_code == 200
         data = response.json()
         assert "access_token" in data
@@ -69,7 +66,7 @@ class TestRateLimiting:
         """Test rate limiting."""
         # Make multiple requests quickly
         responses = []
-        for _ in range(15):  # Limit is 10/minute
+        for _ in range(15):  # Limit is 10 / minute
             response = client.post(
                 "/collaborate",
                 headers={"Authorization": f"Bearer {auth_token}"},
@@ -131,14 +128,14 @@ class TestStreaming:
     def test_streaming_endpoint(self, client, auth_token):
         """Test streaming collaboration."""
         response = client.post(
-            "/collaborate/stream",
+            "/collaborate / stream",
             headers={"Authorization": f"Bearer {auth_token}"},
             json={"task": "Test task", "agents": [{"name": "Agent1", "role": "analyst"}]},
             stream=True,
         )
         # Should return streaming response
         assert response.status_code == 200
-        assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
+        assert response.headers["content - type"] == "text / event - stream; charset=utf - 8"
 
 
 class TestSessionManagement:
@@ -153,9 +150,9 @@ class TestSessionManagement:
         assert "sessions" in data
 
     def test_get_session_not_found(self, client, auth_token):
-        """Test getting non-existent session."""
+        """Test getting non - existent session."""
         response = client.get(
-            "/session/nonexistent", headers={"Authorization": f"Bearer {auth_token}"}
+            "/session / nonexistent", headers={"Authorization": f"Bearer {auth_token}"}
         )
         assert response.status_code == 404
 
@@ -206,7 +203,7 @@ class TestCostEstimation:
             json={
                 "task": "Test task",
                 "agents": [{"name": "Agent1", "role": "analyst"}],
-                "llm_model": "gpt-3.5-turbo",
+                "llm_model": "gpt - 3.5 - turbo",
             },
         )
         if response.status_code == 200:

@@ -6,11 +6,10 @@ Tests:
 - Chat Server Wave 2 features (file upload, threading, export)
 - Dashboard Enhanced metrics and alerts
 - WebSocket connections
-- Real-time updates
+- Real - time updates
 """
 
 import pytest
-import asyncio
 import json
 from pathlib import Path
 from datetime import datetime
@@ -43,7 +42,7 @@ class TestAgentDesignerEnhanced:
 
     def test_get_templates(self, client):
         """Test getting agent templates."""
-        response = client.get("/api/templates")
+        response = client.get("/api / templates")
         assert response.status_code == 200
         data = response.json()
         assert "templates" in data
@@ -52,7 +51,7 @@ class TestAgentDesignerEnhanced:
 
     def test_get_templates_by_category(self, client):
         """Test getting templates by category."""
-        response = client.get("/api/templates/development")
+        response = client.get("/api / templates / development")
         assert response.status_code == 200
         data = response.json()
         assert data["category"] == "development"
@@ -70,7 +69,7 @@ class TestAgentDesignerEnhanced:
             ],
         }
 
-        response = client.post("/api/configs", json=config)
+        response = client.post("/api / configs", json=config)
         assert response.status_code == 200
         data = response.json()
         assert data["success"] is True
@@ -80,14 +79,14 @@ class TestAgentDesignerEnhanced:
         """Test saving invalid configuration."""
         config = {"team_name": "", "agents": []}  # Invalid: empty name  # Invalid: no agents
 
-        response = client.post("/api/configs", json=config)
+        response = client.post("/api / configs", json=config)
         assert response.status_code == 400
         data = response.json()
         assert "error" in data
 
     def test_list_configs(self, client):
         """Test listing configurations."""
-        response = client.get("/api/configs")
+        response = client.get("/api / configs")
         assert response.status_code == 200
         data = response.json()
         assert "configs" in data
@@ -96,7 +95,7 @@ class TestAgentDesignerEnhanced:
         """Test configuration validation."""
         valid_config = {"team_name": "Valid Team", "agents": [{"name": "Agent1", "role": "test"}]}
 
-        response = client.post("/api/validate", json=valid_config)
+        response = client.post("/api / validate", json=valid_config)
         assert response.status_code == 200
         data = response.json()
         assert data["valid"] is True
@@ -111,7 +110,7 @@ class TestAgentDesignerEnhanced:
             ],
         }
 
-        response = client.post("/api/validate", json=invalid_config)
+        response = client.post("/api / validate", json=invalid_config)
         assert response.status_code == 200
         data = response.json()
         assert data["valid"] is False
@@ -121,20 +120,20 @@ class TestAgentDesignerEnhanced:
         """Test exporting configuration as JSON."""
         # First create a config
         config = {"team_name": "Export Test", "agents": [{"name": "Agent1", "role": "test"}]}
-        response = client.post("/api/configs", json=config)
+        response = client.post("/api / configs", json=config)
         config_id = response.json()["config_id"]
 
         # Export it
-        response = client.get(f"/api/configs/{config_id}/export?format=json")
+        response = client.get(f"/api / configs/{config_id}/export?format=json")
         assert response.status_code == 200
 
     def test_export_config_python(self, client):
         """Test exporting configuration as Python code."""
         config = {"team_name": "Python Export", "agents": [{"name": "Agent1", "role": "test"}]}
-        response = client.post("/api/configs", json=config)
+        response = client.post("/api / configs", json=config)
         config_id = response.json()["config_id"]
 
-        response = client.get(f"/api/configs/{config_id}/export?format=python")
+        response = client.get(f"/api / configs/{config_id}/export?format=python")
         assert response.status_code == 200
 
 
@@ -162,7 +161,7 @@ class TestChatServerWave2:
 
     def test_list_sessions(self, client):
         """Test listing sessions."""
-        response = client.get("/api/sessions")
+        response = client.get("/api / sessions")
         assert response.status_code == 200
         data = json.loads(response.data)
         assert "sessions" in data
@@ -176,7 +175,7 @@ class TestChatServerWave2:
 
         try:
             with open(temp_path, "rb") as f:
-                response = client.post("/api/upload", data={"file": (f, "test.txt")})
+                response = client.post("/api / upload", data={"file": (f, "test.txt")})
 
             assert response.status_code == 200
             data = json.loads(response.data)
@@ -193,7 +192,7 @@ class TestChatServerWave2:
 
         try:
             with open(temp_path, "rb") as f:
-                response = client.post("/api/upload", data={"file": (f, "test.exe")})
+                response = client.post("/api / upload", data={"file": (f, "test.exe")})
 
             assert response.status_code == 400
         finally:
@@ -203,14 +202,14 @@ class TestChatServerWave2:
         """Test exporting session as Markdown."""
         # This would require a valid session ID
         # For now, test the endpoint exists
-        response = client.get("/api/sessions/test-id/export?format=markdown")
-        # Will return 404 for non-existent session, which is expected
+        response = client.get("/api / sessions / test - id / export?format=markdown")
+        # Will return 404 for non - existent session, which is expected
         assert response.status_code in [200, 404]
 
     def test_search_messages(self, client):
         """Test message search."""
-        response = client.get("/api/search/test-session?q=test")
-        # Will return 404 for non-existent session
+        response = client.get("/api / search / test - session?q=test")
+        # Will return 404 for non - existent session
         assert response.status_code in [200, 404]
 
 
@@ -239,7 +238,7 @@ class TestDashboardEnhanced:
 
     def test_metrics_summary(self, client):
         """Test getting metrics summary."""
-        response = client.get("/api/metrics/summary")
+        response = client.get("/api / metrics / summary")
         assert response.status_code == 200
         data = response.json()
         assert "total_requests" in data
@@ -248,21 +247,21 @@ class TestDashboardEnhanced:
 
     def test_agent_metrics(self, client):
         """Test getting agent metrics."""
-        response = client.get("/api/metrics/agents")
+        response = client.get("/api / metrics / agents")
         assert response.status_code == 200
         data = response.json()
         assert "agents" in data
 
     def test_agent_comparison(self, client):
         """Test agent performance comparison."""
-        response = client.get("/api/metrics/comparison")
+        response = client.get("/api / metrics / comparison")
         assert response.status_code == 200
         data = response.json()
         assert "comparison" in data
 
     def test_historical_metrics(self, client):
         """Test getting historical metrics."""
-        response = client.get("/api/metrics/historical?hours=24")
+        response = client.get("/api / metrics / historical?hours=24")
         assert response.status_code == 200
         data = response.json()
         assert "period" in data
@@ -270,7 +269,7 @@ class TestDashboardEnhanced:
 
     def test_get_alerts(self, client):
         """Test getting alerts."""
-        response = client.get("/api/alerts")
+        response = client.get("/api / alerts")
         assert response.status_code == 200
         data = response.json()
         assert "alerts" in data
@@ -278,7 +277,7 @@ class TestDashboardEnhanced:
 
     def test_get_alert_config(self, client):
         """Test getting alert configuration."""
-        response = client.get("/api/alerts/config")
+        response = client.get("/api / alerts / config")
         assert response.status_code == 200
         data = response.json()
         assert "config" in data
@@ -287,21 +286,21 @@ class TestDashboardEnhanced:
         """Test updating alert configuration."""
         new_config = {"response_time_threshold": 6000, "error_rate_threshold": 0.1}
 
-        response = client.post("/api/alerts/config", json=new_config)
+        response = client.post("/api / alerts / config", json=new_config)
         assert response.status_code == 200
         data = response.json()
         assert data["success"] is True
 
     def test_get_recommendations(self, client):
         """Test getting optimization recommendations."""
-        response = client.get("/api/recommendations")
+        response = client.get("/api / recommendations")
         assert response.status_code == 200
         data = response.json()
         assert "recommendations" in data
 
     def test_export_metrics(self, client):
         """Test exporting metrics."""
-        response = client.get("/api/export/metrics?format=json")
+        response = client.get("/api / export / metrics?format=json")
         assert response.status_code == 200
 
 
@@ -320,7 +319,7 @@ class TestWebSocketConnections:
 
         client = TestClient(app)
 
-        with client.websocket_connect("/ws/test") as websocket:
+        with client.websocket_connect("/ws / test") as websocket:
             # Send test agent request
             websocket.send_json(
                 {
@@ -348,7 +347,7 @@ class TestWebSocketConnections:
 
         client = TestClient(app)
 
-        with client.websocket_connect("/ws/metrics") as websocket:
+        with client.websocket_connect("/ws / metrics") as websocket:
             # Receive metrics update
             data = websocket.receive_json()
             assert "total_requests" in data
@@ -369,7 +368,7 @@ class TestIntegration:
         client = TestClient(app)
 
         # 1. Get templates
-        response = client.get("/api/templates")
+        response = client.get("/api / templates")
         assert response.status_code == 200
 
         # 2. Create configuration
@@ -380,20 +379,20 @@ class TestIntegration:
             "agents": [{"name": "Agent1", "role": "test1"}, {"name": "Agent2", "role": "test2"}],
         }
 
-        response = client.post("/api/configs", json=config)
+        response = client.post("/api / configs", json=config)
         assert response.status_code == 200
         config_id = response.json()["config_id"]
 
         # 3. Retrieve configuration
-        response = client.get(f"/api/configs/{config_id}")
+        response = client.get(f"/api / configs/{config_id}")
         assert response.status_code == 200
 
         # 4. Export configuration
-        response = client.get(f"/api/configs/{config_id}/export?format=json")
+        response = client.get(f"/api / configs/{config_id}/export?format=json")
         assert response.status_code == 200
 
         # 5. Delete configuration
-        response = client.delete(f"/api/configs/{config_id}")
+        response = client.delete(f"/api / configs/{config_id}")
         assert response.status_code == 200
 
     def test_metrics_collection_flow(self):
@@ -420,17 +419,17 @@ class TestIntegration:
             )
 
         # Get summary
-        response = client.get("/api/metrics/summary")
+        response = client.get("/api / metrics / summary")
         assert response.status_code == 200
         data = response.json()
         assert data["total_requests"] >= 10
 
         # Get agent metrics
-        response = client.get("/api/metrics/agents")
+        response = client.get("/api / metrics / agents")
         assert response.status_code == 200
 
         # Get comparison
-        response = client.get("/api/metrics/comparison")
+        response = client.get("/api / metrics / comparison")
         assert response.status_code == 200
 
 
@@ -455,7 +454,7 @@ class TestPerformance:
         }
 
         start = time.time()
-        response = client.post("/api/configs", json=config)
+        response = client.post("/api / configs", json=config)
         duration = time.time() - start
 
         assert response.status_code == 200
@@ -473,7 +472,7 @@ class TestPerformance:
         client = TestClient(app)
 
         start = time.time()
-        response = client.get("/api/metrics/summary")
+        response = client.get("/api / metrics / summary")
         duration = time.time() - start
 
         assert response.status_code == 200

@@ -1,4 +1,4 @@
-"""Basic multi-agent collaboration example.
+"""Basic multi - agent collaboration example.
 
 This example demonstrates how to create multiple agents with different roles
 and have them collaborate on a task.
@@ -50,7 +50,7 @@ async def main() -> None:
 
     # Step 2: Create agents with different roles
     # Each role brings unique perspectives to the collaboration
-    # ANALYST: Focuses on data-driven insights and logical analysis
+    # ANALYST: Focuses on data - driven insights and logical analysis
     alice = Agent(name="Alice", role=AgentRole.ANALYST.value)
 
     # CREATIVE: Generates innovative ideas and creative solutions
@@ -77,7 +77,7 @@ async def main() -> None:
 
     # Step 4: Define the task and start collaboration
     # The agents will discuss and work together to complete this task
-    task = "We need to come up with a name for a new AI-powered productivity app"
+    task = "We need to come up with a name for a new AI - powered productivity app"
     result = await mind.start_collaboration(task)
 
     # Step 5: Display results

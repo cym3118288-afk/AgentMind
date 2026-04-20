@@ -52,7 +52,7 @@ async def example_agent_with_discord():
     print("=== Agent with Discord Integration ===\n")
 
     # Initialize components
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     # Create agent
@@ -108,7 +108,7 @@ async def example_discord_bot():
     print("=== Discord Bot with Multiple Agents ===\n")
 
     # Initialize LLM and agents
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     # Create specialized agents
@@ -229,7 +229,7 @@ async def example_discord_command_handler():
     """Discord bot with command handling."""
     print("=== Discord Command Handler ===\n")
 
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     command_handler = Agent(
@@ -271,9 +271,9 @@ async def example_discord_command_handler():
 
 async def example_multi_channel_bot():
     """Bot that monitors multiple Discord channels."""
-    print("=== Multi-Channel Discord Bot ===\n")
+    print("=== Multi - Channel Discord Bot ===\n")
 
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     monitor = Agent(

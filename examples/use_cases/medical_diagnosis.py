@@ -1,5 +1,5 @@
 """
-Real-world Use Case: Medical Diagnosis Assistant
+Real - world Use Case: Medical Diagnosis Assistant
 
 This example demonstrates a medical diagnosis support system using AgentMind.
 The system assists healthcare professionals by analyzing symptoms, reviewing
@@ -9,7 +9,7 @@ DISCLAIMER: This is for educational purposes only. Not for actual medical use.
 Always consult qualified healthcare professionals for medical advice.
 
 Features:
-- Multi-agent medical analysis
+- Multi - agent medical analysis
 - Symptom analysis and pattern recognition
 - Differential diagnosis generation
 - Test recommendation
@@ -21,7 +21,6 @@ import asyncio
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field
 from enum import Enum
-from datetime import datetime
 
 from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider
@@ -145,8 +144,8 @@ class MedicalKnowledgeBaseTool(Tool):
         # Simulated medical knowledge base
         self.knowledge_base = {
             "fever + cough + fatigue": {
-                "conditions": ["Influenza", "COVID-19", "Pneumonia", "Bronchitis"],
-                "tests": ["PCR test", "Chest X-ray", "Blood count"],
+                "conditions": ["Influenza", "COVID - 19", "Pneumonia", "Bronchitis"],
+                "tests": ["PCR test", "Chest X - ray", "Blood count"],
                 "treatments": ["Rest", "Hydration", "Antipyretics"],
             },
             "chest pain + shortness of breath": {
@@ -156,7 +155,7 @@ class MedicalKnowledgeBaseTool(Tool):
                     "Pneumonia",
                     "Anxiety",
                 ],
-                "tests": ["ECG", "Troponin", "D-dimer", "Chest X-ray"],
+                "tests": ["ECG", "Troponin", "D - dimer", "Chest X - ray"],
                 "treatments": ["Emergency evaluation", "Oxygen therapy"],
             },
             "headache + nausea + sensitivity to light": {
@@ -167,7 +166,7 @@ class MedicalKnowledgeBaseTool(Tool):
                     "Cluster headache",
                 ],
                 "tests": ["CT scan", "Lumbar puncture", "Blood tests"],
-                "treatments": ["Pain management", "Anti-nausea medication"],
+                "treatments": ["Pain management", "Anti - nausea medication"],
             },
         }
 
@@ -210,9 +209,9 @@ class DiagnosticTestRecommenderTool(Tool):
         # Map conditions to tests
         test_mapping = {
             "influenza": ["Rapid flu test", "PCR test"],
-            "covid-19": ["COVID-19 PCR", "Rapid antigen test"],
-            "pneumonia": ["Chest X-ray", "Blood culture", "Sputum culture"],
-            "myocardial infarction": ["ECG", "Troponin", "CK-MB", "Echocardiogram"],
+            "covid - 19": ["COVID - 19 PCR", "Rapid antigen test"],
+            "pneumonia": ["Chest X - ray", "Blood culture", "Sputum culture"],
+            "myocardial infarction": ["ECG", "Troponin", "CK - MB", "Echocardiogram"],
             "migraine": ["CT scan", "MRI", "Blood tests"],
             "diabetes": ["Fasting glucose", "HbA1c", "Oral glucose tolerance test"],
         }
@@ -267,10 +266,10 @@ async def create_medical_diagnosis_system(llm_provider) -> AgentMind:
         1. Generate a comprehensive differential diagnosis list
         2. Rank diagnoses by likelihood based on symptoms
         3. Consider patient history and risk factors
-        4. Identify life-threatening conditions first
+        4. Identify life - threatening conditions first
         5. Provide reasoning for each diagnosis
 
-        Use evidence-based medicine. Consider common conditions first, but don't miss rare but serious ones.""",
+        Use evidence - based medicine. Consider common conditions first, but don't miss rare but serious ones.""",
         tools=[MedicalKnowledgeBaseTool()],
     )
 
@@ -281,7 +280,7 @@ async def create_medical_diagnosis_system(llm_provider) -> AgentMind:
         system_prompt="""You are a diagnostic testing specialist. Your role is to:
         1. Recommend appropriate diagnostic tests
         2. Prioritize tests based on urgency and likelihood
-        3. Consider cost-effectiveness
+        3. Consider cost - effectiveness
         4. Avoid unnecessary testing
         5. Ensure critical tests are not missed
 
@@ -298,7 +297,7 @@ async def create_medical_diagnosis_system(llm_provider) -> AgentMind:
         2. Consider patient allergies and contraindications
         3. Recommend specialist referrals when needed
         4. Provide emergency interventions for urgent cases
-        5. Consider evidence-based guidelines
+        5. Consider evidence - based guidelines
 
         Patient safety is paramount. When in doubt, recommend specialist consultation.""",
     )
@@ -323,7 +322,7 @@ async def analyze_patient_case(case: PatientCase, llm_provider) -> DiagnosisResu
     mind = await create_medical_diagnosis_system(llm_provider)
 
     # Format the case for analysis
-    case_description = f"""
+    case_description = """
 Patient Case Analysis Request:
 
 Patient Information:
@@ -331,7 +330,7 @@ Patient Information:
 - Gender: {case.gender}
 
 Symptoms:
-{chr(10).join(f"- {s.name}: {s.severity.value} severity, {s.duration_days} days duration - {s.description}" for s in case.symptoms)}
+{chr(10).join(f"- {s.name}: {s.severity.value} severity, {s.duration_days} days duration - {s.description}" for s in case.symptoms)}  # noqa: E501
 
 Medical History:
 {chr(10).join(f"- {h}" for h in case.medical_history) if case.medical_history else "- None reported"}
@@ -383,7 +382,7 @@ async def example_respiratory_infection():
     """Example: Respiratory infection case"""
 
     case = PatientCase(
-        case_id="CASE-001",
+        case_id="CASE - 001",
         age=35,
         gender="Female",
         symptoms=[
@@ -414,7 +413,7 @@ async def example_cardiac_symptoms():
     """Example: Cardiac symptoms case"""
 
     case = PatientCase(
-        case_id="CASE-002",
+        case_id="CASE - 002",
         age=58,
         gender="Male",
         symptoms=[

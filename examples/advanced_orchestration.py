@@ -1,31 +1,31 @@
 """Example: Advanced orchestration patterns.
 
-Demonstrates sophisticated multi-agent coordination techniques including
+Demonstrates sophisticated multi - agent coordination techniques including
 consensus mechanisms, parallel task decomposition, dynamic agent spawning,
-and skill-based agent matching.
+and skill - based agent matching.
 
 Difficulty: ADVANCED
-Prerequisites: Strong understanding of multi-agent systems, async programming
-Estimated time: 30-45 minutes
+Prerequisites: Strong understanding of multi - agent systems, async programming
+Estimated time: 30 - 45 minutes
 
 What you'll learn:
 - Implementing consensus mechanisms (majority, unanimous, weighted voting)
 - Parallel task decomposition for complex workflows
 - Dynamic agent spawning based on workload
-- Skill-based agent matching and specialization
+- Skill - based agent matching and specialization
 - Advanced orchestration patterns for production systems
 
 Expected Output:
 - Consensus demo: Agents vote on proposals with different mechanisms
 - Parallel decomposition: Complex tasks split into concurrent subtasks
-- Dynamic spawning: Agents created on-demand for workload
+- Dynamic spawning: Agents created on - demand for workload
 - Skill matching: Agents selected based on capabilities
-- Demonstrates enterprise-grade orchestration patterns
+- Demonstrates enterprise - grade orchestration patterns
 """
 
 import asyncio
 
-from agentmind.core import Agent, AgentMind
+from agentmind.core import Agent
 from agentmind.llm import OllamaProvider
 from agentmind.orchestration.advanced import (
     ConsensusOrchestrator,
@@ -84,7 +84,7 @@ async def demo_parallel_decomposition():
     decomposer = ParallelTaskDecomposer(llm)
 
     # Decompose a complex task
-    task = "Research, design, and implement a recommendation system for an e-commerce platform"
+    task = "Research, design, and implement a recommendation system for an e - commerce platform"
     subtasks = await decomposer.decompose(task, max_subtasks=4)
 
     print(f"\nOriginal Task: {task}")
@@ -101,7 +101,7 @@ async def demo_parallel_decomposition():
     print("\nExecuting subtasks in parallel...")
     results = await decomposer.execute_parallel(subtasks, agents, timeout=30.0)
 
-    print(f"\nExecution Results:")
+    print("\nExecution Results:")
     print(f"  Completed: {results['completed']}/{results['total_subtasks']}")
     print(f"  Failed: {results['failed']}")
 
@@ -116,7 +116,7 @@ async def demo_dynamic_spawning():
     spawner = DynamicAgentSpawner(llm)
 
     # Spawn agents for a task
-    task = "Build a secure web application with user authentication, data analytics, and real-time notifications"
+    task = "Build a secure web application with user authentication, data analytics, and real - time notifications"
 
     print(f"\nTask: {task}")
     print("\nAnalyzing task and spawning appropriate agents...")
@@ -131,7 +131,7 @@ async def demo_dynamic_spawning():
     history = spawner.get_spawn_history()
     if history:
         last_spawn = history[-1]
-        print(f"\nTask Requirements:")
+        print("\nTask Requirements:")
         print(f"  Domain: {last_spawn['requirements'].get('domain')}")
         print(f"  Complexity: {last_spawn['requirements'].get('complexity')}")
         print(f"  Skills: {', '.join(last_spawn['requirements'].get('skills', []))}")
@@ -158,7 +158,7 @@ async def demo_skill_matching():
     # Add skills to agents
     engine.add_agent_skill(agents[0], "python", 0.9, "Python programming")
     engine.add_agent_skill(agents[0], "testing", 0.7, "Software testing")
-    engine.add_agent_skill(agents[1], "ui_design", 0.8, "UI/UX design")
+    engine.add_agent_skill(agents[1], "ui_design", 0.8, "UI / UX design")
     engine.add_agent_skill(agents[1], "prototyping", 0.6, "Rapid prototyping")
     engine.add_agent_skill(agents[2], "data_analysis", 0.85, "Data analysis")
     engine.add_agent_skill(agents[2], "statistics", 0.75, "Statistical analysis")
@@ -169,7 +169,7 @@ async def demo_skill_matching():
         summary = engine.get_specialization_summary(agent)
         print(f"\n{summary['agent']}:")
         print(f"  Primary: {summary['specialization']} ({summary['primary_proficiency']:.2f})")
-        print(f"  Skills:")
+        print("  Skills:")
         for skill in summary["skills"]:
             print(f"    - {skill['name']}: {skill['proficiency']:.2f}")
 

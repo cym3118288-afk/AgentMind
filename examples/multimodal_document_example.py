@@ -1,4 +1,4 @@
-"""Example: Multi-modal agent with document processing.
+"""Example: Multi - modal agent with document processing.
 
 This example demonstrates how to use AgentMind with document processing
 capabilities for PDF, DOCX, and text file analysis.
@@ -7,7 +7,7 @@ capabilities for PDF, DOCX, and text file analysis.
 import asyncio
 from pathlib import Path
 
-from agentmind.multimodal import DocumentProcessor, DocumentFormat
+from agentmind.multimodal import DocumentProcessor
 from agentmind import Agent, AgentMind
 from agentmind.llm import LiteLLMProvider
 
@@ -18,7 +18,7 @@ async def example_pdf_extraction():
 
     processor = DocumentProcessor()
 
-    pdf_path = "path/to/document.pdf"
+    pdf_path = "path / to / document.pd"
     if Path(pdf_path).exists():
         # Extract all text
         text = processor.extract_text_from_pdf(pdf_path)
@@ -37,7 +37,7 @@ async def example_docx_extraction():
 
     processor = DocumentProcessor()
 
-    docx_path = "path/to/document.docx"
+    docx_path = "path / to / document.docx"
     if Path(docx_path).exists():
         text = processor.extract_text_from_docx(docx_path)
         print(f"Extracted text (first 500 chars):\n{text[:500]}...\n")
@@ -52,7 +52,7 @@ async def example_document_metadata():
     processor = DocumentProcessor()
 
     # PDF metadata
-    pdf_path = "path/to/document.pdf"
+    pdf_path = "path / to / document.pd"
     if Path(pdf_path).exists():
         metadata = processor.get_pdf_metadata(pdf_path)
         print("PDF Metadata:")
@@ -63,7 +63,7 @@ async def example_document_metadata():
         print(f"PDF not found: {pdf_path}\n")
 
     # DOCX metadata
-    docx_path = "path/to/document.docx"
+    docx_path = "path / to / document.docx"
     if Path(docx_path).exists():
         metadata = processor.get_docx_metadata(docx_path)
         print("DOCX Metadata:")
@@ -93,7 +93,7 @@ async def example_document_analysis_agent():
     print("=== Document Analysis Agent Example ===\n")
 
     doc_processor = DocumentProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     analyzer = Agent(
@@ -103,7 +103,7 @@ async def example_document_analysis_agent():
     )
     mind.add_agent(analyzer)
 
-    doc_path = "path/to/report.pdf"
+    doc_path = "path / to / report.pd"
     if Path(doc_path).exists():
         # Extract text
         text = doc_processor.extract_text(doc_path)
@@ -120,10 +120,10 @@ async def example_document_analysis_agent():
 
 async def example_multi_document_comparison():
     """Compare multiple documents."""
-    print("=== Multi-Document Comparison Example ===\n")
+    print("=== Multi - Document Comparison Example ===\n")
 
     doc_processor = DocumentProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     comparer = Agent(
@@ -133,14 +133,14 @@ async def example_multi_document_comparison():
     )
     mind.add_agent(comparer)
 
-    docs = ["path/to/doc1.pdf", "path/to/doc2.pdf"]
+    docs = ["path / to / doc1.pd", "path / to / doc2.pd"]
     if all(Path(doc).exists() for doc in docs):
         # Extract text from both
         texts = [doc_processor.extract_text(doc) for doc in docs]
 
         # Compare
         comparison_prompt = (
-            f"Compare these two documents:\n\n"
+            "Compare these two documents:\n\n"
             f"Document 1:\n{texts[0][:1000]}\n\n"
             f"Document 2:\n{texts[1][:1000]}"
         )
@@ -156,7 +156,7 @@ async def example_research_paper_analyzer():
     print("=== Research Paper Analyzer Example ===\n")
 
     doc_processor = DocumentProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     # Create specialized agents
@@ -182,7 +182,7 @@ async def example_research_paper_analyzer():
     mind.add_agent(methodology_expert)
     mind.add_agent(results_analyst)
 
-    paper_path = "path/to/research_paper.pdf"
+    paper_path = "path / to / research_paper.pd"
     if Path(paper_path).exists():
         # Extract text
         text = doc_processor.extract_text(paper_path)
@@ -202,7 +202,7 @@ async def example_contract_reviewer():
     print("=== Contract Reviewer Example ===\n")
 
     doc_processor = DocumentProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     reviewer = Agent(
@@ -210,22 +210,22 @@ async def example_contract_reviewer():
         role="legal_review",
         system_prompt=(
             "You review contracts and identify key terms, obligations, "
-            "and potential issues. You are thorough and detail-oriented."
+            "and potential issues. You are thorough and detail - oriented."
         ),
     )
     mind.add_agent(reviewer)
 
-    contract_path = "path/to/contract.pdf"
+    contract_path = "path / to / contract.pd"
     if Path(contract_path).exists():
         # Extract text
         text = doc_processor.extract_text(contract_path)
 
         # Review
         result = await mind.collaborate(
-            f"Review this contract and identify:\n"
-            f"1. Key terms and conditions\n"
-            f"2. Obligations for each party\n"
-            f"3. Potential risks or concerns\n\n"
+            "Review this contract and identify:\n"
+            "1. Key terms and conditions\n"
+            "2. Obligations for each party\n"
+            "3. Potential risks or concerns\n\n"
             f"Contract:\n{text}",
             max_rounds=1,
         )
@@ -236,11 +236,11 @@ async def example_contract_reviewer():
 
 
 async def example_document_qa():
-    """Question-answering over documents."""
+    """Question - answering over documents."""
     print("=== Document Q&A Example ===\n")
 
     doc_processor = DocumentProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     qa_agent = Agent(
@@ -250,7 +250,7 @@ async def example_document_qa():
     )
     mind.add_agent(qa_agent)
 
-    doc_path = "path/to/manual.pdf"
+    doc_path = "path / to / manual.pd"
     if Path(doc_path).exists():
         # Extract text
         text = doc_processor.extract_text(doc_path)
@@ -278,7 +278,7 @@ async def example_batch_document_processing():
     print("=== Batch Document Processing Example ===\n")
 
     doc_processor = DocumentProcessor()
-    llm = LiteLLMProvider(model="gpt-4")
+    llm = LiteLLMProvider(model="gpt - 4")
     mind = AgentMind(llm_provider=llm)
 
     processor = Agent(
@@ -288,10 +288,10 @@ async def example_batch_document_processing():
     )
     mind.add_agent(processor)
 
-    doc_dir = Path("path/to/documents")
+    doc_dir = Path("path / to / documents")
     if doc_dir.exists():
         # Process all PDFs in directory
-        pdf_files = list(doc_dir.glob("*.pdf"))
+        pdf_files = list(doc_dir.glob("*.pd"))
 
         for pdf_file in pdf_files[:5]:  # Process first 5
             text = doc_processor.extract_text(pdf_file)
@@ -310,7 +310,7 @@ async def main():
     print("=" * 50 + "\n")
 
     print("Note: Update document paths and ensure required packages are installed.\n")
-    print("Required packages: PyPDF2, python-docx\n")
+    print("Required packages: PyPDF2, python - docx\n")
 
     # Run examples that don't require files
     await example_document_chunking()

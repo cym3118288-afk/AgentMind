@@ -1,16 +1,16 @@
 """
-Real-world Use Case: Content Generation Pipeline
+Real - world Use Case: Content Generation Pipeline
 
 This example demonstrates an automated content generation system using AgentMind.
-Multiple specialized agents collaborate to create high-quality content:
-- Research and fact-checking
+Multiple specialized agents collaborate to create high - quality content:
+- Research and fact - checking
 - Outline creation
 - Content writing
 - Editing and refinement
 - SEO optimization
 
 Features:
-- Multi-stage content pipeline
+- Multi - stage content pipeline
 - Quality assurance
 - SEO optimization
 - Multiple content formats
@@ -18,7 +18,7 @@ Features:
 """
 
 import asyncio
-from typing import List, Dict, Optional
+from typing import List, Optional
 from dataclasses import dataclass
 from enum import Enum
 
@@ -44,7 +44,7 @@ class ContentStatus(str, Enum):
 
 @dataclass
 class ContentBrief:
-    """Content creation brief"""
+    """Content creation brie"""
 
     topic: str
     content_type: ContentType
@@ -69,15 +69,15 @@ class ContentPiece:
 
 
 class ResearchTool(Tool):
-    """Simulates research and fact-checking"""
+    """Simulates research and fact - checking"""
 
     def __init__(self):
         self.knowledge_base = {
-            "ai": "Artificial Intelligence is transforming industries through machine learning, natural language processing, and computer vision.",
-            "python": "Python is a versatile programming language known for its simplicity and extensive ecosystem of libraries.",
-            "marketing": "Digital marketing encompasses SEO, content marketing, social media, and data-driven strategies.",
-            "health": "Modern healthcare focuses on preventive care, personalized medicine, and digital health technologies.",
-            "finance": "Financial technology (FinTech) is revolutionizing banking, payments, and investment management.",
+            "ai": "Artificial Intelligence is transforming industries through machine learning, natural language processing, and computer vision.",  # noqa: E501
+            "python": "Python is a versatile programming language known for its simplicity and extensive ecosystem of libraries.",  # noqa: E501
+            "marketing": "Digital marketing encompasses SEO, content marketing, social media, and data - driven strategies.",  # noqa: E501
+            "health": "Modern healthcare focuses on preventive care, personalized medicine, and digital health technologies.",  # noqa: E501
+            "finance": "Financial technology (FinTech) is revolutionizing banking, payments, and investment management.",  # noqa: E501
         }
 
         super().__init__(
@@ -110,7 +110,7 @@ class SEOAnalysisTool(Tool):
             description="Analyze content for SEO optimization",
             parameters={
                 "content": {"type": "string", "description": "Content to analyze"},
-                "keywords": {"type": "string", "description": "Target keywords (comma-separated)"},
+                "keywords": {"type": "string", "description": "Target keywords (comma - separated)"},
             },
         )
 
@@ -170,7 +170,7 @@ class ReadabilityTool(Tool):
         analysis.append(f"Avg sentence length: {avg_sentence_length:.1f} words")
 
         if avg_sentence_length > 25:
-            analysis.append("⚠️ Sentences too long - aim for 15-20 words")
+            analysis.append("⚠️ Sentences too long - aim for 15 - 20 words")
         else:
             analysis.append("✓ Good sentence length")
 
@@ -186,7 +186,7 @@ class ReadabilityTool(Tool):
 
 
 async def create_content_pipeline() -> AgentMind:
-    """Create the content generation multi-agent system"""
+    """Create the content generation multi - agent system"""
 
     llm = OllamaProvider(model="llama3.2")
     mind = AgentMind(llm_provider=llm)
@@ -277,10 +277,10 @@ async def create_content_pipeline() -> AgentMind:
 
 
 async def generate_content(mind: AgentMind, brief: ContentBrief) -> ContentPiece:
-    """Generate content using the multi-agent pipeline"""
+    """Generate content using the multi - agent pipeline"""
 
     print(f"\n{'='*60}")
-    print(f"Generating Content")
+    print("Generating Content")
     print(f"Topic: {brief.topic}")
     print(f"Type: {brief.content_type.value}")
     print(f"Target: {brief.target_audience}")
@@ -289,7 +289,7 @@ async def generate_content(mind: AgentMind, brief: ContentBrief) -> ContentPiece
     print(f"{'='*60}\n")
 
     # Create generation context
-    context = f"""
+    context = """
     Create content based on this brief:
 
     Topic: {brief.topic}
@@ -307,14 +307,14 @@ async def generate_content(mind: AgentMind, brief: ContentBrief) -> ContentPiece
     4. Edit for clarity and readability
     5. Optimize for SEO
 
-    Deliver high-quality, engaging content that meets all requirements.
+    Deliver high - quality, engaging content that meets all requirements.
     """
 
     # Collaborate to generate content
     result = await mind.collaborate(context, max_rounds=5)
 
     print(f"\n{'='*60}")
-    print(f"Content Generation Complete")
+    print("Content Generation Complete")
     print(f"\nGenerated Content:\n{result[:500]}...")
     print(f"{'='*60}\n")
 
@@ -359,7 +359,7 @@ async def example_product_description():
     brief = ContentBrief(
         topic="Smart Fitness Tracker with AI Coaching",
         content_type=ContentType.PRODUCT_DESCRIPTION,
-        target_audience="Health-conscious consumers",
+        target_audience="Health - conscious consumers",
         tone="Persuasive and exciting",
         keywords=["fitness tracker", "AI coaching", "health monitoring"],
         word_count=300,
@@ -376,13 +376,13 @@ async def example_social_media():
     mind = await create_content_pipeline()
 
     brief = ContentBrief(
-        topic="Launch of New AI-Powered Marketing Tool",
+        topic="Launch of New AI - Powered Marketing Tool",
         content_type=ContentType.SOCIAL_MEDIA,
         target_audience="Marketing professionals",
         tone="Exciting and concise",
         keywords=["AI marketing", "automation", "productivity"],
         word_count=150,
-        additional_requirements="Include call-to-action",
+        additional_requirements="Include call - to - action",
     )
 
     await generate_content(mind, brief)

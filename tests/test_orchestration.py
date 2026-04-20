@@ -10,7 +10,7 @@ from agentmind.orchestration.consensus import ConsensusOrchestrator, VotingMecha
 class MockLLMProvider(LLMProvider):
     """Mock LLM provider for testing."""
 
-    def __init__(self, model="mock-model", response_prefix="Mock", **kwargs):
+    def __init__(self, model="mock - model", response_prefix="Mock", **kwargs):
         super().__init__(model, **kwargs)
         self.response_prefix = response_prefix
 
@@ -64,7 +64,7 @@ async def test_broadcast_strategy_with_llm():
 
 @pytest.mark.asyncio
 async def test_round_robin_strategy():
-    """Test round-robin strategy."""
+    """Test round - robin strategy."""
     provider = MockLLMProvider()
     mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN, llm_provider=provider)
 
@@ -75,7 +75,7 @@ async def test_round_robin_strategy():
     result = await mind.start_collaboration("Test task", max_rounds=3, use_llm=True)
 
     assert result.success
-    # Round-robin should have agents take turns
+    # Round - robin should have agents take turns
     assert result.total_rounds <= 3
 
 
@@ -204,7 +204,7 @@ async def test_collaboration_result_metadata():
 
 @pytest.mark.asyncio
 async def test_multiple_rounds_round_robin():
-    """Test multiple rounds in round-robin mode."""
+    """Test multiple rounds in round - robin mode."""
     provider = MockLLMProvider()
     mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN, llm_provider=provider)
 
@@ -324,7 +324,7 @@ class TestOrchestrationStrategies:
 
     @pytest.mark.asyncio
     async def test_round_robin_order(self):
-        """Test that round-robin maintains order."""
+        """Test that round - robin maintains order."""
         provider = MockLLMProvider()
         mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN, llm_provider=provider)
 
@@ -355,7 +355,7 @@ class TestOrchestrationStrategies:
 
 
 class TestConsensusOrchestration:
-    """Test consensus-based orchestration."""
+    """Test consensus - based orchestration."""
 
     @pytest.mark.asyncio
     async def test_majority_vote_consensus(self):
@@ -439,7 +439,7 @@ class TestConsensusOrchestration:
 
     @pytest.mark.asyncio
     async def test_multi_round_consensus(self):
-        """Test multi-round consensus building."""
+        """Test multi - round consensus building."""
         provider = MockLLMProvider(response_prefix="VOTE: YES\nREASONING: Good\nCONFIDENCE: 80")
 
         agents = [
@@ -497,7 +497,7 @@ class TestOrchestrationPerformance:
 
     @pytest.mark.asyncio
     async def test_round_robin_performance(self):
-        """Test round-robin performance."""
+        """Test round - robin performance."""
         provider = MockLLMProvider()
         mind = AgentMind(strategy=CollaborationStrategy.ROUND_ROBIN, llm_provider=provider)
 

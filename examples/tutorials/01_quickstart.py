@@ -4,7 +4,7 @@ Tutorial 01: Quickstart - Hello World Agent
 This tutorial introduces the basics of AgentMind:
 - Creating a simple agent
 - Processing messages
-- Basic agent-to-agent communication
+- Basic agent - to - agent communication
 
 Estimated time: 10 minutes
 Difficulty: Beginner
@@ -106,7 +106,7 @@ async def main():
     print("\nKey Takeaways:")
     print("1. Agents are created with a name, role, and LLM provider")
     print("2. Messages are processed using agent.process_message()")
-    print("3. AgentMind orchestrates multi-agent collaboration")
+    print("3. AgentMind orchestrates multi - agent collaboration")
     print("\nNext: Tutorial 02 - Memory Systems")
 
 

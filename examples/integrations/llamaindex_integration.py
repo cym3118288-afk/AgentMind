@@ -2,15 +2,14 @@
 LlamaIndex Integration Example
 
 This example demonstrates how to integrate AgentMind with LlamaIndex for
-advanced RAG (Retrieval-Augmented Generation) capabilities.
+advanced RAG (Retrieval - Augmented Generation) capabilities.
 
 Combines:
 - LlamaIndex: Document indexing, vector search, and retrieval
-- AgentMind: Multi-agent reasoning and collaboration
+- AgentMind: Multi - agent reasoning and collaboration
 """
 
 import asyncio
-from typing import List, Optional
 
 from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider
@@ -45,26 +44,25 @@ class LlamaIndexRetriever(Tool):
 
 # Example 1: Basic RAG with LlamaIndex and AgentMind
 async def example_basic_rag():
-    """Use LlamaIndex for retrieval and AgentMind for multi-agent reasoning"""
+    """Use LlamaIndex for retrieval and AgentMind for multi - agent reasoning"""
     print("\n=== Example 1: Basic RAG with LlamaIndex ===\n")
 
     try:
-        from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Document
-        from llama_index.core.node_parser import SimpleNodeParser
+        from llama_index.core import VectorStoreIndex, Document
 
         # Create sample documents
         documents = [
             Document(
-                text="AgentMind is a lightweight multi-agent framework for Python. It supports multiple LLM providers including Ollama, OpenAI, and Anthropic."
+                text="AgentMind is a lightweight multi - agent framework for Python. It supports multiple LLM providers including Ollama, OpenAI, and Anthropic."  # noqa: E501
             ),
             Document(
-                text="The framework features built-in memory management, tool systems, and async-first architecture for concurrent agent collaboration."
+                text="The framework features built - in memory management, tool systems, and async - first architecture for concurrent agent collaboration."  # noqa: E501
             ),
             Document(
-                text="AgentMind is designed to be production-ready with comprehensive error handling, type hints, and extensive testing."
+                text="AgentMind is designed to be production - ready with comprehensive error handling, type hints, and extensive testing."  # noqa: E501
             ),
             Document(
-                text="Key features include multi-agent orchestration, flexible LLM support, memory backends, and extensible tool system."
+                text="Key features include multi - agent orchestration, flexible LLM support, memory backends, and extensible tool system."  # noqa: E501
             ),
         ]
 
@@ -83,7 +81,7 @@ async def example_basic_rag():
         rag_agent = Agent(
             name="RAG_Expert",
             role="rag_specialist",
-            system_prompt="You are an expert at answering questions using retrieved documents. Always base your answers on the retrieved information and cite sources when possible.",
+            system_prompt="You are an expert at answering questions using retrieved documents. Always base your answers on the retrieved information and cite sources when possible.",  # noqa: E501
             tools=[retriever],
         )
 
@@ -102,13 +100,13 @@ async def example_basic_rag():
             print(f"Answer: {result}\n")
 
     except ImportError:
-        print("LlamaIndex not installed. Install with: pip install llama-index")
+        print("LlamaIndex not installed. Install with: pip install llama - index")
 
 
-# Example 2: Multi-agent RAG system
+# Example 2: Multi - agent RAG system
 async def example_multi_agent_rag():
     """Multiple specialized agents working with LlamaIndex retrieval"""
-    print("\n=== Example 2: Multi-Agent RAG System ===\n")
+    print("\n=== Example 2: Multi - Agent RAG System ===\n")
 
     try:
         from llama_index.core import VectorStoreIndex, Document
@@ -116,16 +114,16 @@ async def example_multi_agent_rag():
         # Create knowledge base
         tech_docs = [
             Document(
-                text="Python is a high-level programming language known for its simplicity and readability. It supports multiple programming paradigms."
+                text="Python is a high - level programming language known for its simplicity and readability. It supports multiple programming paradigms."  # noqa: E501
             ),
             Document(
-                text="JavaScript is the language of the web, running in browsers and on servers via Node.js. It's essential for modern web development."
+                text="JavaScript is the language of the web, running in browsers and on servers via Node.js. It's essential for modern web development."  # noqa: E501
             ),
             Document(
-                text="Rust is a systems programming language focused on safety, speed, and concurrency. It prevents memory errors at compile time."
+                text="Rust is a systems programming language focused on safety, speed, and concurrency. It prevents memory errors at compile time."  # noqa: E501
             ),
             Document(
-                text="Go is designed for building scalable network services and cloud applications. It features built-in concurrency support."
+                text="Go is designed for building scalable network services and cloud applications. It features built - in concurrency support."  # noqa: E501
             ),
         ]
 
@@ -144,7 +142,7 @@ async def example_multi_agent_rag():
         retriever_agent = Agent(
             name="Retriever",
             role="retriever",
-            system_prompt="You retrieve relevant information from the knowledge base. Focus on finding accurate, relevant documents.",
+            system_prompt="You retrieve relevant information from the knowledge base. Focus on finding accurate, relevant documents.",  # noqa: E501
             tools=[retriever],
         )
 
@@ -152,7 +150,7 @@ async def example_multi_agent_rag():
         analyzer = Agent(
             name="Analyzer",
             role="analyst",
-            system_prompt="You analyze retrieved information and extract key insights. Identify patterns and important details.",
+            system_prompt="You analyze retrieved information and extract key insights. Identify patterns and important details.",  # noqa: E501
         )
 
         # Synthesizer agent
@@ -168,14 +166,14 @@ async def example_multi_agent_rag():
 
         # Collaborate on complex query
         result = await mind.collaborate(
-            "Compare Python and Rust for systems programming. What are the trade-offs?",
+            "Compare Python and Rust for systems programming. What are the trade - offs?",
             max_rounds=3,
         )
 
         print(f"Result: {result}")
 
     except ImportError:
-        print("LlamaIndex not installed. Install with: pip install llama-index")
+        print("LlamaIndex not installed. Install with: pip install llama - index")
 
 
 # Example 3: Document analysis pipeline
@@ -189,16 +187,16 @@ async def example_document_analysis():
         # Simulate a collection of research papers
         papers = [
             Document(
-                text="Study 1: Machine learning models show 85% accuracy in predicting customer churn. Key factors include usage frequency and support tickets."
+                text="Study 1: Machine learning models show 85% accuracy in predicting customer churn. Key factors include usage frequency and support tickets."  # noqa: E501
             ),
             Document(
-                text="Study 2: Deep learning approaches achieve 92% accuracy but require 10x more training data and computational resources."
+                text="Study 2: Deep learning approaches achieve 92% accuracy but require 10x more training data and computational resources."  # noqa: E501
             ),
             Document(
-                text="Study 3: Ensemble methods combining multiple models reach 89% accuracy with better interpretability than deep learning."
+                text="Study 3: Ensemble methods combining multiple models reach 89% accuracy with better interpretability than deep learning."  # noqa: E501
             ),
             Document(
-                text="Study 4: Feature engineering is critical - domain-specific features improve accuracy by 15% across all model types."
+                text="Study 4: Feature engineering is critical - domain - specific features improve accuracy by 15% across all model types."  # noqa: E501
             ),
         ]
 
@@ -248,12 +246,12 @@ async def example_document_analysis():
         print(f"Analysis: {result}")
 
     except ImportError:
-        print("LlamaIndex not installed. Install with: pip install llama-index")
+        print("LlamaIndex not installed. Install with: pip install llama - index")
 
 
 # Example 4: Hybrid search with metadata filtering
 async def example_hybrid_search():
-    """Advanced RAG with metadata filtering and multi-agent processing"""
+    """Advanced RAG with metadata filtering and multi - agent processing"""
     print("\n=== Example 4: Hybrid Search with Metadata ===\n")
 
     try:
@@ -262,7 +260,7 @@ async def example_hybrid_search():
         # Documents with metadata
         documents = [
             Document(
-                text="Q1 2024 revenue increased 25% year-over-year to $50M.",
+                text="Q1 2024 revenue increased 25% year - over - year to $50M.",
                 metadata={"type": "financial", "quarter": "Q1", "year": 2024},
             ),
             Document(
@@ -316,13 +314,13 @@ async def example_hybrid_search():
         print(f"Strategic Analysis: {result}")
 
     except ImportError:
-        print("LlamaIndex not installed. Install with: pip install llama-index")
+        print("LlamaIndex not installed. Install with: pip install llama - index")
 
 
-# Example 5: Real-time document ingestion
+# Example 5: Real - time document ingestion
 async def example_realtime_ingestion():
-    """Demonstrate adding documents to index and querying in real-time"""
-    print("\n=== Example 5: Real-time Document Ingestion ===\n")
+    """Demonstrate adding documents to index and querying in real - time"""
+    print("\n=== Example 5: Real - time Document Ingestion ===\n")
 
     try:
         from llama_index.core import VectorStoreIndex, Document
@@ -357,7 +355,7 @@ async def example_realtime_ingestion():
         # Add new document
         print("Adding new document about version 2.0...")
         new_doc = Document(
-            text="AgentMind version 2.0 released with advanced features including self-improvement and template marketplace."
+            text="AgentMind version 2.0 released with advanced features including self - improvement and template marketplace."  # noqa: E501
         )
         index.insert(new_doc)
 
@@ -371,7 +369,7 @@ async def example_realtime_ingestion():
         print(f"Answer: {result2}")
 
     except ImportError:
-        print("LlamaIndex not installed. Install with: pip install llama-index")
+        print("LlamaIndex not installed. Install with: pip install llama - index")
 
 
 async def main():
@@ -390,7 +388,7 @@ async def main():
     print("LlamaIndex integration examples completed!")
     print("=" * 60)
     print("\nNote: These examples require LlamaIndex to be installed:")
-    print("  pip install llama-index")
+    print("  pip install llama - index")
 
 
 if __name__ == "__main__":

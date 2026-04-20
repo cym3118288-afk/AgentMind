@@ -1,5 +1,5 @@
 """
-Advanced Example: Multi-Modal Agent
+Advanced Example: Multi - Modal Agent
 
 This example demonstrates an agent that processes multiple modalities:
 - Text understanding and generation
@@ -7,7 +7,7 @@ This example demonstrates an agent that processes multiple modalities:
 - Audio processing and transcription
 - Video analysis
 - Document parsing
-- Cross-modal reasoning
+- Cross - modal reasoning
 
 Estimated time: 30 minutes
 Difficulty: Advanced
@@ -31,7 +31,7 @@ class ModalityType(str, Enum):
 
 
 class MultiModalContent:
-    """Container for multi-modal content"""
+    """Container for multi - modal content"""
 
     def __init__(
         self, modality: ModalityType, content: Any, metadata: Optional[Dict[str, Any]] = None
@@ -132,7 +132,7 @@ class DocumentProcessor:
         return {
             "type": "document",
             "path": doc_path,
-            "format": "pdf",
+            "format": "pd",
             "pages": 10,
             "title": "AgentMind Documentation",
             "sections": [
@@ -150,7 +150,7 @@ class DocumentProcessor:
 
 
 class MultiModalAgent(Agent):
-    """Agent with multi-modal processing capabilities"""
+    """Agent with multi - modal processing capabilities"""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -226,7 +226,7 @@ class MultiModalAgent(Agent):
                 title = content.content.get("title")
                 context.append(f"Document: {title}")
 
-        # Create enhanced query with multi-modal context
+        # Create enhanced query with multi - modal context
         enhanced_query = f"{query}\n\nContext from multiple sources:\n" + "\n".join(context)
 
         # Process with LLM
@@ -256,7 +256,7 @@ async def example_1_image_processing():
 
     # Process image
     result = await agent.process_image("workspace.jpg")
-    print(f"Image Analysis:")
+    print("Image Analysis:")
     print(f"  Objects: {result['analysis']['objects_detected']}")
     print(f"  Scene: {result['analysis']['scene']}")
     print(f"  Caption: {result['caption']}\n")
@@ -271,7 +271,7 @@ async def example_2_audio_processing():
 
     # Process audio
     result = await agent.process_audio("meeting.mp3")
-    print(f"Audio Analysis:")
+    print("Audio Analysis:")
     print(f"  Transcript: {result['transcription']['transcript']}")
     print(f"  Duration: {result['transcription']['duration']}s")
     print(f"  Sentiment: {result['analysis']['sentiment']}\n")
@@ -286,7 +286,7 @@ async def example_3_video_processing():
 
     # Process video
     result = await agent.process_video("presentation.mp4")
-    print(f"Video Analysis:")
+    print("Video Analysis:")
     print(f"  Duration: {result['analysis']['duration']}s")
     print(f"  Scenes: {len(result['analysis']['scenes'])}")
     print(f"  Keyframes: {len(result['keyframes'])}\n")
@@ -300,16 +300,16 @@ async def example_4_document_processing():
     agent = MultiModalAgent(name="doc_agent", role="analyst", llm_provider=llm)
 
     # Process document
-    result = await agent.process_document("report.pdf")
-    print(f"Document Analysis:")
+    result = await agent.process_document("report.pd")
+    print("Document Analysis:")
     print(f"  Title: {result['structure']['title']}")
     print(f"  Pages: {result['structure']['pages']}")
     print(f"  Sections: {len(result['structure']['sections'])}\n")
 
 
 async def example_5_cross_modal_reasoning():
-    """Example 5: Cross-modal reasoning"""
-    print("\n=== Example 5: Cross-Modal Reasoning ===\n")
+    """Example 5: Cross - modal reasoning"""
+    print("\n=== Example 5: Cross - Modal Reasoning ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
     agent = MultiModalAgent(name="multimodal_agent", role="analyst", llm_provider=llm)
@@ -317,14 +317,14 @@ async def example_5_cross_modal_reasoning():
     # Process multiple modalities
     await agent.process_image("product.jpg")
     await agent.process_audio("review.mp3")
-    await agent.process_document("specs.pdf")
+    await agent.process_document("specs.pd")
 
-    # Perform cross-modal reasoning
+    # Perform cross - modal reasoning
     response = await agent.cross_modal_reasoning(
         "Provide a comprehensive analysis of this product based on all available information."
     )
 
-    print(f"Cross-Modal Analysis:")
+    print("Cross - Modal Analysis:")
     print(f"{response[:300]}...\n")
 
     # Show modality summary
@@ -334,13 +334,13 @@ async def example_5_cross_modal_reasoning():
 
 
 async def example_6_multimodal_workflow():
-    """Example 6: Complete multi-modal workflow"""
-    print("\n=== Example 6: Multi-Modal Workflow ===\n")
+    """Example 6: Complete multi - modal workflow"""
+    print("\n=== Example 6: Multi - Modal Workflow ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
     agent = MultiModalAgent(name="workflow_agent", role="analyst", llm_provider=llm)
 
-    print("Processing multi-modal content pipeline:\n")
+    print("Processing multi - modal content pipeline:\n")
 
     # Step 1: Process video
     print("1. Processing video presentation...")
@@ -348,7 +348,7 @@ async def example_6_multimodal_workflow():
 
     # Step 2: Process slides
     print("2. Processing presentation slides...")
-    await agent.process_document("slides.pdf")
+    await agent.process_document("slides.pd")
 
     # Step 3: Process audio feedback
     print("3. Processing audio feedback...")
@@ -361,14 +361,14 @@ async def example_6_multimodal_workflow():
         "visual content, and participant feedback."
     )
 
-    print(f"Report Generated:")
+    print("Report Generated:")
     print(f"{report[:200]}...\n")
 
 
 async def main():
     """Run all examples"""
     print("=" * 60)
-    print("Advanced Example: Multi-Modal Agent")
+    print("Advanced Example: Multi - Modal Agent")
     print("=" * 60)
 
     await example_1_image_processing()
@@ -382,10 +382,10 @@ async def main():
     print("Example Complete!")
     print("=" * 60)
     print("\nKey Concepts:")
-    print("1. Multi-modal agents process diverse input types")
+    print("1. Multi - modal agents process diverse input types")
     print("2. Each modality requires specialized processing")
-    print("3. Cross-modal reasoning combines insights")
-    print("4. Multi-modal workflows enable rich applications")
+    print("3. Cross - modal reasoning combines insights")
+    print("4. Multi - modal workflows enable rich applications")
     print("5. Context from multiple sources improves understanding")
 
 

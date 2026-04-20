@@ -2,15 +2,14 @@
 Haystack Integration Example
 
 This example demonstrates how to integrate AgentMind with Haystack for
-building production-ready NLP pipelines with multi-agent reasoning.
+building production - ready NLP pipelines with multi - agent reasoning.
 
 Combines:
 - Haystack: Document stores, retrievers, and NLP pipelines
-- AgentMind: Multi-agent orchestration and collaboration
+- AgentMind: Multi - agent orchestration and collaboration
 """
 
 import asyncio
-from typing import Any, Dict, List
 
 from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider
@@ -49,7 +48,7 @@ class HaystackRetrieverTool(Tool):
             formatted = []
             for i, doc in enumerate(documents, 1):
                 content = doc.content if hasattr(doc, "content") else str(doc)
-                score = doc.score if hasattr(doc, "score") else "N/A"
+                score = doc.score if hasattr(doc, "score") else "N / A"
                 formatted.append(f"[{i}] (Score: {score})\n{content}")
 
             return "\n\n".join(formatted)
@@ -74,16 +73,16 @@ async def example_basic_retrieval():
         # Add documents
         documents = [
             Document(
-                content="AgentMind is a lightweight multi-agent framework for Python with minimal dependencies."
+                content="AgentMind is a lightweight multi - agent framework for Python with minimal dependencies."
             ),
             Document(
                 content="The framework supports Ollama, OpenAI, Anthropic, and other LLM providers via LiteLLM."
             ),
             Document(
-                content="AgentMind features async-first architecture for true concurrent agent collaboration."
+                content="AgentMind features async - first architecture for true concurrent agent collaboration."
             ),
             Document(
-                content="Built-in memory management supports conversation history and context across sessions."
+                content="Built - in memory management supports conversation history and context across sessions."
             ),
         ]
 
@@ -103,7 +102,7 @@ async def example_basic_retrieval():
         qa_agent = Agent(
             name="QA_Agent",
             role="qa_specialist",
-            system_prompt="You answer questions using retrieved documents. Provide accurate, well-sourced answers.",
+            system_prompt="You answer questions using retrieved documents. Provide accurate, well - sourced answers.",
             tools=[retriever_tool],
         )
 
@@ -122,13 +121,13 @@ async def example_basic_retrieval():
             print(f"A: {answer}\n")
 
     except ImportError:
-        print("Haystack not installed. Install with: pip install haystack-ai")
+        print("Haystack not installed. Install with: pip install haystack - ai")
 
 
-# Example 2: Multi-agent pipeline with Haystack
+# Example 2: Multi - agent pipeline with Haystack
 async def example_multi_agent_pipeline():
-    """Build a multi-agent system using Haystack for retrieval"""
-    print("\n=== Example 2: Multi-Agent Pipeline ===\n")
+    """Build a multi - agent system using Haystack for retrieval"""
+    print("\n=== Example 2: Multi - Agent Pipeline ===\n")
 
     try:
         from haystack import Document
@@ -152,7 +151,7 @@ async def example_multi_agent_pipeline():
                 content="Kubernetes orchestrates containerized applications across clusters of machines."
             ),
             Document(
-                content="PostgreSQL is a powerful open-source relational database with advanced features."
+                content="PostgreSQL is a powerful open - source relational database with advanced features."
             ),
         ]
 
@@ -162,7 +161,7 @@ async def example_multi_agent_pipeline():
         retriever = InMemoryBM25Retriever(document_store=document_store)
         retriever_tool = HaystackRetrieverTool(retriever, name="search_tech_docs")
 
-        # Create multi-agent system
+        # Create multi - agent system
         llm = OllamaProvider(model="llama3.2")
         mind = AgentMind(llm_provider=llm)
 
@@ -201,7 +200,7 @@ async def example_multi_agent_pipeline():
         print(f"Recommendation: {result}")
 
     except ImportError:
-        print("Haystack not installed. Install with: pip install haystack-ai")
+        print("Haystack not installed. Install with: pip install haystack - ai")
 
 
 # Example 3: Question answering pipeline
@@ -210,7 +209,7 @@ async def example_qa_pipeline():
     print("\n=== Example 3: Question Answering Pipeline ===\n")
 
     try:
-        from haystack import Document, Pipeline
+        from haystack import Document
         from haystack.document_stores.in_memory import InMemoryDocumentStore
         from haystack.components.retrievers.in_memory import InMemoryBM25Retriever
 
@@ -231,7 +230,7 @@ async def example_qa_pipeline():
                 content="Q: How do I add custom tools? A: Extend the Tool base class and implement the execute method."
             ),
             Document(
-                content="Q: Is AgentMind production-ready? A: Yes, it includes error handling, testing, and observability features."
+                content="Q: Is AgentMind production - ready? A: Yes, it includes error handling, testing, and observability features."  # noqa: E501
             ),
         ]
 
@@ -268,7 +267,7 @@ async def example_qa_pipeline():
             print(f"Agent: {answer}\n")
 
     except ImportError:
-        print("Haystack not installed. Install with: pip install haystack-ai")
+        print("Haystack not installed. Install with: pip install haystack - ai")
 
 
 # Example 4: Document processing pipeline
@@ -343,7 +342,7 @@ async def example_document_processing():
         print(f"Analysis & Recommendations:\n{result}")
 
     except ImportError:
-        print("Haystack not installed. Install with: pip install haystack-ai")
+        print("Haystack not installed. Install with: pip install haystack - ai")
 
 
 async def main():
@@ -361,7 +360,7 @@ async def main():
     print("Haystack integration examples completed!")
     print("=" * 60)
     print("\nNote: These examples require Haystack to be installed:")
-    print("  pip install haystack-ai")
+    print("  pip install haystack - ai")
 
 
 if __name__ == "__main__":

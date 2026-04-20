@@ -3,7 +3,6 @@ Distributed Research Team Example
 Demonstrates distributed agent execution using Ray or Celery
 """
 
-import asyncio
 from typing import List, Dict, Any
 
 
@@ -76,9 +75,9 @@ def example_ray_distributed():
             else:
                 print(f"\n{i + 1}. {result['agent']}: ERROR - {result.get('error')}")
 
-        # Map-reduce example
+        # Map - reduce example
         print("\n" + "=" * 80)
-        print("MAP-REDUCE EXAMPLE")
+        print("MAP - REDUCE EXAMPLE")
         print("=" * 80)
 
         def combine_results(results: List[Dict]) -> str:
@@ -87,7 +86,7 @@ def example_ray_distributed():
             combined = "\n\n".join([r["result"] for r in successful])
             return f"Combined research from {len(successful)} agents:\n\n{combined}"
 
-        print("\nExecuting map-reduce across all topics...")
+        print("\nExecuting map - reduce across all topics...")
         final_result = mind.map_reduce(agents, topics, llm_config, combine_results)
 
         print("\nFinal Combined Result:")
@@ -124,8 +123,8 @@ def example_celery_distributed():
 
         mind = create_distributed_mind(
             "celery",
-            broker_url="redis://localhost:6379/0",
-            backend_url="redis://localhost:6379/1",
+            broker_url="redis://localhost:6379 / 0",
+            backend_url="redis://localhost:6379 / 1",
         )
 
         # Create agents

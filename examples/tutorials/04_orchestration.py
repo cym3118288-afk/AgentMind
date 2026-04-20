@@ -1,8 +1,8 @@
 """
-Tutorial 04: Multi-Agent Orchestration
+Tutorial 04: Multi - Agent Orchestration
 
 This tutorial covers orchestration strategies:
-- Round-robin coordination
+- Round - robin coordination
 - Broadcast communication
 - Hierarchical structures
 - Consensus mechanisms
@@ -13,13 +13,13 @@ Difficulty: Intermediate
 """
 
 import asyncio
-from agentmind import Agent, AgentMind, CollaborationStrategy
+from agentmind import Agent, AgentMind
 from agentmind.llm import OllamaProvider
 
 
 async def example_1_round_robin():
-    """Example 1: Round-robin orchestration"""
-    print("\n=== Example 1: Round-Robin Orchestration ===\n")
+    """Example 1: Round - robin orchestration"""
+    print("\n=== Example 1: Round - Robin Orchestration ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
 
@@ -28,7 +28,7 @@ async def example_1_round_robin():
     analyst = Agent(name="analyst", role="analyst", llm_provider=llm)
     writer = Agent(name="writer", role="writer", llm_provider=llm)
 
-    # Round-robin: agents take turns in sequence
+    # Round - robin: agents take turns in sequence
     mind = AgentMind(strategy="round_robin")
     mind.add_agent(researcher)
     mind.add_agent(analyst)
@@ -39,7 +39,7 @@ async def example_1_round_robin():
     )
 
     print(f"Result: {result.final_output[:300]}...\n")
-    print(f"Agents participated in order: researcher → analyst → writer")
+    print("Agents participated in order: researcher → analyst → writer")
 
 
 async def example_2_broadcast():
@@ -91,19 +91,19 @@ async def example_3_hierarchical():
     )
 
     print("Manager coordinated the team:")
-    print(f"- Frontend Developer")
-    print(f"- Backend Developer")
-    print(f"- QA Engineer")
+    print("- Frontend Developer")
+    print("- Backend Developer")
+    print("- QA Engineer")
     print(f"\nFinal plan: {result.final_output[:200]}...\n")
 
 
 async def example_4_consensus():
-    """Example 4: Consensus-based decision making"""
+    """Example 4: Consensus - based decision making"""
     print("\n=== Example 4: Consensus Mechanism ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
 
-    # Create decision-making team
+    # Create decision - making team
     expert1 = Agent(name="expert1", role="analyst", llm_provider=llm)
     expert2 = Agent(name="expert2", role="analyst", llm_provider=llm)
     expert3 = Agent(name="expert3", role="analyst", llm_provider=llm)
@@ -115,7 +115,7 @@ async def example_4_consensus():
 
     # Simulate consensus building
     result = await mind.start_collaboration(
-        "Should we adopt microservices architecture? Provide yes/no with reasoning.", max_rounds=1
+        "Should we adopt microservices architecture? Provide yes / no with reasoning.", max_rounds=1
     )
 
     print("Experts provided their opinions:")
@@ -172,8 +172,8 @@ async def example_6_mixed_strategies():
     )
     print(f"Generated {len(ideas.conversation_history)} ideas\n")
 
-    # Phase 2: Round-robin for refinement
-    print("Phase 2: Refinement (Round-Robin)")
+    # Phase 2: Round - robin for refinement
+    print("Phase 2: Refinement (Round - Robin)")
     refine_agents = [
         Agent(name="analyst", role="analyst", llm_provider=llm),
         Agent(name="designer", role="creative", llm_provider=llm),
@@ -197,14 +197,14 @@ async def example_7_orchestration_comparison():
     strategies = {
         "round_robin": "Sequential, ordered participation",
         "broadcast": "Parallel, simultaneous responses",
-        "hierarchical": "Manager-subordinate delegation",
+        "hierarchical": "Manager - subordinate delegation",
     }
 
     print("Orchestration Strategy Comparison:\n")
     for strategy, description in strategies.items():
         print(f"{strategy.upper()}:")
         print(f"  Description: {description}")
-        print(f"  Best for: ", end="")
+        print("  Best for: ", end="")
 
         if strategy == "round_robin":
             print("Sequential workflows, pipeline processing")
@@ -219,7 +219,7 @@ async def example_7_orchestration_comparison():
 async def main():
     """Run all examples"""
     print("=" * 60)
-    print("AgentMind Tutorial 04: Multi-Agent Orchestration")
+    print("AgentMind Tutorial 04: Multi - Agent Orchestration")
     print("=" * 60)
 
     await example_1_round_robin()
@@ -234,7 +234,7 @@ async def main():
     print("Tutorial Complete!")
     print("=" * 60)
     print("\nKey Takeaways:")
-    print("1. Round-robin: Sequential agent participation")
+    print("1. Round - robin: Sequential agent participation")
     print("2. Broadcast: All agents respond simultaneously")
     print("3. Hierarchical: Manager coordinates subordinates")
     print("4. Choose strategy based on task requirements")

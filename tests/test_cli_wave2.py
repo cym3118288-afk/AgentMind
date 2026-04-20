@@ -4,7 +4,6 @@ Tests for Wave 2 CLI enhancements.
 
 import json
 import pytest
-import tempfile
 import yaml
 from pathlib import Path
 from click.testing import CliRunner
@@ -71,7 +70,7 @@ class TestConfigManagement:
         monkeypatch.setattr(cli, "CONFIG_DIR", temp_config_dir)
         monkeypatch.setattr(cli, "PROFILES_FILE", temp_config_dir / "profiles.yaml")
 
-        profile_data = {"provider": "openai", "model": "gpt-4", "temperature": 0.8}
+        profile_data = {"provider": "openai", "model": "gpt - 4", "temperature": 0.8}
 
         save_profile("production", profile_data)
         loaded = load_profile("production")
@@ -81,24 +80,24 @@ class TestConfigManagement:
     def test_get_env_config(self, monkeypatch):
         """Test getting configuration from environment variables."""
         monkeypatch.setenv("AGENTMIND_PROVIDER", "anthropic")
-        monkeypatch.setenv("AGENTMIND_MODEL", "claude-3")
+        monkeypatch.setenv("AGENTMIND_MODEL", "claude - 3")
         monkeypatch.setenv("AGENTMIND_TEMPERATURE", "0.9")
 
         config = get_env_config()
 
         assert config["provider"] == "anthropic"
-        assert config["model"] == "claude-3"
+        assert config["model"] == "claude - 3"
         assert config["temperature"] == 0.9
 
     def test_merge_configs(self):
         """Test merging configurations."""
         base = {"provider": "ollama", "model": "llama3.2", "temperature": 0.7}
-        override = {"model": "gpt-4", "temperature": 0.9}
+        override = {"model": "gpt - 4", "temperature": 0.9}
 
         merged = merge_configs(base, override)
 
         assert merged["provider"] == "ollama"
-        assert merged["model"] == "gpt-4"
+        assert merged["model"] == "gpt - 4"
         assert merged["temperature"] == 0.9
 
 
@@ -114,27 +113,27 @@ class TestInitCommand:
             [
                 "init",
                 "--name",
-                "test-project",
+                "test - project",
                 "--description",
                 "Test project",
                 "--provider",
                 "ollama",
                 "--template",
                 "basic",
-                "--no-interactive",
+                "--no - interactive",
             ],
         )
 
         assert result.exit_code == 0
-        assert (tmp_path / "test-project").exists()
-        assert (tmp_path / "test-project" / "main.py").exists()
-        assert (tmp_path / "test-project" / "requirements.txt").exists()
-        assert (tmp_path / "test-project" / "config" / "config.yaml").exists()
+        assert (tmp_path / "test - project").exists()
+        assert (tmp_path / "test - project" / "main.py").exists()
+        assert (tmp_path / "test - project" / "requirements.txt").exists()
+        assert (tmp_path / "test - project" / "config" / "config.yaml").exists()
 
     def test_init_with_existing_directory(self, runner, tmp_path, monkeypatch):
         """Test initialization with existing directory."""
         monkeypatch.chdir(tmp_path)
-        project_dir = tmp_path / "existing-project"
+        project_dir = tmp_path / "existing - project"
         project_dir.mkdir()
 
         result = runner.invoke(
@@ -142,14 +141,14 @@ class TestInitCommand:
             [
                 "init",
                 "--name",
-                "existing-project",
+                "existing - project",
                 "--description",
                 "Test",
                 "--provider",
                 "ollama",
                 "--template",
                 "basic",
-                "--no-interactive",
+                "--no - interactive",
             ],
             input="n\n",
         )
@@ -166,18 +165,18 @@ class TestInitCommand:
             [
                 "init",
                 "--name",
-                "structured-project",
+                "structured - project",
                 "--description",
                 "Test",
                 "--provider",
                 "ollama",
                 "--template",
                 "research",
-                "--no-interactive",
+                "--no - interactive",
             ],
         )
 
-        project_path = tmp_path / "structured-project"
+        project_path = tmp_path / "structured - project"
         assert (project_path / "agents").exists()
         assert (project_path / "config").exists()
         assert (project_path / "tests").exists()
@@ -191,7 +190,7 @@ class TestAgentCreateCommand:
     def test_agent_create_basic(self, runner):
         """Test basic agent creation."""
         result = runner.invoke(
-            cli, ["agent", "create", "--name", "TestAgent", "--role", "Tester", "--no-interactive"]
+            cli, ["agent", "create", "--name", "TestAgent", "--role", "Tester", "--no - interactive"]
         )
 
         assert result.exit_code == 0
@@ -213,7 +212,7 @@ class TestAgentCreateCommand:
                 "Data Analysis Expert",
                 "--output",
                 str(output_file),
-                "--no-interactive",
+                "--no - interactive",
             ],
         )
 
@@ -235,9 +234,9 @@ class TestAgentCreateCommand:
                 "CustomAgent",
                 "--role",
                 "Custom Role",
-                "--system-prompt",
+                "--system - prompt",
                 "Custom system prompt here",
-                "--no-interactive",
+                "--no - interactive",
             ],
         )
 
@@ -290,17 +289,17 @@ class TestDeployCommand:
     """Test agentmind deploy command."""
 
     def test_deploy_docker_dry_run(self, runner):
-        """Test Docker deployment in dry-run mode."""
-        result = runner.invoke(cli, ["deploy", "--target", "docker", "--env", "dev", "--dry-run"])
+        """Test Docker deployment in dry - run mode."""
+        result = runner.invoke(cli, ["deploy", "--target", "docker", "--env", "dev", "--dry - run"])
 
         assert result.exit_code == 0
         assert "DRY RUN" in result.output
         assert "docker" in result.output.lower()
 
     def test_deploy_kubernetes_dry_run(self, runner):
-        """Test Kubernetes deployment in dry-run mode."""
+        """Test Kubernetes deployment in dry - run mode."""
         result = runner.invoke(
-            cli, ["deploy", "--target", "kubernetes", "--env", "staging", "--dry-run"]
+            cli, ["deploy", "--target", "kubernetes", "--env", "staging", "--dry - run"]
         )
 
         assert result.exit_code == 0
@@ -312,7 +311,7 @@ class TestDeployCommand:
             mock_run.return_value = MagicMock(returncode=0)
 
             result = runner.invoke(
-                cli, ["deploy", "--target", "local", "--env", "dev", "--dry-run"]
+                cli, ["deploy", "--target", "local", "--env", "dev", "--dry - run"]
             )
 
             assert result.exit_code == 0
@@ -399,7 +398,7 @@ class TestConfigCommands:
             assert config["provider"] == "openai"
 
     def test_config_list_profiles(self, runner, temp_config_dir, monkeypatch):
-        """Test config list-profiles command."""
+        """Test config list - profiles command."""
         import cli
 
         monkeypatch.setattr(cli, "CONFIG_DIR", temp_config_dir)
@@ -408,13 +407,13 @@ class TestConfigCommands:
         # Create profiles
         profiles = {
             "dev": {"provider": "ollama", "model": "llama3.2"},
-            "prod": {"provider": "openai", "model": "gpt-4"},
+            "prod": {"provider": "openai", "model": "gpt - 4"},
         }
         profiles_file = temp_config_dir / "profiles.yaml"
         with open(profiles_file, "w") as f:
             yaml.dump(profiles, f)
 
-        result = runner.invoke(cli, ["config", "list-profiles"])
+        result = runner.invoke(cli, ["config", "list - profiles"])
 
         assert result.exit_code == 0
         assert "dev" in result.output
@@ -432,7 +431,7 @@ class TestCLIIntegration:
         monkeypatch.setattr(cli, "PROFILES_FILE", temp_config_dir / "profiles.yaml")
 
         # Create profile
-        profiles = {"test": {"provider": "ollama", "model": "test-model"}}
+        profiles = {"test": {"provider": "ollama", "model": "test - model"}}
         profiles_file = temp_config_dir / "profiles.yaml"
         with open(profiles_file, "w") as f:
             yaml.dump(profiles, f)

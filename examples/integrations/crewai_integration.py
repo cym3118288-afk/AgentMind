@@ -3,8 +3,8 @@ CrewAI Integration Example
 
 This example demonstrates integration between AgentMind and CrewAI:
 - Converting CrewAI crews to AgentMind teams
-- Task-based workflows
-- Role-based agent collaboration
+- Task - based workflows
+- Role - based agent collaboration
 - Process orchestration
 
 Note: This is a compatibility example. Install crewai with:
@@ -19,7 +19,7 @@ from agentmind.llm import OllamaProvider
 
 
 class ProcessType(str, Enum):
-    """CrewAI-style process types"""
+    """CrewAI - style process types"""
 
     SEQUENTIAL = "sequential"
     HIERARCHICAL = "hierarchical"
@@ -27,7 +27,7 @@ class ProcessType(str, Enum):
 
 
 class Task:
-    """CrewAI-style task"""
+    """CrewAI - style task"""
 
     def __init__(
         self,
@@ -67,7 +67,7 @@ class Task:
 
 
 class CrewAgent(Agent):
-    """AgentMind agent with CrewAI-style interface"""
+    """AgentMind agent with CrewAI - style interface"""
 
     def __init__(
         self, *args, role: str, goal: str, backstory: str, verbose: bool = False, **kwargs
@@ -79,7 +79,7 @@ class CrewAgent(Agent):
         self.tasks_completed = 0
 
     async def execute_task(self, task: Task) -> str:
-        """Execute a CrewAI-style task"""
+        """Execute a CrewAI - style task"""
         if self.verbose:
             print(f"\n[{self.name}] Starting task: {task.description[:50]}...")
 
@@ -103,7 +103,7 @@ class CrewAgent(Agent):
 
 
 class Crew:
-    """CrewAI-style crew"""
+    """CrewAI - style crew"""
 
     def __init__(
         self,
@@ -138,7 +138,7 @@ class Crew:
         """Execute tasks sequentially"""
         for i, task in enumerate(self.tasks):
             if self.verbose:
-                print(f"\nTask {i+1}/{len(self.tasks)}: {task.description[:50]}...")
+                print(f"\nTask {i + 1}/{len(self.tasks)}: {task.description[:50]}...")
 
             # Assign agent if not already assigned
             if not task.agent:
@@ -198,7 +198,7 @@ class Crew:
 
 
 async def example_1_basic_crew():
-    """Example 1: Basic CrewAI-style crew"""
+    """Example 1: Basic CrewAI - style crew"""
     print("\n=== Example 1: Basic Crew ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
@@ -232,7 +232,7 @@ async def example_1_basic_crew():
         Task(
             description="Write an article based on the research",
             agent=writer,
-            expected_output="Well-written article",
+            expected_output="Well - written article",
         ),
     ]
 
@@ -267,7 +267,7 @@ async def example_2_hierarchical_crew():
     developer = CrewAgent(
         name="developer",
         role="developer",
-        goal="Write high-quality code",
+        goal="Write high - quality code",
         backstory="Senior software developer",
         llm_provider=llm,
     )
@@ -344,7 +344,7 @@ async def example_4_crewai_to_agentmind():
 
     llm = OllamaProvider(model="llama3.2:3b")
 
-    # Create CrewAI-style agents
+    # Create CrewAI - style agents
     crew_agents = [
         CrewAgent(
             name="agent1",
@@ -365,7 +365,7 @@ async def example_4_crewai_to_agentmind():
 
     result = await mind.start_collaboration("Research and write about AI trends", max_rounds=2)
 
-    print("Using AgentMind orchestration with CrewAI-style agents:")
+    print("Using AgentMind orchestration with CrewAI - style agents:")
     print(f"Result: {result.final_output[:200]}...\n")
 
 
@@ -412,8 +412,8 @@ async def main():
     print("Example Complete!")
     print("=" * 60)
     print("\nKey Concepts:")
-    print("1. CrewAI-style crews work with AgentMind")
-    print("2. Task-based workflows enable structured collaboration")
+    print("1. CrewAI - style crews work with AgentMind")
+    print("2. Task - based workflows enable structured collaboration")
     print("3. Multiple process types: sequential, hierarchical, consensus")
     print("4. Task dependencies create complex workflows")
     print("5. Agent profiles define roles and capabilities")

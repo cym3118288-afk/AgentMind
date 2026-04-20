@@ -1,12 +1,12 @@
 """
-Real-world Use Case: IoT Device Management
+Real - world Use Case: IoT Device Management
 
 This example demonstrates an IoT device management system using AgentMind.
 The system monitors, controls, and optimizes IoT devices across smart homes,
 industrial settings, and smart cities.
 
 Features:
-- Multi-agent device monitoring
+- Multi - agent device monitoring
 - Predictive maintenance
 - Energy optimization
 - Anomaly detection
@@ -18,7 +18,7 @@ import asyncio
 from typing import Dict, List, Optional
 from dataclasses import dataclass, field
 from enum import Enum
-from datetime import datetime, timedelta
+from datetime import datetime
 import random
 
 from agentmind import Agent, AgentMind
@@ -221,7 +221,7 @@ class PredictiveMaintenanceTool(Tool):
         error_count = usage_data.get("error_count", 0)
         last_maintenance = usage_data.get("days_since_maintenance", 90)
 
-        # Calculate maintenance score (0-100, higher = more urgent)
+        # Calculate maintenance score (0 - 100, higher = more urgent)
         maintenance_score = min(
             100,
             ((uptime_hours / 100) * 0.3 + (error_count * 5) * 0.4 + (last_maintenance / 3) * 0.3),
@@ -311,7 +311,7 @@ class EnergyOptimizerTool(Tool):
                 optimization["recommendations"].append(
                     {
                         "device_id": device_id,
-                        "action": "Schedule for off-peak hours",
+                        "action": "Schedule for off - peak hours",
                         "estimated_savings": power * 0.40,
                     }
                 )
@@ -493,7 +493,7 @@ async def manage_iot_infrastructure(devices: List[IoTDevice], llm_provider) -> I
     """Manage IoT device infrastructure"""
 
     print(f"\n{'='*60}")
-    print(f"Managing IoT Infrastructure")
+    print("Managing IoT Infrastructure")
     print(f"Total Devices: {len(devices)}")
     print(f"{'='*60}\n")
 
@@ -506,7 +506,7 @@ async def manage_iot_infrastructure(devices: List[IoTDevice], llm_provider) -> I
     )
 
     # Format the management request
-    management_request = f"""
+    management_request = """
 IoT Infrastructure Management:
 
 Devices ({len(devices)} total):

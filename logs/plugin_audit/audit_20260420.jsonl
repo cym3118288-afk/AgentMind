@@ -1,0 +1,4 @@
+{"event_id": "evt_20260420131651_000001", "event_type": "plugin_loaded", "plugin_name": "mock-plugin", "timestamp": "2026-04-20T13:16:51.535902", "user_id": null, "details": {"version": "1.0.0"}, "severity": "info", "success": true}
+{"event_id": "evt_20260420131651_000002", "event_type": "plugin_unloaded", "plugin_name": "mock-plugin", "timestamp": "2026-04-20T13:16:51.536647", "user_id": null, "details": {}, "severity": "info", "success": true}
+{"event_id": "evt_20260420131651_000001", "event_type": "plugin_loaded", "plugin_name": "mock-plugin", "timestamp": "2026-04-20T13:16:51.540013", "user_id": null, "details": {"version": "1.0.0"}, "severity": "info", "success": true}
+{"event_id": "evt_20260420131651_000002", "event_type": "plugin_executed", "plugin_name": "mock-plugin", "timestamp": "2026-04-20T13:16:51.540629", "user_id": null, "details": {"sandboxed": true}, "severity": "info", "success": true}

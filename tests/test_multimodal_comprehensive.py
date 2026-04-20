@@ -12,9 +12,7 @@ pytest.importorskip("PyPDF2")
 
 from agentmind.multimodal.image_processor import ImageProcessor  # noqa: E402
 from agentmind.multimodal.audio_processor import AudioProcessor  # noqa: E402
-from agentmind.multimodal.document_processor import (  # noqa: E402
-    DocumentProcessor
-)
+from agentmind.multimodal.document_processor import DocumentProcessor  # noqa: E402
 from agentmind.multimodal.vision_llm import VisionLLM  # noqa: E402
 
 

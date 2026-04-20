@@ -10,15 +10,11 @@ from datetime import datetime, timedelta
 # Skip all tests - plugin interface has changed, tests need to be updated
 pytestmark = pytest.mark.skip(reason="Plugin interface changed, tests need updating")
 
-from agentmind.plugins.base import (  # noqa: E402
-    Plugin, PluginMetadata, PluginConfig
-)
+from agentmind.plugins.base import Plugin, PluginMetadata, PluginConfig  # noqa: E402
 from agentmind.plugins.manager import PluginManager  # noqa: E402
 from agentmind.plugins.loader import PluginLoader  # noqa: E402
 from agentmind.security.auth import AuthManager, User  # noqa: E402
-from agentmind.security.rate_limiter import (  # noqa: E402
-    RateLimiter, RateLimitConfig
-)
+from agentmind.security.rate_limiter import RateLimiter, RateLimitConfig  # noqa: E402
 from agentmind.security.sanitizer import InputSanitizer  # noqa: E402
 from agentmind.security.audit import AuditLogger, AuditEvent  # noqa: E402
 

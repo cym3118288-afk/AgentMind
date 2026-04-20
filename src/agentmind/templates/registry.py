@@ -97,7 +97,11 @@ class TemplateRegistry:
                     AgentTemplate(
                         name="researcher",
                         role="researcher",
-                        system_prompt="You are a thorough researcher who finds accurate information from multiple sources. Focus on facts, data, and credible sources.",
+                        system_prompt=(
+                            "You are a thorough researcher who finds "
+                            "accurate information from multiple sources. "
+                            "Focus on facts, data, and credible sources."
+                        ),
                         description="Finds and gathers information",
                     ),
                     AgentTemplate(

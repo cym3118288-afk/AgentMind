@@ -377,7 +377,7 @@ class TestDeadlockDetection:
         mind.add_task("task_b", "Task B", dependencies=["task_a"])
 
         # Try to execute
-        results = await mind.execute_task_queue(max_parallel=2)
+        await mind.execute_task_queue(max_parallel=2)
 
         # Should detect deadlock
         assert mind.metrics["deadlocks_detected"] > 0

@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from agentmind.llm.retry import (
+from agentmind.llm.retry import (  # noqa: E402
     RetryConfig,
     calculate_backoff_delay,
     retry_async,

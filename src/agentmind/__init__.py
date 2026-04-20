@@ -30,7 +30,9 @@ Example:
     >>> print(result.final_output)
 """
 
+from .core.agent import Agent
 from .core.mind import AgentMind
+from .core.types import Message, MessageRole, AgentRole, AgentConfig
 
 # Enhanced classes (optional imports)
 try:

@@ -165,7 +165,7 @@ class TestAgentMindIntegration:
         mind.add_agent(agent1)
         mind.add_agent(agent2)
 
-        result = await mind.start_collaboration("Coordinate on this task", max_rounds=2)
+        await mind.start_collaboration("Coordinate on this task", max_rounds=2)
 
         # Both agents should have participated
         assert len(agent1.memory) > 0
@@ -179,7 +179,7 @@ class TestPerformanceIntegration:
     async def test_caching_with_agent(self):
         """Test caching integration with agents."""
         cache = CacheManager()
-        llm = MockLLMProvider(responses=["Cached response"])
+        MockLLMProvider(responses=["Cached response"])
 
         # Wrap LLM with caching
         class CachedLLMProvider(MockLLMProvider):

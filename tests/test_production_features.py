@@ -3,18 +3,17 @@ Tests for production features: authentication, rate limiting, observability.
 """
 
 import pytest
-
-# Skip all tests if fastapi is not installed
-fastapi = pytest.importorskip("fastapi")
-from fastapi.testclient import TestClient
-
-# Import the enhanced API server
 import sys
 import os
 
+# Skip all tests if fastapi is not installed
+fastapi = pytest.importorskip("fastapi")
+from fastapi.testclient import TestClient  # noqa: E402
+
+# Import the enhanced API server
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from api_server_enhanced import app, create_access_token
+from api_server_enhanced import app, create_access_token  # noqa: E402
 
 
 @pytest.fixture

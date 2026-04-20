@@ -263,7 +263,7 @@ class TestPluginConfiguration:
         manager = ConfigManager(config_dir=tmp_path)
 
         dev_config = {"enabled": True, "debug": True}
-        prod_config = {"enabled": True, "debug": False}
+        _ = {"enabled": True, "debug": False}
 
         manager.update_config("test - plugin", dev_config, save=False)
 

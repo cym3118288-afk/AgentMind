@@ -418,10 +418,10 @@ async def design_game_ai(
 ) -> GameAIDesign:
     """Design complete game AI system"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Designing Game AI")
     print(f"Genre: {game_genre.value}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create the game AI system
     mind = await create_game_ai_system(llm_provider)
@@ -466,9 +466,9 @@ Provide a complete, implementable game AI design.
     # Collaborate to design AI
     result = await mind.collaborate(task=design_request, max_rounds=5)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Game AI Design Complete")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
     print(result)
 
     # Create AI design

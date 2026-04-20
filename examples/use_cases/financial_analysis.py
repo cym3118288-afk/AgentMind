@@ -352,10 +352,10 @@ async def analyze_investment(ticker: str, investment_amount: float) -> Dict[str,
 
     Deliver a clear recommendation: BUY, HOLD, or AVOID with detailed justification."""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Financial Analysis: {ticker}")
     print(f"Investment Amount: ${investment_amount:,.2f}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     result = await mind.collaborate(task, max_rounds=4)
 
@@ -404,10 +404,10 @@ async def generate_portfolio_report(tickers: List[str]) -> Dict[str, Any]:
     4. Rebalancing recommendations
     5. Performance outlook"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Portfolio Analysis")
     print(f"Holdings: {', '.join(tickers)}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     result = await mind.collaborate(task, max_rounds=3)
 

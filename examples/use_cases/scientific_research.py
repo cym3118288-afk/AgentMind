@@ -434,10 +434,10 @@ async def conduct_research_project(
 ) -> ResearchReport:
     """Conduct a complete research project"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Research Project: {research_question}")
     print(f"Field: {field.value}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create the research system
     mind = await create_research_system(llm_provider)
@@ -482,9 +482,9 @@ Provide a complete, publication - ready research plan.
     # Collaborate to conduct research
     result = await mind.collaborate(task=research_request, max_rounds=5)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Research Project Complete")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
     print(result)
 
     # Create research report

@@ -246,11 +246,11 @@ async def create_code_review_system() -> AgentMind:
 async def review_code(mind: AgentMind, file_path: str, code: str, language: str) -> CodeReview:
     """Review code using the multi - agent system"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Reviewing: {file_path}")
     print(f"Language: {language}")
     print(f"Lines: {len(code.split(chr(10)))}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create review context
     context = """
@@ -274,10 +274,10 @@ async def review_code(mind: AgentMind, file_path: str, code: str, language: str)
     # Collaborate to review code
     result = await mind.collaborate(context, max_rounds=5)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Review Complete: {file_path}")
     print(f"\nReview Summary:\n{result}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create review object (simplified)
     review = CodeReview(

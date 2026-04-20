@@ -531,10 +531,10 @@ async def optimize_supply_chain(
 ) -> SupplyChainReport:
     """Optimize supply chain operations"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Optimizing Supply Chain")
     print(f"Products: {len(products)}, Warehouses: {len(set(i.warehouse_id for i in inventory))}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create the supply chain system
     mind = await create_supply_chain_system(llm_provider)
@@ -585,9 +585,9 @@ Provide actionable recommendations to improve efficiency and reduce costs.
     # Collaborate to optimize supply chain
     result = await mind.collaborate(task=optimization_request, max_rounds=5)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Supply Chain Optimization Complete")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
     print(result)
 
     # Create report

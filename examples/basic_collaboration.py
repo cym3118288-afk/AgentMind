@@ -26,7 +26,7 @@ from pathlib import Path
 
 # Add src to path for development
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from agentmind import Agent, AgentMind, AgentRole
+from agentmind import Agent, AgentMind, AgentRole  # noqa: E402
 
 
 async def main() -> None:

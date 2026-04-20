@@ -17,16 +17,16 @@ from pathlib import Path
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from agentmind import Agent, AgentMind
-from agentmind.llm import OllamaProvider
+from agentmind import Agent, AgentMind  # noqa: E402
+from agentmind.llm import OllamaProvider  # noqa: E402
 
 
 async def run_software_dev_swarm(project_description: str, requirements: list):
     """Run a software development planning session."""
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("Software Development Swarm")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
     print(f"Project: {project_description}\n")
     print("Requirements:")
     for i, req in enumerate(requirements, 1):

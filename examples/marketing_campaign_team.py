@@ -17,16 +17,16 @@ from pathlib import Path
 
 # Add src to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from agentmind import Agent, AgentMind
-from agentmind.llm import OllamaProvider
+from agentmind import Agent, AgentMind  # noqa: E402
+from agentmind.llm import OllamaProvider  # noqa: E402
 
 
 async def run_marketing_campaign(product: str, target_audience: str, budget: str):
     """Run a marketing campaign planning session."""
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("Marketing Campaign Planning")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
     print(f"Product: {product}")
     print(f"Target Audience: {target_audience}")
     print(f"Budget: {budget}\n")

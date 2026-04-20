@@ -492,10 +492,10 @@ async def create_iot_management_system(llm_provider) -> AgentMind:
 async def manage_iot_infrastructure(devices: List[IoTDevice], llm_provider) -> IoTManagementReport:
     """Manage IoT device infrastructure"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Managing IoT Infrastructure")
     print(f"Total Devices: {len(devices)}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create the IoT management system
     mind = await create_iot_management_system(llm_provider)
@@ -545,9 +545,9 @@ Provide actionable recommendations for optimal IoT operations.
     # Collaborate to manage infrastructure
     result = await mind.collaborate(task=management_request, max_rounds=5)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("IoT Management Complete")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
     print(result)
 
     # Create management report

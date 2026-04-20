@@ -121,11 +121,11 @@ class Crew:
     async def kickoff(self) -> Dict[str, Any]:
         """Start the crew's work"""
         if self.verbose:
-            print(f"\n{'='*60}")
+            print(f"\n{'=' * 60}")
             print(f"Starting Crew with {len(self.agents)} agents")
             print(f"Process: {self.process.value}")
             print(f"Tasks: {len(self.tasks)}")
-            print(f"{'='*60}\n")
+            print(f"{'=' * 60}\n")
 
         if self.process == ProcessType.SEQUENTIAL:
             return await self._sequential_process()

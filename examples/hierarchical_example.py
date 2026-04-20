@@ -28,8 +28,8 @@ from pathlib import Path
 
 # Add src to path for development
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
-from agentmind import Agent, AgentMind, AgentRole, CollaborationStrategy
-from agentmind.llm import OllamaProvider
+from agentmind import Agent, AgentMind, AgentRole, CollaborationStrategy  # noqa: E402
+from agentmind.llm import OllamaProvider  # noqa: E402
 
 
 async def hierarchical_debate() -> None:

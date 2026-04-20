@@ -335,10 +335,10 @@ async def generate_recommendations(user_profile: UserProfile, context: str = "")
     Provide 3 - 5 specific product recommendations with clear explanations."""
 
     # Collaborate
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Generating recommendations for user {user_profile.user_id}")
     print(f"Context: {context if context else 'General recommendations'}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     result = await mind.collaborate(task, max_rounds=4)
 

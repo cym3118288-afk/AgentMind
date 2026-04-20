@@ -314,9 +314,9 @@ async def create_medical_diagnosis_system(llm_provider) -> AgentMind:
 async def analyze_patient_case(case: PatientCase, llm_provider) -> DiagnosisResult:
     """Analyze a patient case and generate diagnosis recommendations"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Analyzing Patient Case: {case.case_id}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create the medical system
     mind = await create_medical_diagnosis_system(llm_provider)
@@ -355,9 +355,9 @@ Please provide:
     # Collaborate to analyze the case
     result = await mind.collaborate(task=case_description, max_rounds=4)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Analysis Complete")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
     print(result)
 
     # Parse result into structured format (simplified)

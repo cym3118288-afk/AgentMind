@@ -373,9 +373,9 @@ async def create_legal_analysis_system(llm_provider) -> AgentMind:
 async def analyze_legal_document(document: LegalDocument, llm_provider) -> DocumentAnalysisResult:
     """Analyze a legal document"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Analyzing Legal Document: {document.title}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create the legal analysis system
     mind = await create_legal_analysis_system(llm_provider)
@@ -406,9 +406,9 @@ Please provide comprehensive analysis including:
     # Collaborate to analyze the document
     result = await mind.collaborate(task=analysis_request, max_rounds=5)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Analysis Complete")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
     print(result)
 
     # Parse result into structured format (simplified)

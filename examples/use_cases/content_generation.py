@@ -282,14 +282,14 @@ async def create_content_pipeline() -> AgentMind:
 async def generate_content(mind: AgentMind, brief: ContentBrief) -> ContentPiece:
     """Generate content using the multi - agent pipeline"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Generating Content")
     print(f"Topic: {brief.topic}")
     print(f"Type: {brief.content_type.value}")
     print(f"Target: {brief.target_audience}")
     print(f"Tone: {brief.tone}")
     print(f"Keywords: {', '.join(brief.keywords)}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create generation context
     context = """
@@ -316,10 +316,10 @@ async def generate_content(mind: AgentMind, brief: ContentBrief) -> ContentPiece
     # Collaborate to generate content
     result = await mind.collaborate(context, max_rounds=5)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("Content Generation Complete")
     print(f"\nGenerated Content:\n{result[:500]}...")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create content piece
     content_piece = ContentPiece(

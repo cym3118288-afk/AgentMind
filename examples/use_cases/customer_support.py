@@ -211,12 +211,12 @@ async def create_support_system() -> AgentMind:
 async def process_ticket(mind: AgentMind, ticket: SupportTicket) -> SupportTicket:
     """Process a support ticket through the multi - agent system"""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Processing Ticket: {ticket.id}")
     print(f"Customer: {ticket.customer_name} ({ticket.email})")
     print(f"Subject: {ticket.subject}")
     print(f"Message: {ticket.message}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     # Create comprehensive context for agents
     context = """
@@ -239,11 +239,11 @@ async def process_ticket(mind: AgentMind, ticket: SupportTicket) -> SupportTicke
     ticket.response = result
     ticket.status = TicketStatus.RESOLVED
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Ticket {ticket.id} Processed")
     print(f"Status: {ticket.status}")
     print(f"\nResponse:\n{ticket.response}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     return ticket
 

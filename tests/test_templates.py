@@ -10,7 +10,7 @@ from agentmind.llm import LLMProvider, LLMResponse
 class MockLLMProvider(LLMProvider):
     """Mock LLM provider for testing."""
 
-    def __init__(self, model="mock - model", **kwargs):
+    def __init__(self, model="mock-model", **kwargs):
         super().__init__(model, **kwargs)
 
     async def generate(self, messages, temperature=None, max_tokens=None, **kwargs):
@@ -28,11 +28,11 @@ class TestTemplateRegistry:
     """Tests for TemplateRegistry."""
 
     def test_registry_initialization(self):
-        """Test that registry initializes with built - in templates."""
+        """Test that registry initializes with built-in templates."""
         registry = TemplateRegistry()
         templates = registry.list_templates()
 
-        assert len(templates) >= 20  # Should have 20+ built - in templates
+        assert len(templates) >= 20  # Should have 20+ built-in templates
 
     def test_get_template(self):
         """Test getting a template by name."""
@@ -81,29 +81,29 @@ class TestTemplateRegistry:
         assert all("agents" in t for t in templates)
 
     def test_builtin_templates_exist(self):
-        """Test that all expected built - in templates exist."""
+        """Test that all expected built-in templates exist."""
         registry = TemplateRegistry()
 
         expected_templates = [
             "research",
-            "code - generation",
-            "startup - validator",
-            "content - creation",
-            "data - analysis",
-            "customer - support",
-            "product - design",
-            "marketing - campaign",
-            "legal - review",
+            "code-generation",
+            "startup-validator",
+            "content-creation",
+            "data-analysis",
+            "customer-support",
+            "product-design",
+            "marketing-campaign",
+            "legal-review",
             "education",
-            "crisis - management",
-            "scientific - research",
-            "investment - analysis",
-            "game - development",
-            "healthcare - consultation",
+            "crisis-management",
+            "scientific-research",
+            "investment-analysis",
+            "game-development",
+            "healthcare-consultation",
             "debate",
             "translation",
-            "security - audit",
-            "creative - writing",
+            "security-audit",
+            "creative-writing",
             "devops",
         ]
 
@@ -212,9 +212,9 @@ class TestSpecificTemplates:
     def test_code_generation_template(self):
         """Test code generation template configuration."""
         registry = TemplateRegistry()
-        template = registry.get("code - generation")
+        template = registry.get("code-generation")
 
-        assert template.name == "code - generation"
+        assert template.name == "code-generation"
         assert len(template.agents) == 3
 
         agent_names = [a.name for a in template.agents]
@@ -225,9 +225,9 @@ class TestSpecificTemplates:
     def test_startup_validator_template(self):
         """Test startup validator template configuration."""
         registry = TemplateRegistry()
-        template = registry.get("startup - validator")
+        template = registry.get("startup-validator")
 
-        assert template.name == "startup - validator"
+        assert template.name == "startup-validator"
         assert len(template.agents) == 3
         assert template.strategy == CollaborationStrategy.BROADCAST
 
@@ -303,7 +303,7 @@ class TestTemplatePerformance:
     """Test template system performance."""
 
     def test_load_all_templates(self):
-        """Test loading all built - in templates."""
+        """Test loading all built-in templates."""
         provider = MockLLMProvider()
         loader = TemplateLoader(llm_provider=provider)
 
@@ -324,7 +324,7 @@ class TestTemplatePerformance:
         for _ in range(1000):
             template = registry.get("research")
             assert template is not None
-        elapsed = time.time() - start
+        elapsed = time.time()-start
 
         assert elapsed < 0.1  # Should be very fast
 
@@ -333,16 +333,16 @@ class TestTemplateStrategies:
     """Test different collaboration strategies in templates."""
 
     def test_sequential_strategy_templates(self):
-        """Test templates using round - robin strategy (sequential execution)."""
+        """Test templates using round-robin strategy (sequential execution)."""
         registry = TemplateRegistry()
 
         sequential_templates = [
             "research",
-            "code - generation",
-            "content - creation",
-            "data - analysis",
-            "product - design",
-            "marketing - campaign",
+            "code-generation",
+            "content-creation",
+            "data-analysis",
+            "product-design",
+            "marketing-campaign",
         ]
 
         for template_name in sequential_templates:
@@ -354,10 +354,10 @@ class TestTemplateStrategies:
         registry = TemplateRegistry()
 
         broadcast_templates = [
-            "startup - validator",
-            "legal - review",
-            "investment - analysis",
-            "security - audit",
+            "startup-validator",
+            "legal-review",
+            "investment-analysis",
+            "security-audit",
         ]
 
         for template_name in broadcast_templates:
@@ -368,7 +368,7 @@ class TestTemplateStrategies:
         """Test templates using hierarchical strategy."""
         registry = TemplateRegistry()
 
-        hierarchical_templates = ["customer - support", "crisis - management"]
+        hierarchical_templates = ["customer-support", "crisis-management"]
 
         for template_name in hierarchical_templates:
             template = registry.get(template_name)

@@ -107,13 +107,21 @@ class TemplateRegistry:
                     AgentTemplate(
                         name="analyst",
                         role="analyst",
-                        system_prompt="You are a critical analyst who evaluates information quality, identifies patterns, and assesses credibility. Be skeptical and thorough.",
+                        system_prompt=(
+                            "You are a critical analyst who evaluates "
+                            "information quality, identifies patterns, and "
+                            "assesses credibility. Be skeptical and thorough."
+                        ),
                         description="Analyzes and validates information",
                     ),
                     AgentTemplate(
                         name="synthesizer",
                         role="synthesizer",
-                        system_prompt="You are a synthesizer who combines insights from multiple sources into coherent, well-structured reports. Focus on clarity and actionability.",
+                        system_prompt=(
+                            "You are a synthesizer who combines insights from "
+                            "multiple sources into coherent, well-structured "
+                            "reports. Focus on clarity and actionability."
+                        ),
                         description="Synthesizes findings into reports",
                     ),
                 ],
@@ -130,13 +138,21 @@ class TemplateRegistry:
                     AgentTemplate(
                         name="architect",
                         role="architect",
-                        system_prompt="You are a software architect who designs clean, scalable solutions. Focus on architecture, patterns, and best practices.",
+                        system_prompt=(
+                            "You are a software architect who designs clean, "
+                            "scalable solutions. Focus on architecture, "
+                            "patterns, and best practices."
+                        ),
                         description="Designs software architecture",
                     ),
                     AgentTemplate(
                         name="coder",
                         role="coder",
-                        system_prompt="You are an expert programmer who writes clean, efficient, well-documented code. Follow best practices and write tests.",
+                        system_prompt=(
+                            "You are an expert programmer who writes clean, "
+                            "efficient, well-documented code. Follow best "
+                            "practices and write tests."
+                        ),
                         description="Implements the code",
                     ),
                     AgentTemplate(

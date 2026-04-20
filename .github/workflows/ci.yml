@@ -30,7 +30,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest tests/ --cov=src/agentmind --cov-report=xml --cov-report=term
+        pytest tests/ -v
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

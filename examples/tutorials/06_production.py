@@ -126,7 +126,7 @@ class CircuitBreaker:
                     logger.info("Circuit breaker: closed")
                 return result
 
-            except Exception as e:
+            except Exception:
                 self.failure_count += 1
                 self.last_failure_time = time.time()
 

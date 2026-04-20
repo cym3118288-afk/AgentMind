@@ -147,7 +147,7 @@ async def run_software_dev_swarm(project_description: str, requirements: list):
     print("✓ QA Engineer - Testing strategy")
 
     # Define development task
-    _requirements_text = "\n".join([f"- {req}" for req in requirements])
+    # _requirements_text = "\n".join([f"- {req}" for req in requirements])
     task = """
     Design and plan the development of: {project_description}
 

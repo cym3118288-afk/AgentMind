@@ -18,7 +18,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from agentmind.llm import LLMProvider, LLMResponse, OllamaProvider
+from agentmind.llm import LLMProvider, LLMResponse, OllamaProvider  # noqa: E402
 
 
 class MockLLMProvider(LLMProvider):

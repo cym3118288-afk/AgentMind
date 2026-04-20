@@ -114,33 +114,33 @@ class TestDependencyResolution:
         resolver = DependencyResolver()
 
         # Add plugins with dependencies
-        resolver.add_plugin("plugin - a", "1.0.0", [])
+        resolver.add_plugin("plugin-a", "1.0.0", [])
         resolver.add_plugin(
-            "plugin - b", "1.0.0", [PluginDependency(name="plugin - a", version_spec=">=1.0.0")]
+            "plugin-b", "1.0.0", [PluginDependency(name="plugin-a", version_spec=">=1.0.0")]
         )
         resolver.add_plugin(
-            "plugin - c", "1.0.0", [PluginDependency(name="plugin - b", version_spec=">=1.0.0")]
+            "plugin-c", "1.0.0", [PluginDependency(name="plugin-b", version_spec=">=1.0.0")]
         )
 
         # Get load order
-        available = {"plugin - a": "1.0.0", "plugin - b": "1.0.0", "plugin - c": "1.0.0"}
+        available = {"plugin-a": "1.0.0", "plugin-b": "1.0.0", "plugin-c": "1.0.0"}
         load_order, errors = resolver.resolve_load_order(
-            ["plugin - a", "plugin - b", "plugin - c"], available
+            ["plugin-a", "plugin-b", "plugin-c"], available
         )
 
         assert errors == []
-        assert load_order.index("plugin - a") < load_order.index("plugin - b")
-        assert load_order.index("plugin - b") < load_order.index("plugin - c")
+        assert load_order.index("plugin-a") < load_order.index("plugin-b")
+        assert load_order.index("plugin-b") < load_order.index("plugin-c")
 
     def test_circular_dependency_detection(self):
         """Test circular dependency detection."""
         resolver = DependencyResolver()
 
         resolver.add_plugin(
-            "plugin - a", "1.0.0", [PluginDependency(name="plugin - b", version_spec="*")]
+            "plugin-a", "1.0.0", [PluginDependency(name="plugin-b", version_spec="*")]
         )
         resolver.add_plugin(
-            "plugin - b", "1.0.0", [PluginDependency(name="plugin - a", version_spec="*")]
+            "plugin-b", "1.0.0", [PluginDependency(name="plugin-a", version_spec="*")]
         )
 
         has_circular, cycle = resolver.graph.has_circular_dependency()
@@ -152,13 +152,13 @@ class TestDependencyResolution:
         resolver = DependencyResolver()
 
         resolver.add_plugin(
-            "plugin - a",
+            "plugin-a",
             "1.0.0",
-            [PluginDependency(name="plugin - missing", version_spec=">=1.0.0")],
+            [PluginDependency(name="plugin-missing", version_spec=">=1.0.0")],
         )
 
-        available = {"plugin - a": "1.0.0"}
-        satisfied, missing = resolver.check_dependencies("plugin - a", available)
+        available = {"plugin-a": "1.0.0"}
+        satisfied, missing = resolver.check_dependencies("plugin-a", available)
 
         assert not satisfied
         assert len(missing) > 0
@@ -330,7 +330,7 @@ class TestPluginMarketplace:
         assert len(tools) == 3
 
         # Search by query
-        results = registry.search_plugins(query="plugin - 2")
+        results = registry.search_plugins(query="plugin-2")
         assert len(results) == 1
 
     def test_plugin_ratings(self, tmp_path):
@@ -382,12 +382,12 @@ class TestPluginAudit:
         logger = PluginAuditLogger(log_dir=tmp_path)
 
         # Log multiple events
-        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin - a", user_id="user1")
-        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin - a", success=False)
-        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin - b", user_id="user2")
+        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin-a", user_id="user1")
+        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin-a", success=False)
+        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin-b", user_id="user2")
 
         # Filter by plugin
-        plugin_a_events = logger.get_events(plugin_name="plugin - a")
+        plugin_a_events = logger.get_events(plugin_name="plugin-a")
         assert len(plugin_a_events) == 2
 
         # Filter by user
@@ -402,9 +402,9 @@ class TestPluginAudit:
         """Test audit statistics."""
         logger = PluginAuditLogger(log_dir=tmp_path)
 
-        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin - a")
-        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin - a", success=False)
-        logger.log_event(AuditEventType.PLUGIN_EXECUTED, "plugin - b")
+        logger.log_event(AuditEventType.PLUGIN_LOADED, "plugin-a")
+        logger.log_event(AuditEventType.PLUGIN_ERROR, "plugin-a", success=False)
+        logger.log_event(AuditEventType.PLUGIN_EXECUTED, "plugin-b")
 
         stats = logger.get_statistics()
 

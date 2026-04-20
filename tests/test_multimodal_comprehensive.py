@@ -6,6 +6,11 @@ import pytest
 from unittest.mock import Mock, patch, MagicMock
 from pathlib import Path
 
+# Skip all tests if optional dependencies are not available
+pytest.importorskip("PIL")
+pytest.importorskip("speech_recognition")
+pytest.importorskip("PyPDF2")
+
 from agentmind.multimodal.image_processor import ImageProcessor
 from agentmind.multimodal.audio_processor import AudioProcessor
 from agentmind.multimodal.document_processor import DocumentProcessor

@@ -30,17 +30,11 @@ class CalculatorTool(Tool):
                 "operation": {
                     "type": "string",
                     "description": "Operation to perform: add, subtract, multiply, divide",
-                    "enum": ["add", "subtract", "multiply", "divide"]
+                    "enum": ["add", "subtract", "multiply", "divide"],
                 },
-                "a": {
-                    "type": "number",
-                    "description": "First number"
-                },
-                "b": {
-                    "type": "number",
-                    "description": "Second number"
-                }
-            }
+                "a": {"type": "number", "description": "First number"},
+                "b": {"type": "number", "description": "Second number"},
+            },
         )
 
     async def execute(self, operation: str, a: float, b: float) -> str:
@@ -73,17 +67,14 @@ class WeatherTool(Tool):
             name="get_weather",
             description="Get current weather for a location",
             parameters={
-                "location": {
-                    "type": "string",
-                    "description": "City name or location"
-                },
+                "location": {"type": "string", "description": "City name or location"},
                 "units": {
                     "type": "string",
                     "description": "Temperature units: celsius or fahrenheit",
                     "enum": ["celsius", "fahrenheit"],
-                    "default": "celsius"
-                }
-            }
+                    "default": "celsius",
+                },
+            },
         )
 
     async def execute(self, location: str, units: str = "celsius") -> str:
@@ -115,21 +106,14 @@ class DatabaseTool(Tool):
             name="query_database",
             description="Query a database table",
             parameters={
-                "table": {
-                    "type": "string",
-                    "description": "Table name to query"
-                },
-                "filters": {
-                    "type": "object",
-                    "description": "Filter conditions",
-                    "default": {}
-                },
+                "table": {"type": "string", "description": "Table name to query"},
+                "filters": {"type": "object", "description": "Filter conditions", "default": {}},
                 "limit": {
                     "type": "integer",
                     "description": "Maximum number of results",
-                    "default": 10
-                }
-            }
+                    "default": 10,
+                },
+            },
         )
         # Simulated database
         self.db = {
@@ -142,7 +126,7 @@ class DatabaseTool(Tool):
                 {"id": 1, "name": "Laptop", "price": 999},
                 {"id": 2, "name": "Mouse", "price": 29},
                 {"id": 3, "name": "Keyboard", "price": 79},
-            ]
+            ],
         }
 
     async def execute(self, table: str, filters: Dict[str, Any] = None, limit: int = 10) -> str:
@@ -179,12 +163,7 @@ async def example_1_basic_tool():
     registry.register_tool(calculator)
 
     # Create agent with tools
-    agent = Agent(
-        name="math_assistant",
-        role="assistant",
-        llm_provider=llm,
-        tool_registry=registry
-    )
+    agent = Agent(name="math_assistant", role="assistant", llm_provider=llm, tool_registry=registry)
 
     # Test the tool directly
     result = await calculator.execute(operation="add", a=15, b=27)
@@ -206,12 +185,7 @@ async def example_2_multiple_tools():
     registry.register_tool(DatabaseTool())
 
     # Create agent
-    agent = Agent(
-        name="assistant",
-        role="assistant",
-        llm_provider=llm,
-        tool_registry=registry
-    )
+    agent = Agent(name="assistant", role="assistant", llm_provider=llm, tool_registry=registry)
 
     print(f"Agent has access to {len(registry.list_tools())} tools:")
     for tool_name in registry.list_tools():
@@ -231,19 +205,9 @@ async def example_3_tool_in_collaboration():
     registry.register_tool(WeatherTool())
 
     # Create agents with tools
-    analyst = Agent(
-        name="analyst",
-        role="analyst",
-        llm_provider=llm,
-        tool_registry=registry
-    )
+    analyst = Agent(name="analyst", role="analyst", llm_provider=llm, tool_registry=registry)
 
-    planner = Agent(
-        name="planner",
-        role="planner",
-        llm_provider=llm,
-        tool_registry=registry
-    )
+    planner = Agent(name="planner", role="planner", llm_provider=llm, tool_registry=registry)
 
     # Create orchestrator
     mind = AgentMind(strategy="round_robin")
@@ -285,20 +249,14 @@ async def example_5_custom_tool_pattern():
                 name="file_system",
                 description="Simulated file system operations",
                 parameters={
-                    "operation": {
-                        "type": "string",
-                        "enum": ["list", "read", "write"]
-                    },
-                    "path": {
-                        "type": "string",
-                        "description": "File path"
-                    },
+                    "operation": {"type": "string", "enum": ["list", "read", "write"]},
+                    "path": {"type": "string", "description": "File path"},
                     "content": {
                         "type": "string",
                         "description": "Content for write operation",
-                        "default": ""
-                    }
-                }
+                        "default": "",
+                    },
+                },
             )
             self.files = {}  # Simulated file system
 

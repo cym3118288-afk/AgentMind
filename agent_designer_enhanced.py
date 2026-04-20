@@ -10,7 +10,15 @@ Features:
 - Workflow validation and error checking
 """
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, UploadFile, File, HTTPException
+from fastapi import (
+    FastAPI,
+    WebSocket,
+    WebSocketDisconnect,
+    Request,
+    UploadFile,
+    File,
+    HTTPException,
+)
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 import json
@@ -63,7 +71,7 @@ AGENT_TEMPLATES = {
             "icon": "💻",
             "system_prompt": "You are an expert software engineer. Write clean, efficient, and well-documented code.",
             "plugins": ["code_analyzer", "git_integration"],
-            "capabilities": ["coding", "debugging", "code_review"]
+            "capabilities": ["coding", "debugging", "code_review"],
         },
         {
             "id": "qa_engineer",
@@ -73,7 +81,7 @@ AGENT_TEMPLATES = {
             "icon": "🧪",
             "system_prompt": "You are a QA engineer focused on quality assurance and testing.",
             "plugins": ["test_runner", "bug_tracker"],
-            "capabilities": ["testing", "quality_assurance", "bug_detection"]
+            "capabilities": ["testing", "quality_assurance", "bug_detection"],
         },
         {
             "id": "devops_engineer",
@@ -83,8 +91,8 @@ AGENT_TEMPLATES = {
             "icon": "🚀",
             "system_prompt": "You are a DevOps engineer specializing in automation and infrastructure.",
             "plugins": ["docker", "kubernetes", "ci_cd"],
-            "capabilities": ["deployment", "monitoring", "automation"]
-        }
+            "capabilities": ["deployment", "monitoring", "automation"],
+        },
     ],
     "research": [
         {
@@ -95,7 +103,7 @@ AGENT_TEMPLATES = {
             "icon": "🔍",
             "system_prompt": "You are a research specialist. Gather comprehensive information and cite sources.",
             "plugins": ["web_search", "document_analyzer"],
-            "capabilities": ["research", "analysis", "fact_checking"]
+            "capabilities": ["research", "analysis", "fact_checking"],
         },
         {
             "id": "analyst",
@@ -105,8 +113,8 @@ AGENT_TEMPLATES = {
             "icon": "📊",
             "system_prompt": "You are a data analyst. Analyze data and provide clear insights.",
             "plugins": ["data_processor", "visualization"],
-            "capabilities": ["data_analysis", "statistics", "reporting"]
-        }
+            "capabilities": ["data_analysis", "statistics", "reporting"],
+        },
     ],
     "creative": [
         {
@@ -117,7 +125,7 @@ AGENT_TEMPLATES = {
             "icon": "✍️",
             "system_prompt": "You are a professional content writer. Create engaging, clear content.",
             "plugins": ["grammar_checker", "seo_optimizer"],
-            "capabilities": ["writing", "editing", "storytelling"]
+            "capabilities": ["writing", "editing", "storytelling"],
         },
         {
             "id": "creative_director",
@@ -127,8 +135,8 @@ AGENT_TEMPLATES = {
             "icon": "🎨",
             "system_prompt": "You are a creative director. Generate innovative and compelling ideas.",
             "plugins": ["brainstorming", "design_tools"],
-            "capabilities": ["ideation", "design", "branding"]
-        }
+            "capabilities": ["ideation", "design", "branding"],
+        },
     ],
     "business": [
         {
@@ -139,7 +147,7 @@ AGENT_TEMPLATES = {
             "icon": "📢",
             "system_prompt": "You are a marketing manager. Create effective marketing strategies.",
             "plugins": ["analytics", "campaign_manager"],
-            "capabilities": ["marketing", "strategy", "campaigns"]
+            "capabilities": ["marketing", "strategy", "campaigns"],
         },
         {
             "id": "support_specialist",
@@ -149,8 +157,8 @@ AGENT_TEMPLATES = {
             "icon": "🤝",
             "system_prompt": "You are a customer support specialist. Provide helpful, empathetic support.",
             "plugins": ["ticket_system", "knowledge_base"],
-            "capabilities": ["support", "communication", "problem_solving"]
-        }
+            "capabilities": ["support", "communication", "problem_solving"],
+        },
     ],
     "security": [
         {
@@ -161,9 +169,9 @@ AGENT_TEMPLATES = {
             "icon": "🔒",
             "system_prompt": "You are a security expert. Identify vulnerabilities and recommend fixes.",
             "plugins": ["security_scanner", "vulnerability_db"],
-            "capabilities": ["security_audit", "penetration_testing", "compliance"]
+            "capabilities": ["security_audit", "penetration_testing", "compliance"],
         }
-    ]
+    ],
 }
 
 
@@ -179,7 +187,7 @@ async def health():
     return {
         "status": "healthy",
         "version": "0.4.0",
-        "features": ["drag_drop", "real_time_testing", "templates", "export_import"]
+        "features": ["drag_drop", "real_time_testing", "templates", "export_import"],
     }
 
 
@@ -211,7 +219,7 @@ async def save_config(request: Request):
         if not validation_result["valid"]:
             return JSONResponse(
                 status_code=400,
-                content={"error": "Invalid configuration", "details": validation_result["errors"]}
+                content={"error": "Invalid configuration", "details": validation_result["errors"]},
             )
 
         # Save to file
@@ -232,12 +240,14 @@ async def list_configs():
         try:
             with open(config_file, "r") as f:
                 config = json.load(f)
-                configs.append({
-                    "id": config.get("id"),
-                    "name": config.get("team_name", "Unnamed"),
-                    "agent_count": len(config.get("agents", [])),
-                    "updated_at": config.get("updated_at")
-                })
+                configs.append(
+                    {
+                        "id": config.get("id"),
+                        "name": config.get("team_name", "Unnamed"),
+                        "agent_count": len(config.get("agents", [])),
+                        "updated_at": config.get("updated_at"),
+                    }
+                )
         except:
             continue
     return {"configs": configs}
@@ -272,9 +282,9 @@ async def import_config(file: UploadFile = File(...)):
     try:
         content = await file.read()
 
-        if file.filename.endswith('.json'):
+        if file.filename.endswith(".json"):
             config = json.loads(content)
-        elif file.filename.endswith(('.yaml', '.yml')):
+        elif file.filename.endswith((".yaml", ".yml")):
             config = yaml.safe_load(content)
         else:
             raise HTTPException(status_code=400, detail="Unsupported file format")
@@ -288,7 +298,7 @@ async def import_config(file: UploadFile = File(...)):
         if not validation_result["valid"]:
             return JSONResponse(
                 status_code=400,
-                content={"error": "Invalid configuration", "details": validation_result["errors"]}
+                content={"error": "Invalid configuration", "details": validation_result["errors"]},
             )
 
         config_path = CONFIGS_DIR / f"{config_id}.json"
@@ -357,44 +367,43 @@ async def websocket_test_endpoint(websocket: WebSocket):
                 agent_config = data.get("agent")
                 test_input = data.get("input", "Hello!")
 
-                await websocket.send_json({
-                    "type": "test_start",
-                    "agent": agent_config.get("name")
-                })
+                await websocket.send_json({"type": "test_start", "agent": agent_config.get("name")})
 
                 # Simulate agent response
                 await asyncio.sleep(1)
 
-                await websocket.send_json({
-                    "type": "test_response",
-                    "agent": agent_config.get("name"),
-                    "response": f"Test response from {agent_config.get('name')}: {test_input}",
-                    "timestamp": datetime.now().isoformat()
-                })
+                await websocket.send_json(
+                    {
+                        "type": "test_response",
+                        "agent": agent_config.get("name"),
+                        "response": f"Test response from {agent_config.get('name')}: {test_input}",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
 
             elif action == "test_workflow":
                 # Test entire workflow
                 config = data.get("config")
                 test_input = data.get("input", "Test workflow")
 
-                await websocket.send_json({
-                    "type": "workflow_start",
-                    "agents": len(config.get("agents", []))
-                })
+                await websocket.send_json(
+                    {"type": "workflow_start", "agents": len(config.get("agents", []))}
+                )
 
                 # Simulate workflow execution
                 for agent in config.get("agents", []):
                     await asyncio.sleep(0.5)
-                    await websocket.send_json({
-                        "type": "agent_processing",
-                        "agent": agent.get("name"),
-                        "status": "processing"
-                    })
+                    await websocket.send_json(
+                        {
+                            "type": "agent_processing",
+                            "agent": agent.get("name"),
+                            "status": "processing",
+                        }
+                    )
 
-                await websocket.send_json({
-                    "type": "workflow_complete",
-                    "result": "Workflow test completed successfully"
-                })
+                await websocket.send_json(
+                    {"type": "workflow_complete", "result": "Workflow test completed successfully"}
+                )
 
     except WebSocketDisconnect:
         active_connections.remove(websocket)
@@ -434,10 +443,7 @@ def validate_config(config: Dict) -> Dict:
         if conn.get("to") not in agent_names:
             errors.append(f"Connection: Invalid target agent '{conn.get('to')}'")
 
-    return {
-        "valid": len(errors) == 0,
-        "errors": errors
-    }
+    return {"valid": len(errors) == 0, "errors": errors}
 
 
 def generate_python_code(config: Dict) -> str:
@@ -470,16 +476,16 @@ async def main():
 
     for agent in agents:
         agent_var = agent["name"].lower().replace(" ", "_").replace("-", "_")
-        code += f'''    {agent_var} = Agent(
+        code += f"""    {agent_var} = Agent(
         name="{agent['name']}",
         role="{agent['role']}",
         system_prompt="{agent.get('system_prompt', '')}"
     )
     mind.add_agent({agent_var})
 
-'''
+"""
 
-    code += f'''    # Run collaboration
+    code += f"""    # Run collaboration
     result = await mind.collaborate(
         "Your task here",
         max_rounds={max_rounds}
@@ -491,7 +497,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
-'''
+"""
 
     return code
 
@@ -506,7 +512,8 @@ async def agent_designer():
             return HTMLResponse(content=f.read())
 
     # Fallback inline HTML
-    return HTMLResponse(content="""
+    return HTMLResponse(
+        content="""
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -523,7 +530,8 @@ async def agent_designer():
         <script src="/static/js/designer_enhanced.js"></script>
     </body>
     </html>
-    """)
+    """
+    )
 
 
 if __name__ == "__main__":

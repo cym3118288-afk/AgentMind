@@ -48,19 +48,20 @@ PROFILES_FILE = CONFIG_DIR / "profiles.yaml"
 # Configuration Management
 # ============================================================================
 
+
 def load_config() -> Dict[str, Any]:
     """Load configuration from file."""
     if not CONFIG_FILE.exists():
         return {}
 
-    with open(CONFIG_FILE, 'r') as f:
+    with open(CONFIG_FILE, "r") as f:
         return yaml.safe_load(f) or {}
 
 
 def save_config(config: Dict[str, Any]) -> None:
     """Save configuration to file."""
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
-    with open(CONFIG_FILE, 'w') as f:
+    with open(CONFIG_FILE, "w") as f:
         yaml.dump(config, f, default_flow_style=False)
 
 
@@ -69,7 +70,7 @@ def load_profile(profile_name: str) -> Dict[str, Any]:
     if not PROFILES_FILE.exists():
         return {}
 
-    with open(PROFILES_FILE, 'r') as f:
+    with open(PROFILES_FILE, "r") as f:
         profiles = yaml.safe_load(f) or {}
 
     return profiles.get(profile_name, {})
@@ -81,12 +82,12 @@ def save_profile(profile_name: str, profile_data: Dict[str, Any]) -> None:
 
     profiles = {}
     if PROFILES_FILE.exists():
-        with open(PROFILES_FILE, 'r') as f:
+        with open(PROFILES_FILE, "r") as f:
             profiles = yaml.safe_load(f) or {}
 
     profiles[profile_name] = profile_data
 
-    with open(PROFILES_FILE, 'w') as f:
+    with open(PROFILES_FILE, "w") as f:
         yaml.dump(profiles, f, default_flow_style=False)
 
 
@@ -95,18 +96,18 @@ def get_env_config() -> Dict[str, Any]:
     config = {}
 
     # LLM settings
-    if os.getenv('AGENTMIND_PROVIDER'):
-        config['provider'] = os.getenv('AGENTMIND_PROVIDER')
-    if os.getenv('AGENTMIND_MODEL'):
-        config['model'] = os.getenv('AGENTMIND_MODEL')
-    if os.getenv('AGENTMIND_TEMPERATURE'):
-        config['temperature'] = float(os.getenv('AGENTMIND_TEMPERATURE'))
+    if os.getenv("AGENTMIND_PROVIDER"):
+        config["provider"] = os.getenv("AGENTMIND_PROVIDER")
+    if os.getenv("AGENTMIND_MODEL"):
+        config["model"] = os.getenv("AGENTMIND_MODEL")
+    if os.getenv("AGENTMIND_TEMPERATURE"):
+        config["temperature"] = float(os.getenv("AGENTMIND_TEMPERATURE"))
 
     # API keys
-    if os.getenv('OPENAI_API_KEY'):
-        config['openai_api_key'] = os.getenv('OPENAI_API_KEY')
-    if os.getenv('ANTHROPIC_API_KEY'):
-        config['anthropic_api_key'] = os.getenv('ANTHROPIC_API_KEY')
+    if os.getenv("OPENAI_API_KEY"):
+        config["openai_api_key"] = os.getenv("OPENAI_API_KEY")
+    if os.getenv("ANTHROPIC_API_KEY"):
+        config["anthropic_api_key"] = os.getenv("ANTHROPIC_API_KEY")
 
     return config
 
@@ -121,6 +122,7 @@ def merge_configs(base: Dict[str, Any], override: Dict[str, Any]) -> Dict[str, A
 # ============================================================================
 # Helper Functions
 # ============================================================================
+
 
 def create_llm_provider(provider: str, model: str, temperature: float):
     """Create an LLM provider."""
@@ -151,9 +153,9 @@ def create_default_agents(llm_provider, num_agents: int) -> List[Agent]:
 
 @click.group()
 @click.version_option(version="0.3.0")
-@click.option('--profile', help='Configuration profile to use')
-@click.option('--verbose', '-v', is_flag=True, help='Verbose output')
-@click.option('--quiet', '-q', is_flag=True, help='Quiet mode')
+@click.option("--profile", help="Configuration profile to use")
+@click.option("--verbose", "-v", is_flag=True, help="Verbose output")
+@click.option("--quiet", "-q", is_flag=True, help="Quiet mode")
 @click.pass_context
 def cli(ctx, profile, verbose, quiet):
     """AgentMind CLI - Multi-agent collaboration framework.
@@ -182,9 +184,9 @@ def cli(ctx, profile, verbose, quiet):
     config = merge_configs(config, env_config)
 
     # Store in context
-    ctx.obj['config'] = config
-    ctx.obj['verbose'] = verbose
-    ctx.obj['quiet'] = quiet
+    ctx.obj["config"] = config
+    ctx.obj["verbose"] = verbose
+    ctx.obj["quiet"] = quiet
 
 
 @cli.command()
@@ -213,13 +215,13 @@ def run(
     Example:
         agentmind run --task "Design a REST API for a todo app" --agents 3
     """
-    config = ctx.obj.get('config', {})
-    verbose = ctx.obj.get('verbose', False)
+    config = ctx.obj.get("config", {})
+    verbose = ctx.obj.get("verbose", False)
 
     # Use config values as defaults
-    provider = provider or config.get('provider', 'ollama')
-    model = model or config.get('model', 'llama3.2')
-    temperature = temperature if temperature is not None else config.get('temperature', 0.7)
+    provider = provider or config.get("provider", "ollama")
+    model = model or config.get("model", "llama3.2")
+    temperature = temperature if temperature is not None else config.get("temperature", 0.7)
 
     if verbose:
         logging.getLogger().setLevel(logging.INFO)
@@ -738,14 +740,25 @@ def version():
 # Wave 2: New Commands
 # ============================================================================
 
+
 @cli.command()
-@click.option('--name', prompt='Project name', help='Name of the project')
-@click.option('--description', prompt='Project description', help='Brief description')
-@click.option('--provider', type=click.Choice(['ollama', 'openai', 'anthropic']),
-              prompt='LLM provider', default='ollama', help='LLM provider to use')
-@click.option('--template', type=click.Choice(['basic', 'research', 'development', 'marketing', 'custom']),
-              prompt='Project template', default='basic', help='Project template')
-@click.option('--interactive/--no-interactive', default=True, help='Interactive mode')
+@click.option("--name", prompt="Project name", help="Name of the project")
+@click.option("--description", prompt="Project description", help="Brief description")
+@click.option(
+    "--provider",
+    type=click.Choice(["ollama", "openai", "anthropic"]),
+    prompt="LLM provider",
+    default="ollama",
+    help="LLM provider to use",
+)
+@click.option(
+    "--template",
+    type=click.Choice(["basic", "research", "development", "marketing", "custom"]),
+    prompt="Project template",
+    default="basic",
+    help="Project template",
+)
+@click.option("--interactive/--no-interactive", default=True, help="Interactive mode")
 def init(name: str, description: str, provider: str, template: str, interactive: bool):
     """Initialize a new AgentMind project with scaffolding wizard.
 
@@ -779,7 +792,7 @@ def init(name: str, description: str, provider: str, template: str, interactive:
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
         TaskProgressColumn(),
-        console=console
+        console=console,
     ) as progress:
         task = progress.add_task("Creating project structure...", total=10)
 
@@ -802,7 +815,9 @@ def init(name: str, description: str, provider: str, template: str, interactive:
         progress.update(task, advance=1)
 
         # Create main.py
-        main_content = _generate_main_file(name, description, provider, template, num_agents, use_memory, use_tools)
+        main_content = _generate_main_file(
+            name, description, provider, template, num_agents, use_memory, use_tools
+        )
         (project_path / "main.py").write_text(main_content)
         progress.update(task, advance=1)
 
@@ -862,21 +877,27 @@ def init(name: str, description: str, provider: str, template: str, interactive:
     console.print("  python main.py")
 
 
-@cli.group(name='agent')
+@cli.group(name="agent")
 def agent_group():
     """Agent management commands."""
     pass
 
 
-@agent_group.command(name='create')
-@click.option('--name', prompt='Agent name', help='Name of the agent')
-@click.option('--role', prompt='Agent role', help='Role/specialty of the agent')
-@click.option('--system-prompt', help='Custom system prompt')
-@click.option('--temperature', type=float, default=0.7, help='Temperature setting')
-@click.option('--output', type=click.Path(), help='Output file path')
-@click.option('--interactive/--no-interactive', default=True, help='Interactive mode')
-def agent_create(name: str, role: str, system_prompt: Optional[str], temperature: float,
-                 output: Optional[str], interactive: bool):
+@agent_group.command(name="create")
+@click.option("--name", prompt="Agent name", help="Name of the agent")
+@click.option("--role", prompt="Agent role", help="Role/specialty of the agent")
+@click.option("--system-prompt", help="Custom system prompt")
+@click.option("--temperature", type=float, default=0.7, help="Temperature setting")
+@click.option("--output", type=click.Path(), help="Output file path")
+@click.option("--interactive/--no-interactive", default=True, help="Interactive mode")
+def agent_create(
+    name: str,
+    role: str,
+    system_prompt: Optional[str],
+    temperature: float,
+    output: Optional[str],
+    interactive: bool,
+):
     """Interactive agent builder.
 
     Example:
@@ -894,14 +915,16 @@ def agent_create(name: str, role: str, system_prompt: Optional[str], temperature
             if use_custom_prompt:
                 system_prompt = Prompt.ask("Enter system prompt")
             else:
-                system_prompt = f"You are {name}, a {role}. Provide expert assistance in your domain."
+                system_prompt = (
+                    f"You are {name}, a {role}. Provide expert assistance in your domain."
+                )
 
         enable_memory = Confirm.ask("Enable memory?", default=True)
         enable_tools = Confirm.ask("Enable tools?", default=False)
 
         if enable_tools:
             tools_list = Prompt.ask("Tool names (comma-separated)", default="")
-            tools = [t.strip() for t in tools_list.split(',') if t.strip()]
+            tools = [t.strip() for t in tools_list.split(",") if t.strip()]
         else:
             tools = []
     else:
@@ -973,11 +996,11 @@ class {name.replace(" ", "")}Agent(Agent):
 
 
 @cli.command()
-@click.argument('test_path', required=False, default='tests/')
-@click.option('--pattern', default='test_*.py', help='Test file pattern')
-@click.option('--verbose', '-v', is_flag=True, help='Verbose output')
-@click.option('--coverage', is_flag=True, help='Run with coverage')
-@click.option('--markers', help='Run tests with specific markers')
+@click.argument("test_path", required=False, default="tests/")
+@click.option("--pattern", default="test_*.py", help="Test file pattern")
+@click.option("--verbose", "-v", is_flag=True, help="Verbose output")
+@click.option("--coverage", is_flag=True, help="Run with coverage")
+@click.option("--markers", help="Run tests with specific markers")
 def test(test_path: str, pattern: str, verbose: bool, coverage: bool, markers: Optional[str]):
     """Run agent tests.
 
@@ -1018,11 +1041,21 @@ def test(test_path: str, pattern: str, verbose: bool, coverage: bool, markers: O
 
 
 @cli.command()
-@click.option('--target', type=click.Choice(['docker', 'kubernetes', 'aws', 'local']),
-              prompt='Deployment target', default='docker', help='Deployment target')
-@click.option('--env', type=click.Choice(['dev', 'staging', 'production']),
-              prompt='Environment', default='dev', help='Deployment environment')
-@click.option('--dry-run', is_flag=True, help='Show what would be deployed without deploying')
+@click.option(
+    "--target",
+    type=click.Choice(["docker", "kubernetes", "aws", "local"]),
+    prompt="Deployment target",
+    default="docker",
+    help="Deployment target",
+)
+@click.option(
+    "--env",
+    type=click.Choice(["dev", "staging", "production"]),
+    prompt="Environment",
+    default="dev",
+    help="Deployment environment",
+)
+@click.option("--dry-run", is_flag=True, help="Show what would be deployed without deploying")
 def deploy(target: str, env: str, dry_run: bool):
     """Deployment helper for AgentMind projects.
 
@@ -1037,13 +1070,13 @@ def deploy(target: str, env: str, dry_run: bool):
     if dry_run:
         console.print("[yellow]DRY RUN MODE - No changes will be made[/yellow]\n")
 
-    if target == 'docker':
+    if target == "docker":
         _deploy_docker(env, dry_run)
-    elif target == 'kubernetes':
+    elif target == "kubernetes":
         _deploy_kubernetes(env, dry_run)
-    elif target == 'aws':
+    elif target == "aws":
         _deploy_aws(env, dry_run)
-    elif target == 'local':
+    elif target == "local":
         _deploy_local(env, dry_run)
 
 
@@ -1055,17 +1088,20 @@ def _deploy_docker(env: str, dry_run: bool):
         "Building Docker image...",
         "Tagging image...",
         "Pushing to registry...",
-        "Updating container..."
+        "Updating container...",
     ]
 
     if dry_run:
         for step in steps:
             console.print(f"  [dim]Would execute: {step}[/dim]")
     else:
-        with Progress(SpinnerColumn(), TextColumn("[progress.description]{task.description}"), console=console) as progress:
+        with Progress(
+            SpinnerColumn(), TextColumn("[progress.description]{task.description}"), console=console
+        ) as progress:
             for step in steps:
                 task = progress.add_task(step, total=None)
                 import time
+
                 time.sleep(0.5)  # Simulate work
                 progress.update(task, completed=True)
 
@@ -1103,14 +1139,15 @@ def _deploy_local(env: str, dry_run: bool):
     else:
         console.print("Starting local deployment...")
         import subprocess
+
         subprocess.run([sys.executable, "main.py"])
 
 
 @cli.command()
-@click.option('--iterations', default=10, type=int, help='Number of benchmark iterations')
-@click.option('--agents', default=3, type=int, help='Number of agents')
-@click.option('--task', default='Analyze this problem', help='Benchmark task')
-@click.option('--output', type=click.Path(), help='Save results to file')
+@click.option("--iterations", default=10, type=int, help="Number of benchmark iterations")
+@click.option("--agents", default=3, type=int, help="Number of agents")
+@click.option("--task", default="Analyze this problem", help="Benchmark task")
+@click.option("--output", type=click.Path(), help="Save results to file")
 def benchmark(iterations: int, agents: int, task: str, output: Optional[str]):
     """Run performance benchmarks.
 
@@ -1120,41 +1157,39 @@ def benchmark(iterations: int, agents: int, task: str, output: Optional[str]):
     """
     console.print("[bold cyan]AgentMind Performance Benchmark[/bold cyan]\n")
 
-    results = {
-        'iterations': iterations,
-        'agents': agents,
-        'task': task,
-        'runs': []
-    }
+    results = {"iterations": iterations, "agents": agents, "task": task, "runs": []}
 
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
         BarColumn(),
         TaskProgressColumn(),
-        console=console
+        console=console,
     ) as progress:
         bench_task = progress.add_task(f"Running {iterations} iterations...", total=iterations)
 
         for i in range(iterations):
             import time
+
             start = time.time()
 
             # Simulate benchmark run
             time.sleep(0.1)
 
             duration = time.time() - start
-            results['runs'].append({
-                'iteration': i + 1,
-                'duration': duration,
-                'tokens': 1000 + i * 100,  # Simulated
-                'cost': 0.01 + i * 0.001  # Simulated
-            })
+            results["runs"].append(
+                {
+                    "iteration": i + 1,
+                    "duration": duration,
+                    "tokens": 1000 + i * 100,  # Simulated
+                    "cost": 0.01 + i * 0.001,  # Simulated
+                }
+            )
 
             progress.update(bench_task, advance=1)
 
     # Calculate statistics
-    durations = [r['duration'] for r in results['runs']]
+    durations = [r["duration"] for r in results["runs"]]
     avg_duration = sum(durations) / len(durations)
     min_duration = min(durations)
     max_duration = max(durations)
@@ -1178,36 +1213,36 @@ def benchmark(iterations: int, agents: int, task: str, output: Optional[str]):
     if output:
         output_path = Path(output)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             json.dump(results, f, indent=2)
         console.print(f"\n[green]✓ Results saved to {output}[/green]")
 
 
-@cli.group(name='config')
+@cli.group(name="config")
 def config_group():
     """Configuration management commands."""
     pass
 
 
-@config_group.command(name='init')
+@config_group.command(name="init")
 def config_init():
     """Initialize configuration directory."""
     CONFIG_DIR.mkdir(parents=True, exist_ok=True)
 
     default_config = {
-        'provider': 'ollama',
-        'model': 'llama3.2',
-        'temperature': 0.7,
-        'max_retries': 3,
-        'timeout': 30
+        "provider": "ollama",
+        "model": "llama3.2",
+        "temperature": 0.7,
+        "max_retries": 3,
+        "timeout": 30,
     }
 
     save_config(default_config)
     console.print(f"[green]✓ Configuration initialized at {CONFIG_FILE}[/green]")
 
 
-@config_group.command(name='show')
-@click.option('--profile', help='Show specific profile')
+@config_group.command(name="show")
+@click.option("--profile", help="Show specific profile")
 def config_show(profile: Optional[str]):
     """Show current configuration."""
     if profile:
@@ -1225,10 +1260,10 @@ def config_show(profile: Optional[str]):
     console.print(syntax)
 
 
-@config_group.command(name='set')
-@click.argument('key')
-@click.argument('value')
-@click.option('--profile', help='Set in specific profile')
+@config_group.command(name="set")
+@click.argument("key")
+@click.argument("value")
+@click.option("--profile", help="Set in specific profile")
 def config_set(key: str, value: str, profile: Optional[str]):
     """Set a configuration value."""
     if profile:
@@ -1243,14 +1278,14 @@ def config_set(key: str, value: str, profile: Optional[str]):
         console.print(f"[green]✓ Set {key}={value}[/green]")
 
 
-@config_group.command(name='list-profiles')
+@config_group.command(name="list-profiles")
 def config_list_profiles():
     """List all configuration profiles."""
     if not PROFILES_FILE.exists():
         console.print("[yellow]No profiles found[/yellow]")
         return
 
-    with open(PROFILES_FILE, 'r') as f:
+    with open(PROFILES_FILE, "r") as f:
         profiles = yaml.safe_load(f) or {}
 
     if not profiles:
@@ -1265,11 +1300,7 @@ def config_list_profiles():
     table.add_column("Model", style="green")
 
     for name, config in profiles.items():
-        table.add_row(
-            name,
-            config.get('provider', 'N/A'),
-            config.get('model', 'N/A')
-        )
+        table.add_row(name, config.get("provider", "N/A"), config.get("model", "N/A"))
 
     console.print(table)
 
@@ -1278,8 +1309,16 @@ def config_list_profiles():
 # Helper Functions for New Commands
 # ============================================================================
 
-def _generate_main_file(name: str, description: str, provider: str, template: str,
-                        num_agents: int, use_memory: bool, use_tools: bool) -> str:
+
+def _generate_main_file(
+    name: str,
+    description: str,
+    provider: str,
+    template: str,
+    num_agents: int,
+    use_memory: bool,
+    use_tools: bool,
+) -> str:
     """Generate main.py content."""
     return f'''"""
 {name}
@@ -1325,7 +1364,7 @@ if __name__ == "__main__":
 
 def _generate_config(provider: str, template: str) -> str:
     """Generate config.yaml content."""
-    return f'''# AgentMind Configuration
+    return f"""# AgentMind Configuration
 
 llm:
   provider: {provider}
@@ -1343,10 +1382,12 @@ logging:
   file: logs/agentmind.log
 
 template: {template}
-'''
+"""
 
 
-def _generate_requirements(provider: str, use_memory: bool, use_tools: bool, use_plugins: bool) -> str:
+def _generate_requirements(
+    provider: str, use_memory: bool, use_tools: bool, use_plugins: bool
+) -> str:
     """Generate requirements.txt content."""
     reqs = ["agentmind>=0.3.0"]
 
@@ -1367,20 +1408,20 @@ def _generate_requirements(provider: str, use_memory: bool, use_tools: bool, use
 
 def _generate_env_file(provider: str) -> str:
     """Generate .env.example content."""
-    content = f'''# LLM Configuration
+    content = f"""# LLM Configuration
 {"OLLAMA_BASE_URL=http://localhost:11434" if provider == "ollama" else "OPENAI_API_KEY=your-key-here"}
 
 # AgentMind Settings
 AGENTMIND_LOG_LEVEL=INFO
 AGENTMIND_MAX_RETRIES=3
 AGENTMIND_TIMEOUT=30
-'''
+"""
     return content
 
 
 def _generate_readme(name: str, description: str, provider: str, template: str) -> str:
     """Generate README.md content."""
-    return f'''# {name}
+    return f"""# {name}
 
 {description}
 
@@ -1418,7 +1459,7 @@ pytest tests/
 # Run with verbose output
 python main.py --verbose
 ```
-'''
+"""
 
 
 def _generate_test_file(name: str) -> str:

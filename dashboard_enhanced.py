@@ -66,19 +66,22 @@ except:
 # WebSocket connections
 active_connections: List[WebSocket] = []
 
+
 # In-memory metrics storage
 class MetricsStore:
     def __init__(self, max_history=1000):
         self.max_history = max_history
         self.requests = deque(maxlen=max_history)
-        self.agent_metrics = defaultdict(lambda: {
-            "total_requests": 0,
-            "total_tokens": 0,
-            "total_cost": 0,
-            "avg_response_time": 0,
-            "error_count": 0,
-            "success_count": 0
-        })
+        self.agent_metrics = defaultdict(
+            lambda: {
+                "total_requests": 0,
+                "total_tokens": 0,
+                "total_cost": 0,
+                "avg_response_time": 0,
+                "error_count": 0,
+                "success_count": 0,
+            }
+        )
         self.system_metrics = deque(maxlen=max_history)
         self.alerts = []
         self.alert_config = {
@@ -86,7 +89,7 @@ class MetricsStore:
             "error_rate_threshold": 0.05,  # 5%
             "cost_threshold": 100,  # $100
             "memory_threshold": 80,  # 80%
-            "cpu_threshold": 80  # 80%
+            "cpu_threshold": 80,  # 80%
         }
 
     def add_request(self, request_data: Dict):
@@ -125,12 +128,14 @@ class MetricsStore:
             avg_time = sum(recent_times) / len(recent_times) if recent_times else 0
 
             if avg_time > self.alert_config["response_time_threshold"]:
-                new_alerts.append({
-                    "type": "response_time",
-                    "severity": "warning",
-                    "message": f"Average response time ({avg_time:.0f}ms) exceeds threshold",
-                    "timestamp": datetime.now().isoformat()
-                })
+                new_alerts.append(
+                    {
+                        "type": "response_time",
+                        "severity": "warning",
+                        "message": f"Average response time ({avg_time:.0f}ms) exceeds threshold",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
 
         # Check error rate
         total_requests = sum(m["total_requests"] for m in self.agent_metrics.values())
@@ -139,42 +144,50 @@ class MetricsStore:
         if total_requests > 0:
             error_rate = total_errors / total_requests
             if error_rate > self.alert_config["error_rate_threshold"]:
-                new_alerts.append({
-                    "type": "error_rate",
-                    "severity": "critical",
-                    "message": f"Error rate ({error_rate*100:.1f}%) exceeds threshold",
-                    "timestamp": datetime.now().isoformat()
-                })
+                new_alerts.append(
+                    {
+                        "type": "error_rate",
+                        "severity": "critical",
+                        "message": f"Error rate ({error_rate*100:.1f}%) exceeds threshold",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
 
         # Check total cost
         total_cost = sum(m["total_cost"] for m in self.agent_metrics.values())
         if total_cost > self.alert_config["cost_threshold"]:
-            new_alerts.append({
-                "type": "cost",
-                "severity": "warning",
-                "message": f"Total cost (${total_cost:.2f}) exceeds threshold",
-                "timestamp": datetime.now().isoformat()
-            })
+            new_alerts.append(
+                {
+                    "type": "cost",
+                    "severity": "warning",
+                    "message": f"Total cost (${total_cost:.2f}) exceeds threshold",
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
 
         # Check system resources
         if self.system_metrics:
             latest = self.system_metrics[-1]
 
             if latest.get("memory_percent", 0) > self.alert_config["memory_threshold"]:
-                new_alerts.append({
-                    "type": "memory",
-                    "severity": "warning",
-                    "message": f"Memory usage ({latest['memory_percent']:.1f}%) exceeds threshold",
-                    "timestamp": datetime.now().isoformat()
-                })
+                new_alerts.append(
+                    {
+                        "type": "memory",
+                        "severity": "warning",
+                        "message": f"Memory usage ({latest['memory_percent']:.1f}%) exceeds threshold",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
 
             if latest.get("cpu_percent", 0) > self.alert_config["cpu_threshold"]:
-                new_alerts.append({
-                    "type": "cpu",
-                    "severity": "warning",
-                    "message": f"CPU usage ({latest['cpu_percent']:.1f}%) exceeds threshold",
-                    "timestamp": datetime.now().isoformat()
-                })
+                new_alerts.append(
+                    {
+                        "type": "cpu",
+                        "severity": "warning",
+                        "message": f"CPU usage ({latest['cpu_percent']:.1f}%) exceeds threshold",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
 
         self.alerts.extend(new_alerts)
         return new_alerts
@@ -190,7 +203,9 @@ class MetricsStore:
 
         # Calculate average response time across all agents
         if self.agent_metrics:
-            avg_response_time = sum(m["avg_response_time"] for m in self.agent_metrics.values()) / len(self.agent_metrics)
+            avg_response_time = sum(
+                m["avg_response_time"] for m in self.agent_metrics.values()
+            ) / len(self.agent_metrics)
         else:
             avg_response_time = 0
 
@@ -201,7 +216,13 @@ class MetricsStore:
             "error_rate": error_rate,
             "avg_response_time": avg_response_time,
             "active_agents": len(self.agent_metrics),
-            "alert_count": len([a for a in self.alerts if (datetime.now() - datetime.fromisoformat(a["timestamp"])).seconds < 3600])
+            "alert_count": len(
+                [
+                    a
+                    for a in self.alerts
+                    if (datetime.now() - datetime.fromisoformat(a["timestamp"])).seconds < 3600
+                ]
+            ),
         }
 
 
@@ -209,13 +230,13 @@ metrics_store = MetricsStore()
 
 # LLM Pricing (per 1M tokens)
 LLM_PRICING = {
-    'llama3.2': {'input': 0, 'output': 0, 'provider': 'Ollama (Local)'},
-    'gpt-4': {'input': 30, 'output': 60, 'provider': 'OpenAI'},
-    'gpt-4-turbo': {'input': 10, 'output': 30, 'provider': 'OpenAI'},
-    'gpt-3.5-turbo': {'input': 0.5, 'output': 1.5, 'provider': 'OpenAI'},
-    'claude-3-opus': {'input': 15, 'output': 75, 'provider': 'Anthropic'},
-    'claude-3-sonnet': {'input': 3, 'output': 15, 'provider': 'Anthropic'},
-    'claude-3-haiku': {'input': 0.25, 'output': 1.25, 'provider': 'Anthropic'},
+    "llama3.2": {"input": 0, "output": 0, "provider": "Ollama (Local)"},
+    "gpt-4": {"input": 30, "output": 60, "provider": "OpenAI"},
+    "gpt-4-turbo": {"input": 10, "output": 30, "provider": "OpenAI"},
+    "gpt-3.5-turbo": {"input": 0.5, "output": 1.5, "provider": "OpenAI"},
+    "claude-3-opus": {"input": 15, "output": 75, "provider": "Anthropic"},
+    "claude-3-sonnet": {"input": 3, "output": 15, "provider": "Anthropic"},
+    "claude-3-haiku": {"input": 0.25, "output": 1.25, "provider": "Anthropic"},
 }
 
 
@@ -225,7 +246,8 @@ async def root(request: Request):
     if templates:
         return templates.TemplateResponse("dashboard_enhanced.html", {"request": request})
 
-    return HTMLResponse(content="""
+    return HTMLResponse(
+        content="""
     <!DOCTYPE html>
     <html>
     <head>
@@ -246,7 +268,8 @@ async def root(request: Request):
         </script>
     </body>
     </html>
-    """)
+    """
+    )
 
 
 @app.get("/health")
@@ -256,7 +279,12 @@ async def health():
         "status": "healthy",
         "version": "0.4.0",
         "redis_connected": redis_client is not None,
-        "features": ["real_time_metrics", "alerts", "performance_comparison", "historical_analysis"]
+        "features": [
+            "real_time_metrics",
+            "alerts",
+            "performance_comparison",
+            "historical_analysis",
+        ],
     }
 
 
@@ -270,7 +298,7 @@ async def get_metrics_summary():
         summary["system"] = {
             "cpu_percent": psutil.cpu_percent(interval=0.1),
             "memory_percent": psutil.virtual_memory().percent,
-            "disk_percent": psutil.disk_usage('/').percent
+            "disk_percent": psutil.disk_usage("/").percent,
         }
     except:
         summary["system"] = {}
@@ -281,9 +309,7 @@ async def get_metrics_summary():
 @app.get("/api/metrics/agents")
 async def get_agent_metrics():
     """Get per-agent metrics."""
-    return {
-        "agents": dict(metrics_store.agent_metrics)
-    }
+    return {"agents": dict(metrics_store.agent_metrics)}
 
 
 @app.get("/api/metrics/agents/{agent_name}")
@@ -300,7 +326,7 @@ async def get_agent_metrics_detail(agent_name: str):
     return {
         "agent": agent_name,
         "metrics": metrics,
-        "recent_requests": list(agent_requests)[-50:]  # Last 50 requests
+        "recent_requests": list(agent_requests)[-50:],  # Last 50 requests
     }
 
 
@@ -310,14 +336,24 @@ async def get_agent_comparison():
     comparison = []
 
     for agent_name, metrics in metrics_store.agent_metrics.items():
-        comparison.append({
-            "agent": agent_name,
-            "total_requests": metrics["total_requests"],
-            "avg_response_time": metrics["avg_response_time"],
-            "success_rate": metrics["success_count"] / metrics["total_requests"] if metrics["total_requests"] > 0 else 0,
-            "total_cost": metrics["total_cost"],
-            "tokens_per_request": metrics["total_tokens"] / metrics["total_requests"] if metrics["total_requests"] > 0 else 0
-        })
+        comparison.append(
+            {
+                "agent": agent_name,
+                "total_requests": metrics["total_requests"],
+                "avg_response_time": metrics["avg_response_time"],
+                "success_rate": (
+                    metrics["success_count"] / metrics["total_requests"]
+                    if metrics["total_requests"] > 0
+                    else 0
+                ),
+                "total_cost": metrics["total_cost"],
+                "tokens_per_request": (
+                    metrics["total_tokens"] / metrics["total_requests"]
+                    if metrics["total_requests"] > 0
+                    else 0
+                ),
+            }
+        )
 
     # Sort by total requests
     comparison.sort(key=lambda x: x["total_requests"], reverse=True)
@@ -332,18 +368,15 @@ async def get_historical_metrics(hours: int = 24):
 
     # Filter requests by time
     recent_requests = [
-        r for r in metrics_store.requests
+        r
+        for r in metrics_store.requests
         if datetime.fromisoformat(r.get("timestamp", datetime.now().isoformat())) > cutoff_time
     ]
 
     # Group by hour
-    hourly_data = defaultdict(lambda: {
-        "requests": 0,
-        "tokens": 0,
-        "cost": 0,
-        "avg_duration": 0,
-        "errors": 0
-    })
+    hourly_data = defaultdict(
+        lambda: {"requests": 0, "tokens": 0, "cost": 0, "avg_duration": 0, "errors": 0}
+    )
 
     for req in recent_requests:
         timestamp = datetime.fromisoformat(req.get("timestamp", datetime.now().isoformat()))
@@ -361,10 +394,7 @@ async def get_historical_metrics(hours: int = 24):
         if hourly_data[hour_key]["requests"] > 0:
             hourly_data[hour_key]["avg_duration"] /= hourly_data[hour_key]["requests"]
 
-    return {
-        "period": f"{hours} hours",
-        "data": dict(hourly_data)
-    }
+    return {"period": f"{hours} hours", "data": dict(hourly_data)}
 
 
 @app.get("/api/alerts")
@@ -373,14 +403,10 @@ async def get_alerts():
     # Filter alerts from last 24 hours
     cutoff = datetime.now() - timedelta(hours=24)
     recent_alerts = [
-        a for a in metrics_store.alerts
-        if datetime.fromisoformat(a["timestamp"]) > cutoff
+        a for a in metrics_store.alerts if datetime.fromisoformat(a["timestamp"]) > cutoff
     ]
 
-    return {
-        "alerts": recent_alerts,
-        "count": len(recent_alerts)
-    }
+    return {"alerts": recent_alerts, "count": len(recent_alerts)}
 
 
 @app.get("/api/alerts/config")
@@ -416,37 +442,43 @@ async def get_recommendations():
     # Check for expensive models
     for agent_name, metrics in metrics_store.agent_metrics.items():
         if metrics["total_cost"] > 10:
-            recommendations.append({
-                "type": "cost_optimization",
-                "severity": "medium",
-                "agent": agent_name,
-                "message": f"Agent '{agent_name}' has high costs (${metrics['total_cost']:.2f})",
-                "suggestion": "Consider using a cheaper model or local LLM for development"
-            })
+            recommendations.append(
+                {
+                    "type": "cost_optimization",
+                    "severity": "medium",
+                    "agent": agent_name,
+                    "message": f"Agent '{agent_name}' has high costs (${metrics['total_cost']:.2f})",
+                    "suggestion": "Consider using a cheaper model or local LLM for development",
+                }
+            )
 
     # Check for slow agents
     for agent_name, metrics in metrics_store.agent_metrics.items():
         if metrics["avg_response_time"] > 5000:
-            recommendations.append({
-                "type": "performance",
-                "severity": "high",
-                "agent": agent_name,
-                "message": f"Agent '{agent_name}' has slow response time ({metrics['avg_response_time']:.0f}ms)",
-                "suggestion": "Optimize prompts or use a faster model"
-            })
+            recommendations.append(
+                {
+                    "type": "performance",
+                    "severity": "high",
+                    "agent": agent_name,
+                    "message": f"Agent '{agent_name}' has slow response time ({metrics['avg_response_time']:.0f}ms)",
+                    "suggestion": "Optimize prompts or use a faster model",
+                }
+            )
 
     # Check for high error rates
     for agent_name, metrics in metrics_store.agent_metrics.items():
         if metrics["total_requests"] > 0:
             error_rate = metrics["error_count"] / metrics["total_requests"]
             if error_rate > 0.1:
-                recommendations.append({
-                    "type": "reliability",
-                    "severity": "critical",
-                    "agent": agent_name,
-                    "message": f"Agent '{agent_name}' has high error rate ({error_rate*100:.1f}%)",
-                    "suggestion": "Review error logs and fix underlying issues"
-                })
+                recommendations.append(
+                    {
+                        "type": "reliability",
+                        "severity": "critical",
+                        "agent": agent_name,
+                        "message": f"Agent '{agent_name}' has high error rate ({error_rate*100:.1f}%)",
+                        "suggestion": "Review error logs and fix underlying issues",
+                    }
+                )
 
     return {"recommendations": recommendations}
 
@@ -461,7 +493,7 @@ async def export_metrics(format: str = "json"):
         "exported_at": datetime.now().isoformat(),
         "summary": summary,
         "agents": agent_metrics,
-        "recent_requests": list(metrics_store.requests)[-100:]
+        "recent_requests": list(metrics_store.requests)[-100:],
     }
 
     if format == "json":
@@ -494,7 +526,7 @@ async def websocket_metrics(websocket: WebSocket):
                 summary["system"] = {
                     "cpu_percent": psutil.cpu_percent(interval=0.1),
                     "memory_percent": psutil.virtual_memory().percent,
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
                 }
             except:
                 pass
@@ -519,8 +551,8 @@ async def collect_system_metrics():
                 "timestamp": datetime.now().isoformat(),
                 "cpu_percent": psutil.cpu_percent(interval=1),
                 "memory_percent": psutil.virtual_memory().percent,
-                "disk_percent": psutil.disk_usage('/').percent,
-                "network": psutil.net_io_counters()._asdict()
+                "disk_percent": psutil.disk_usage("/").percent,
+                "network": psutil.net_io_counters()._asdict(),
             }
 
             metrics_store.add_system_metrics(metrics)
@@ -545,14 +577,16 @@ async def startup_event():
 
     # Simulate some initial data for demo
     for i in range(20):
-        metrics_store.add_request({
-            "agent": ["Alice", "Bob", "Charlie"][i % 3],
-            "duration": 1000 + (i * 100),
-            "tokens": 500 + (i * 50),
-            "cost": 0.01 + (i * 0.001),
-            "success": i % 10 != 0,
-            "timestamp": (datetime.now() - timedelta(minutes=i)).isoformat()
-        })
+        metrics_store.add_request(
+            {
+                "agent": ["Alice", "Bob", "Charlie"][i % 3],
+                "duration": 1000 + (i * 100),
+                "tokens": 500 + (i * 50),
+                "cost": 0.01 + (i * 0.001),
+                "success": i % 10 != 0,
+                "timestamp": (datetime.now() - timedelta(minutes=i)).isoformat(),
+            }
+        )
 
 
 if __name__ == "__main__":

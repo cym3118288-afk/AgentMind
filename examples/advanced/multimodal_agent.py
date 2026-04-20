@@ -22,6 +22,7 @@ from agentmind.llm import OllamaProvider
 
 class ModalityType(str, Enum):
     """Types of modalities"""
+
     TEXT = "text"
     IMAGE = "image"
     AUDIO = "audio"
@@ -33,10 +34,7 @@ class MultiModalContent:
     """Container for multi-modal content"""
 
     def __init__(
-        self,
-        modality: ModalityType,
-        content: Any,
-        metadata: Optional[Dict[str, Any]] = None
+        self, modality: ModalityType, content: Any, metadata: Optional[Dict[str, Any]] = None
     ):
         self.modality = modality
         self.content = content
@@ -60,7 +58,7 @@ class ImageProcessor:
             "objects_detected": ["person", "laptop", "desk"],
             "scene": "office workspace",
             "colors": ["blue", "white", "gray"],
-            "text_detected": "Welcome to AgentMind"
+            "text_detected": "Welcome to AgentMind",
         }
 
     async def generate_caption(self, image_path: str) -> str:
@@ -82,7 +80,7 @@ class AudioProcessor:
             "language": "en",
             "duration": 30.5,
             "speaker_count": 1,
-            "confidence": 0.95
+            "confidence": 0.95,
         }
 
     async def analyze_audio(self, audio_path: str) -> Dict[str, Any]:
@@ -91,7 +89,7 @@ class AudioProcessor:
             "sentiment": "neutral",
             "emotion": "calm",
             "speech_rate": "normal",
-            "background_noise": "low"
+            "background_noise": "low",
         }
 
 
@@ -110,10 +108,10 @@ class VideoProcessor:
             "scenes": [
                 {"timestamp": 0, "description": "Introduction scene"},
                 {"timestamp": 30, "description": "Main content"},
-                {"timestamp": 90, "description": "Conclusion"}
+                {"timestamp": 90, "description": "Conclusion"},
             ],
             "audio_track": True,
-            "subtitles": True
+            "subtitles": True,
         }
 
     async def extract_keyframes(self, video_path: str) -> List[str]:
@@ -121,7 +119,7 @@ class VideoProcessor:
         return [
             f"{video_path}_frame_001.jpg",
             f"{video_path}_frame_030.jpg",
-            f"{video_path}_frame_090.jpg"
+            f"{video_path}_frame_090.jpg",
         ]
 
 
@@ -140,10 +138,10 @@ class DocumentProcessor:
             "sections": [
                 {"title": "Introduction", "page": 1},
                 {"title": "Architecture", "page": 3},
-                {"title": "Examples", "page": 7}
+                {"title": "Examples", "page": 7},
             ],
             "images": 5,
-            "tables": 3
+            "tables": 3,
         }
 
     async def extract_text(self, doc_path: str) -> str:
@@ -168,17 +166,11 @@ class MultiModalAgent(Agent):
         caption = await self.image_processor.generate_caption(image_path)
 
         content = MultiModalContent(
-            modality=ModalityType.IMAGE,
-            content=analysis,
-            metadata={"caption": caption}
+            modality=ModalityType.IMAGE, content=analysis, metadata={"caption": caption}
         )
         self.processed_modalities.append(content)
 
-        return {
-            "modality": "image",
-            "analysis": analysis,
-            "caption": caption
-        }
+        return {"modality": "image", "analysis": analysis, "caption": caption}
 
     async def process_audio(self, audio_path: str) -> Dict[str, Any]:
         """Process audio input"""
@@ -186,17 +178,11 @@ class MultiModalAgent(Agent):
         analysis = await self.audio_processor.analyze_audio(audio_path)
 
         content = MultiModalContent(
-            modality=ModalityType.AUDIO,
-            content=transcription,
-            metadata={"analysis": analysis}
+            modality=ModalityType.AUDIO, content=transcription, metadata={"analysis": analysis}
         )
         self.processed_modalities.append(content)
 
-        return {
-            "modality": "audio",
-            "transcription": transcription,
-            "analysis": analysis
-        }
+        return {"modality": "audio", "transcription": transcription, "analysis": analysis}
 
     async def process_video(self, video_path: str) -> Dict[str, Any]:
         """Process video input"""
@@ -204,17 +190,11 @@ class MultiModalAgent(Agent):
         keyframes = await self.video_processor.extract_keyframes(video_path)
 
         content = MultiModalContent(
-            modality=ModalityType.VIDEO,
-            content=analysis,
-            metadata={"keyframes": keyframes}
+            modality=ModalityType.VIDEO, content=analysis, metadata={"keyframes": keyframes}
         )
         self.processed_modalities.append(content)
 
-        return {
-            "modality": "video",
-            "analysis": analysis,
-            "keyframes": keyframes
-        }
+        return {"modality": "video", "analysis": analysis, "keyframes": keyframes}
 
     async def process_document(self, doc_path: str) -> Dict[str, Any]:
         """Process document input"""
@@ -222,17 +202,11 @@ class MultiModalAgent(Agent):
         text = await self.document_processor.extract_text(doc_path)
 
         content = MultiModalContent(
-            modality=ModalityType.DOCUMENT,
-            content=structure,
-            metadata={"text": text}
+            modality=ModalityType.DOCUMENT, content=structure, metadata={"text": text}
         )
         self.processed_modalities.append(content)
 
-        return {
-            "modality": "document",
-            "structure": structure,
-            "text": text
-        }
+        return {"modality": "document", "structure": structure, "text": text}
 
     async def cross_modal_reasoning(self, query: str) -> str:
         """Perform reasoning across multiple modalities"""
@@ -263,16 +237,10 @@ class MultiModalAgent(Agent):
 
     def get_modality_summary(self) -> Dict[str, Any]:
         """Get summary of processed modalities"""
-        summary = {
-            "total_processed": len(self.processed_modalities),
-            "by_type": {}
-        }
+        summary = {"total_processed": len(self.processed_modalities), "by_type": {}}
 
         for modality_type in ModalityType:
-            count = sum(
-                1 for c in self.processed_modalities
-                if c.modality == modality_type
-            )
+            count = sum(1 for c in self.processed_modalities if c.modality == modality_type)
             if count > 0:
                 summary["by_type"][modality_type.value] = count
 
@@ -284,11 +252,7 @@ async def example_1_image_processing():
     print("\n=== Example 1: Image Processing ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = MultiModalAgent(
-        name="vision_agent",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = MultiModalAgent(name="vision_agent", role="analyst", llm_provider=llm)
 
     # Process image
     result = await agent.process_image("workspace.jpg")
@@ -303,11 +267,7 @@ async def example_2_audio_processing():
     print("\n=== Example 2: Audio Processing ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = MultiModalAgent(
-        name="audio_agent",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = MultiModalAgent(name="audio_agent", role="analyst", llm_provider=llm)
 
     # Process audio
     result = await agent.process_audio("meeting.mp3")
@@ -322,11 +282,7 @@ async def example_3_video_processing():
     print("\n=== Example 3: Video Processing ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = MultiModalAgent(
-        name="video_agent",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = MultiModalAgent(name="video_agent", role="analyst", llm_provider=llm)
 
     # Process video
     result = await agent.process_video("presentation.mp4")
@@ -341,11 +297,7 @@ async def example_4_document_processing():
     print("\n=== Example 4: Document Processing ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = MultiModalAgent(
-        name="doc_agent",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = MultiModalAgent(name="doc_agent", role="analyst", llm_provider=llm)
 
     # Process document
     result = await agent.process_document("report.pdf")
@@ -360,11 +312,7 @@ async def example_5_cross_modal_reasoning():
     print("\n=== Example 5: Cross-Modal Reasoning ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = MultiModalAgent(
-        name="multimodal_agent",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = MultiModalAgent(name="multimodal_agent", role="analyst", llm_provider=llm)
 
     # Process multiple modalities
     await agent.process_image("product.jpg")
@@ -390,11 +338,7 @@ async def example_6_multimodal_workflow():
     print("\n=== Example 6: Multi-Modal Workflow ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = MultiModalAgent(
-        name="workflow_agent",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = MultiModalAgent(name="workflow_agent", role="analyst", llm_provider=llm)
 
     print("Processing multi-modal content pipeline:\n")
 

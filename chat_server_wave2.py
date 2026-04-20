@@ -39,12 +39,28 @@ app.config["UPLOAD_FOLDER"] = Path("./uploads")
 app.config["UPLOAD_FOLDER"].mkdir(exist_ok=True)
 
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading", max_http_buffer_size=16 * 1024 * 1024)
+socketio = SocketIO(
+    app, cors_allowed_origins="*", async_mode="threading", max_http_buffer_size=16 * 1024 * 1024
+)
 
 # Allowed file extensions
 ALLOWED_EXTENSIONS = {
-    'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'doc', 'docx',
-    'py', 'js', 'html', 'css', 'json', 'xml', 'md', 'csv'
+    "txt",
+    "pdf",
+    "png",
+    "jpg",
+    "jpeg",
+    "gif",
+    "doc",
+    "docx",
+    "py",
+    "js",
+    "html",
+    "css",
+    "json",
+    "xml",
+    "md",
+    "csv",
 }
 
 # Redis for session storage
@@ -99,7 +115,7 @@ def initialize_agents():
 
 def allowed_file(filename):
     """Check if file extension is allowed."""
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 def get_session(session_id: str) -> Optional[Dict]:
@@ -176,12 +192,14 @@ def index():
 @app.route("/health")
 def health():
     """Health check endpoint."""
-    return jsonify({
-        "status": "healthy",
-        "agents": len(mind.agents),
-        "redis_connected": redis_client is not None,
-        "features": ["file_upload", "threading", "syntax_highlighting", "export"]
-    })
+    return jsonify(
+        {
+            "status": "healthy",
+            "agents": len(mind.agents),
+            "redis_connected": redis_client is not None,
+            "features": ["file_upload", "threading", "syntax_highlighting", "export"],
+        }
+    )
 
 
 @app.route("/api/sessions", methods=["GET"])
@@ -195,27 +213,33 @@ def list_sessions():
                 session_id = key.split(":")[-1]
                 data = get_session(session_id)
                 if data:
-                    session_list.append({
-                        "session_id": session_id,
-                        "created_at": data.get("created_at"),
-                        "message_count": len(data.get("messages", [])),
-                        "last_message": data.get("messages", [])[-1] if data.get("messages") else None
-                    })
+                    session_list.append(
+                        {
+                            "session_id": session_id,
+                            "created_at": data.get("created_at"),
+                            "message_count": len(data.get("messages", [])),
+                            "last_message": (
+                                data.get("messages", [])[-1] if data.get("messages") else None
+                            ),
+                        }
+                    )
             return jsonify({"sessions": session_list})
         except:
             pass
 
-    return jsonify({
-        "sessions": [
-            {
-                "session_id": sid,
-                "created_at": data.get("created_at"),
-                "message_count": len(data.get("messages", [])),
-                "last_message": data.get("messages", [])[-1] if data.get("messages") else None
-            }
-            for sid, data in sessions.items()
-        ]
-    })
+    return jsonify(
+        {
+            "sessions": [
+                {
+                    "session_id": sid,
+                    "created_at": data.get("created_at"),
+                    "message_count": len(data.get("messages", [])),
+                    "last_message": data.get("messages", [])[-1] if data.get("messages") else None,
+                }
+                for sid, data in sessions.items()
+            ]
+        }
+    )
 
 
 @app.route("/api/sessions/<session_id>", methods=["GET"])
@@ -240,7 +264,9 @@ def export_session(session_id: str):
         with open(temp_path, "w", encoding="utf-8") as f:
             f.write(md_content)
 
-        return send_file(temp_path, as_attachment=True, download_name=filename, mimetype="text/markdown")
+        return send_file(
+            temp_path, as_attachment=True, download_name=filename, mimetype="text/markdown"
+        )
 
     elif format_type == "json":
         session = get_session(session_id)
@@ -253,7 +279,9 @@ def export_session(session_id: str):
         with open(temp_path, "w", encoding="utf-8") as f:
             json.dump(session, f, indent=2)
 
-        return send_file(temp_path, as_attachment=True, download_name=filename, mimetype="application/json")
+        return send_file(
+            temp_path, as_attachment=True, download_name=filename, mimetype="application/json"
+        )
 
     return jsonify({"error": "Unsupported format"}), 400
 
@@ -261,29 +289,31 @@ def export_session(session_id: str):
 @app.route("/api/upload", methods=["POST"])
 def upload_file():
     """Handle file uploads."""
-    if 'file' not in request.files:
+    if "file" not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
-    file = request.files['file']
-    if file.filename == '':
+    file = request.files["file"]
+    if file.filename == "":
         return jsonify({"error": "No file selected"}), 400
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         file_id = str(uuid.uuid4())
-        file_ext = filename.rsplit('.', 1)[1].lower()
+        file_ext = filename.rsplit(".", 1)[1].lower()
         saved_filename = f"{file_id}.{file_ext}"
         file_path = app.config["UPLOAD_FOLDER"] / saved_filename
 
         file.save(file_path)
 
-        return jsonify({
-            "success": True,
-            "file_id": file_id,
-            "filename": filename,
-            "size": file_path.stat().st_size,
-            "path": str(file_path)
-        })
+        return jsonify(
+            {
+                "success": True,
+                "file_id": file_id,
+                "filename": filename,
+                "size": file_path.stat().st_size,
+                "path": str(file_path),
+            }
+        )
 
     return jsonify({"error": "File type not allowed"}), 400
 
@@ -316,7 +346,7 @@ def handle_connect():
         "session_id": session_id,
         "created_at": datetime.now().isoformat(),
         "messages": [],
-        "threads": {}
+        "threads": {},
     }
     save_session(session_id, session_data)
 
@@ -332,10 +362,13 @@ def handle_connect():
     ]
 
     emit("session_created", {"session_id": session_id, "agents": agent_list})
-    emit("system_message", {
-        "content": f"Welcome! {len(mind.agents)} agents are ready to collaborate.",
-        "timestamp": datetime.now().strftime("%H:%M:%S"),
-    })
+    emit(
+        "system_message",
+        {
+            "content": f"Welcome! {len(mind.agents)} agents are ready to collaborate.",
+            "timestamp": datetime.now().strftime("%H:%M:%S"),
+        },
+    )
 
 
 @socketio.on("disconnect")
@@ -376,7 +409,7 @@ def handle_user_message(data):
         "type": "user",
         "emoji": "👤",
         "thread_id": thread_id,
-        "attachments": attachments
+        "attachments": attachments,
     }
 
     session = get_session(session_id)
@@ -409,7 +442,7 @@ def handle_user_message(data):
                     "role": agent.role if agent else "assistant",
                     "emoji": getattr(agent, "emoji", "🤖") if agent else "🤖",
                     "thread_id": thread_id,
-                    "reply_to": message_id
+                    "reply_to": message_id,
                 }
 
                 session = get_session(session_id)
@@ -432,10 +465,13 @@ def handle_typing(data):
     username = data.get("username")
     is_typing = data.get("is_typing", True)
 
-    emit("user_typing", {
-        "username": username,
-        "is_typing": is_typing
-    }, room=session_id, broadcast=True, include_self=False)
+    emit(
+        "user_typing",
+        {"username": username, "is_typing": is_typing},
+        room=session_id,
+        broadcast=True,
+        include_self=False,
+    )
 
 
 @socketio.on("toggle_agent")
@@ -448,10 +484,12 @@ def handle_toggle_agent(data):
 
     if agent:
         agent.is_active = not agent.is_active
-        emit("agent_toggled", {
-            "agent_name": agent_name,
-            "is_active": agent.is_active
-        }, room=session_id, broadcast=True)
+        emit(
+            "agent_toggled",
+            {"agent_name": agent_name, "is_active": agent.is_active},
+            room=session_id,
+            broadcast=True,
+        )
 
 
 @socketio.on("clear_session")
@@ -475,11 +513,12 @@ def handle_message_reaction(data):
     reaction = data.get("reaction")
     username = data.get("username")
 
-    emit("message_reaction", {
-        "message_id": message_id,
-        "reaction": reaction,
-        "username": username
-    }, room=session_id, broadcast=True)
+    emit(
+        "message_reaction",
+        {"message_id": message_id, "reaction": reaction, "username": username},
+        room=session_id,
+        broadcast=True,
+    )
 
 
 @socketio.on("bookmark_message")
@@ -489,10 +528,12 @@ def handle_bookmark_message(data):
     message_id = data.get("message_id")
     bookmarked = data.get("bookmarked", True)
 
-    emit("message_bookmarked", {
-        "message_id": message_id,
-        "bookmarked": bookmarked
-    }, room=session_id, broadcast=True)
+    emit(
+        "message_bookmarked",
+        {"message_id": message_id, "bookmarked": bookmarked},
+        room=session_id,
+        broadcast=True,
+    )
 
 
 if __name__ == "__main__":

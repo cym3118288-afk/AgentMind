@@ -24,6 +24,7 @@ from agentmind.llm import OllamaProvider
 
 class AgentStatus(str, Enum):
     """Agent status in distributed system"""
+
     IDLE = "idle"
     BUSY = "busy"
     OFFLINE = "offline"
@@ -32,6 +33,7 @@ class AgentStatus(str, Enum):
 
 class TaskPriority(str, Enum):
     """Task priority levels"""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -46,7 +48,7 @@ class DistributedTask:
         task_id: str,
         content: str,
         priority: TaskPriority = TaskPriority.MEDIUM,
-        required_capability: Optional[str] = None
+        required_capability: Optional[str] = None,
     ):
         self.task_id = task_id
         self.content = content
@@ -72,16 +74,13 @@ class LoadBalancer:
         self.agent_loads[agent_id] = 0
         self.agent_capabilities[agent_id] = capabilities
 
-    def get_best_agent(
-        self,
-        task: DistributedTask,
-        available_agents: List[str]
-    ) -> Optional[str]:
+    def get_best_agent(self, task: DistributedTask, available_agents: List[str]) -> Optional[str]:
         """Select best agent for task using load balancing"""
         # Filter by capability if required
         if task.required_capability:
             capable_agents = [
-                agent_id for agent_id in available_agents
+                agent_id
+                for agent_id in available_agents
                 if task.required_capability in self.agent_capabilities.get(agent_id, [])
             ]
             if not capable_agents:
@@ -113,7 +112,7 @@ class TaskQueue:
             TaskPriority.CRITICAL: 0,
             TaskPriority.HIGH: 1,
             TaskPriority.MEDIUM: 2,
-            TaskPriority.LOW: 3
+            TaskPriority.LOW: 3,
         }
 
     def add_task(self, task: DistributedTask):
@@ -144,7 +143,7 @@ class TaskQueue:
             "pending": sum(1 for t in self.tasks if t.status == "pending"),
             "in_progress": sum(1 for t in self.tasks if t.status == "in_progress"),
             "completed": sum(1 for t in self.tasks if t.status == "completed"),
-            "failed": sum(1 for t in self.tasks if t.status == "failed")
+            "failed": sum(1 for t in self.tasks if t.status == "failed"),
         }
 
 
@@ -178,11 +177,7 @@ class DistributedAgent(Agent):
             task.result = response.content
             self.completed_tasks += 1
 
-            return {
-                "success": True,
-                "result": response.content,
-                "agent": self.name
-            }
+            return {"success": True, "result": response.content, "agent": self.name}
 
         except Exception as e:
             # Handle failure
@@ -191,11 +186,7 @@ class DistributedAgent(Agent):
             self.failed_tasks += 1
             self.status = AgentStatus.ERROR
 
-            return {
-                "success": False,
-                "error": str(e),
-                "agent": self.name
-            }
+            return {"success": False, "error": str(e), "agent": self.name}
 
         finally:
             self.current_task = None
@@ -214,7 +205,7 @@ class DistributedAgent(Agent):
                 self.completed_tasks / (self.completed_tasks + self.failed_tasks)
                 if (self.completed_tasks + self.failed_tasks) > 0
                 else 0
-            )
+            ),
         }
 
 
@@ -249,7 +240,8 @@ class DistributedSystem:
 
             # Find available agent
             available_agents = [
-                agent_id for agent_id, agent in self.agents.items()
+                agent_id
+                for agent_id, agent in self.agents.items()
                 if agent.status == AgentStatus.IDLE
             ]
 
@@ -286,7 +278,7 @@ class DistributedSystem:
             "agents": len(self.agents),
             "queue": self.task_queue.get_queue_stats(),
             "load_distribution": self.load_balancer.get_load_distribution(),
-            "agent_stats": [agent.get_stats() for agent in self.agents.values()]
+            "agent_stats": [agent.get_stats() for agent in self.agents.values()],
         }
 
 
@@ -302,19 +294,14 @@ async def example_1_basic_distribution():
     # Add agents
     for i in range(3):
         agent = DistributedAgent(
-            name=f"agent_{i}",
-            role="worker",
-            llm_provider=llm,
-            capabilities=["general"]
+            name=f"agent_{i}", role="worker", llm_provider=llm, capabilities=["general"]
         )
         system.add_agent(agent)
 
     # Submit tasks
     for i in range(5):
         task = DistributedTask(
-            task_id=f"task_{i}",
-            content=f"Process item {i}",
-            priority=TaskPriority.MEDIUM
+            task_id=f"task_{i}", content=f"Process item {i}", priority=TaskPriority.MEDIUM
         )
         system.submit_task(task)
 
@@ -335,16 +322,11 @@ async def example_2_load_balancing():
     agents_config = [
         ("analyst", ["analysis", "general"]),
         ("writer", ["writing", "general"]),
-        ("coder", ["coding", "general"])
+        ("coder", ["coding", "general"]),
     ]
 
     for name, capabilities in agents_config:
-        agent = DistributedAgent(
-            name=name,
-            role=name,
-            llm_provider=llm,
-            capabilities=capabilities
-        )
+        agent = DistributedAgent(name=name, role=name, llm_provider=llm, capabilities=capabilities)
         system.add_agent(agent)
 
     # Submit tasks with different requirements
@@ -352,15 +334,11 @@ async def example_2_load_balancing():
         ("task_1", "Analyze data", "analysis"),
         ("task_2", "Write report", "writing"),
         ("task_3", "Write code", "coding"),
-        ("task_4", "General task", None)
+        ("task_4", "General task", None),
     ]
 
     for task_id, content, capability in tasks:
-        task = DistributedTask(
-            task_id=task_id,
-            content=content,
-            required_capability=capability
-        )
+        task = DistributedTask(task_id=task_id, content=content, required_capability=capability)
         system.submit_task(task)
 
     print("Load balancer distributes tasks based on:")
@@ -381,7 +359,7 @@ async def example_3_priority_queue():
         ("task_1", "Low priority task", TaskPriority.LOW),
         ("task_2", "Critical task", TaskPriority.CRITICAL),
         ("task_3", "Medium task", TaskPriority.MEDIUM),
-        ("task_4", "High priority task", TaskPriority.HIGH)
+        ("task_4", "High priority task", TaskPriority.HIGH),
     ]
 
     for task_id, content, priority in tasks:
@@ -401,11 +379,7 @@ async def example_4_fault_tolerance():
     llm = OllamaProvider(model="llama3.2:3b")
 
     # Create agent
-    agent = DistributedAgent(
-        name="resilient_agent",
-        role="worker",
-        llm_provider=llm
-    )
+    agent = DistributedAgent(name="resilient_agent", role="worker", llm_provider=llm)
 
     # Simulate task execution
     task = DistributedTask("task_1", "Test task")
@@ -429,10 +403,7 @@ async def example_5_scalability():
     # Add many agents
     for i in range(10):
         agent = DistributedAgent(
-            name=f"agent_{i}",
-            role="worker",
-            llm_provider=llm,
-            capabilities=["general"]
+            name=f"agent_{i}", role="worker", llm_provider=llm, capabilities=["general"]
         )
         system.add_agent(agent)
 
@@ -456,23 +427,18 @@ async def example_6_complete_workflow():
     agents = [
         ("data_processor", ["data", "general"]),
         ("analyzer", ["analysis", "general"]),
-        ("reporter", ["reporting", "general"])
+        ("reporter", ["reporting", "general"]),
     ]
 
     for name, capabilities in agents:
-        agent = DistributedAgent(
-            name=name,
-            role=name,
-            llm_provider=llm,
-            capabilities=capabilities
-        )
+        agent = DistributedAgent(name=name, role=name, llm_provider=llm, capabilities=capabilities)
         system.add_agent(agent)
 
     # Submit workflow tasks
     workflow_tasks = [
         ("step_1", "Process raw data", TaskPriority.HIGH, "data"),
         ("step_2", "Analyze processed data", TaskPriority.MEDIUM, "analysis"),
-        ("step_3", "Generate report", TaskPriority.LOW, "reporting")
+        ("step_3", "Generate report", TaskPriority.LOW, "reporting"),
     ]
 
     for task_id, content, priority, capability in workflow_tasks:

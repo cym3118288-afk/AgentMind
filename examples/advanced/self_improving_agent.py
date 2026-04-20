@@ -29,22 +29,19 @@ class PerformanceTracker:
         self.avg_quality_score = 0.0
 
     def record_task(
-        self,
-        task: str,
-        result: str,
-        success: bool,
-        quality_score: float,
-        duration: float
+        self, task: str, result: str, success: bool, quality_score: float, duration: float
     ):
         """Record a completed task"""
-        self.tasks.append({
-            "timestamp": datetime.now().isoformat(),
-            "task": task,
-            "result": result,
-            "success": success,
-            "quality_score": quality_score,
-            "duration": duration
-        })
+        self.tasks.append(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "task": task,
+                "result": result,
+                "success": success,
+                "quality_score": quality_score,
+                "duration": duration,
+            }
+        )
 
         # Update metrics
         successful_tasks = sum(1 for t in self.tasks if t["success"])
@@ -64,7 +61,7 @@ class PerformanceTracker:
             "success_rate": self.success_rate,
             "recent_success_rate": recent_success,
             "avg_quality": self.avg_quality_score,
-            "trend": "improving" if recent_success > self.success_rate else "declining"
+            "trend": "improving" if recent_success > self.success_rate else "declining",
         }
 
 
@@ -84,11 +81,7 @@ class KnowledgeBase:
 
     def add_pattern(self, pattern: Dict[str, Any]):
         """Record a successful pattern"""
-        self.patterns.append({
-            **pattern,
-            "timestamp": datetime.now().isoformat(),
-            "usage_count": 1
-        })
+        self.patterns.append({**pattern, "timestamp": datetime.now().isoformat(), "usage_count": 1})
 
     def get_relevant_knowledge(self, query: str) -> List[str]:
         """Retrieve relevant knowledge"""
@@ -103,11 +96,7 @@ class KnowledgeBase:
 
     def get_best_patterns(self, limit: int = 5) -> List[Dict[str, Any]]:
         """Get most successful patterns"""
-        sorted_patterns = sorted(
-            self.patterns,
-            key=lambda p: p.get("usage_count", 0),
-            reverse=True
-        )
+        sorted_patterns = sorted(self.patterns, key=lambda p: p.get("usage_count", 0), reverse=True)
         return sorted_patterns[:limit]
 
 
@@ -119,17 +108,13 @@ class SelfImprovingAgent(Agent):
         self.performance_tracker = PerformanceTracker()
         self.knowledge_base = KnowledgeBase()
         self.improvement_cycles = 0
-        self.strategies: List[str] = [
-            "analytical",
-            "creative",
-            "systematic",
-            "intuitive"
-        ]
+        self.strategies: List[str] = ["analytical", "creative", "systematic", "intuitive"]
         self.current_strategy = "analytical"
 
     async def process_with_learning(self, task: str) -> Dict[str, Any]:
         """Process task and learn from the experience"""
         import time
+
         start_time = time.time()
 
         # Retrieve relevant knowledge
@@ -156,7 +141,7 @@ class SelfImprovingAgent(Agent):
             result=response.content,
             success=success,
             quality_score=quality_score,
-            duration=duration
+            duration=duration,
         )
 
         # Extract and store new knowledge
@@ -167,7 +152,7 @@ class SelfImprovingAgent(Agent):
             "quality_score": quality_score,
             "success": success,
             "duration": duration,
-            "strategy_used": self.current_strategy
+            "strategy_used": self.current_strategy,
         }
 
     def _evaluate_quality(self, result: str) -> float:
@@ -211,11 +196,7 @@ class SelfImprovingAgent(Agent):
         """Reflect on performance and identify improvements"""
         insights = self.performance_tracker.get_insights()
 
-        reflection = {
-            "insights": insights,
-            "improvements_identified": [],
-            "action_plan": []
-        }
+        reflection = {"insights": insights, "improvements_identified": [], "action_plan": []}
 
         # Identify areas for improvement
         if insights.get("success_rate", 0) < 0.7:
@@ -255,7 +236,7 @@ class SelfImprovingAgent(Agent):
             ),
             "patterns_learned": len(self.knowledge_base.patterns),
             "current_strategy": self.current_strategy,
-            "performance": self.performance_tracker.get_insights()
+            "performance": self.performance_tracker.get_insights(),
         }
 
 
@@ -264,17 +245,13 @@ async def example_1_basic_learning():
     print("\n=== Example 1: Basic Learning ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = SelfImprovingAgent(
-        name="learner",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = SelfImprovingAgent(name="learner", role="analyst", llm_provider=llm)
 
     # Process several tasks
     tasks = [
         "Analyze the benefits of renewable energy",
         "Analyze the impact of AI on healthcare",
-        "Analyze market trends in e-commerce"
+        "Analyze market trends in e-commerce",
     ]
 
     for task in tasks:
@@ -295,11 +272,7 @@ async def example_2_self_reflection():
     print("\n=== Example 2: Self-Reflection ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = SelfImprovingAgent(
-        name="reflective",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = SelfImprovingAgent(name="reflective", role="analyst", llm_provider=llm)
 
     # Process tasks
     for i in range(5):
@@ -319,11 +292,7 @@ async def example_3_strategy_adaptation():
     print("\n=== Example 3: Strategy Adaptation ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = SelfImprovingAgent(
-        name="adaptive",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = SelfImprovingAgent(name="adaptive", role="analyst", llm_provider=llm)
 
     print(f"Initial strategy: {agent.current_strategy}\n")
 
@@ -342,18 +311,14 @@ async def example_4_knowledge_accumulation():
     print("\n=== Example 4: Knowledge Accumulation ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = SelfImprovingAgent(
-        name="knowledge_seeker",
-        role="researcher",
-        llm_provider=llm
-    )
+    agent = SelfImprovingAgent(name="knowledge_seeker", role="researcher", llm_provider=llm)
 
     # Process diverse tasks
     tasks = [
         "Analyze data patterns",
         "Create a design proposal",
         "Solve optimization problem",
-        "Analyze user behavior"
+        "Analyze user behavior",
     ]
 
     for task in tasks:
@@ -372,11 +337,7 @@ async def example_5_continuous_improvement():
     print("\n=== Example 5: Continuous Improvement ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = SelfImprovingAgent(
-        name="improver",
-        role="analyst",
-        llm_provider=llm
-    )
+    agent = SelfImprovingAgent(name="improver", role="analyst", llm_provider=llm)
 
     print("Running improvement cycles...\n")
 

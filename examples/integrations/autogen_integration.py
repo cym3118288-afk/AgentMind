@@ -26,9 +26,7 @@ class AutoGenCompatAgent(Agent):
         self.conversation_history = []
 
     async def generate_reply(
-        self,
-        messages: List[Dict[str, str]],
-        sender: Optional[str] = None
+        self, messages: List[Dict[str, str]], sender: Optional[str] = None
     ) -> str:
         """AutoGen-style reply generation"""
         # Convert AutoGen message format to AgentMind format
@@ -36,11 +34,7 @@ class AutoGenCompatAgent(Agent):
             last_message = messages[-1]
             content = last_message.get("content", "")
 
-            message = Message(
-                content=content,
-                sender=sender or "user",
-                role="user"
-            )
+            message = Message(content=content, sender=sender or "user", role="user")
 
             response = await self.process_message(message)
             return response.content
@@ -51,11 +45,7 @@ class AutoGenCompatAgent(Agent):
         """Get conversation in AutoGen format"""
         history = []
         for msg in self.memory:
-            history.append({
-                "role": msg.role,
-                "content": msg.content,
-                "name": msg.sender
-            })
+            history.append({"role": msg.role, "content": msg.content, "name": msg.sender})
         return history
 
 
@@ -79,11 +69,7 @@ class GroupChatManager:
             reply = await speaker.generate_reply(self.messages, sender="system")
 
             # Add to messages
-            self.messages.append({
-                "role": "assistant",
-                "content": reply,
-                "name": speaker.name
-            })
+            self.messages.append({"role": "assistant", "content": reply, "name": speaker.name})
 
             # Check for termination
             if self._should_terminate(reply):
@@ -111,7 +97,7 @@ class CodeExecutor:
             "success": True,
             "output": f"[Simulated execution of {language} code]\n{code[:100]}...",
             "language": language,
-            "code": code
+            "code": code,
         }
 
         self.execution_history.append(result)
@@ -133,7 +119,7 @@ async def example_1_basic_autogen_compat():
         name="assistant",
         role="assistant",
         llm_provider=llm,
-        system_message="You are a helpful AI assistant."
+        system_message="You are a helpful AI assistant.",
     )
 
     # Use AutoGen-style interface
@@ -156,29 +142,27 @@ async def example_2_group_chat():
             name="planner",
             role="planner",
             llm_provider=llm,
-            system_message="You are a strategic planner."
+            system_message="You are a strategic planner.",
         ),
         AutoGenCompatAgent(
             name="engineer",
             role="engineer",
             llm_provider=llm,
-            system_message="You are a software engineer."
+            system_message="You are a software engineer.",
         ),
         AutoGenCompatAgent(
             name="critic",
             role="critic",
             llm_provider=llm,
-            system_message="You are a critical reviewer."
-        )
+            system_message="You are a critical reviewer.",
+        ),
     ]
 
     # Create group chat manager
     manager = GroupChatManager(agents, max_rounds=3)
 
     # Run group chat
-    messages = await manager.run_chat(
-        "Let's design a new mobile app for task management."
-    )
+    messages = await manager.run_chat("Let's design a new mobile app for task management.")
 
     print("Group Chat Conversation:")
     for msg in messages:
@@ -196,7 +180,7 @@ async def example_3_code_execution():
         name="coder",
         role="developer",
         llm_provider=llm,
-        system_message="You are a Python programmer."
+        system_message="You are a Python programmer.",
     )
 
     executor = CodeExecutor()
@@ -230,7 +214,7 @@ async def example_4_autogen_to_agentmind():
     # AutoGen-style agents
     autogen_agents = [
         AutoGenCompatAgent(name="agent1", role="analyst", llm_provider=llm),
-        AutoGenCompatAgent(name="agent2", role="writer", llm_provider=llm)
+        AutoGenCompatAgent(name="agent2", role="writer", llm_provider=llm),
     ]
 
     # Convert to AgentMind orchestration
@@ -240,8 +224,7 @@ async def example_4_autogen_to_agentmind():
 
     # Use AgentMind orchestration
     result = await mind.start_collaboration(
-        "Analyze market trends and write a summary",
-        max_rounds=2
+        "Analyze market trends and write a summary", max_rounds=2
     )
 
     print("Using AgentMind orchestration with AutoGen-compatible agents:")

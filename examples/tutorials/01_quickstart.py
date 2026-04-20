@@ -23,18 +23,10 @@ async def example_1_single_agent():
     llm = OllamaProvider(model="llama3.2:3b")
 
     # Create a simple agent
-    agent = Agent(
-        name="assistant",
-        role="assistant",
-        llm_provider=llm
-    )
+    agent = Agent(name="assistant", role="assistant", llm_provider=llm)
 
     # Create a message
-    message = Message(
-        content="Hello! Please introduce yourself.",
-        sender="user",
-        role="user"
-    )
+    message = Message(content="Hello! Please introduce yourself.", sender="user", role="user")
 
     # Process the message
     response = await agent.process_message(message)
@@ -48,23 +40,13 @@ async def example_2_two_agents():
     llm = OllamaProvider(model="llama3.2:3b")
 
     # Create two agents with different roles
-    analyst = Agent(
-        name="analyst",
-        role="analyst",
-        llm_provider=llm
-    )
+    analyst = Agent(name="analyst", role="analyst", llm_provider=llm)
 
-    creative = Agent(
-        name="creative",
-        role="creative",
-        llm_provider=llm
-    )
+    creative = Agent(name="creative", role="creative", llm_provider=llm)
 
     # Analyst analyzes a problem
     problem = Message(
-        content="We need to increase user engagement on our platform.",
-        sender="user",
-        role="user"
+        content="We need to increase user engagement on our platform.", sender="user", role="user"
     )
 
     analysis = await analyst.process_message(problem)
@@ -74,7 +56,7 @@ async def example_2_two_agents():
     creative_prompt = Message(
         content=f"Based on this analysis: {analysis.content}\n\nProvide creative solutions.",
         sender="analyst",
-        role="user"
+        role="user",
     )
 
     solution = await creative.process_message(creative_prompt)
@@ -100,8 +82,7 @@ async def example_3_agentmind_orchestration():
 
     # Start collaboration
     result = await mind.start_collaboration(
-        "How can we improve our mobile app's user experience?",
-        max_rounds=3
+        "How can we improve our mobile app's user experience?", max_rounds=3
     )
 
     print(f"Final Result:\n{result.final_output}\n")

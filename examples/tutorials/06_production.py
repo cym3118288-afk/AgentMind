@@ -24,8 +24,7 @@ from agentmind.llm import OllamaProvider
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -49,7 +48,7 @@ class ResilientAgent(Agent):
                 logger.error(f"Attempt {attempt + 1} failed: {str(e)}")
 
                 if attempt < self.max_retries - 1:
-                    wait_time = 2 ** attempt  # Exponential backoff
+                    wait_time = 2**attempt  # Exponential backoff
                     logger.info(f"Retrying in {wait_time} seconds...")
                     await asyncio.sleep(wait_time)
                 else:
@@ -67,7 +66,7 @@ class MonitoredAgent(Agent):
             "total_messages": 0,
             "total_time": 0.0,
             "avg_response_time": 0.0,
-            "errors": 0
+            "errors": 0,
         }
 
     async def process_message(self, message):
@@ -110,6 +109,7 @@ class CircuitBreaker:
 
     def call(self, func):
         """Decorator for circuit breaker"""
+
         async def wrapper(*args, **kwargs):
             if self.state == "open":
                 if time.time() - self.last_failure_time > self.timeout:
@@ -183,7 +183,7 @@ class HealthChecker:
             "status": "healthy",
             "timestamp": self.last_check.isoformat(),
             "agents": {},
-            "issues": []
+            "issues": [],
         }
 
         # Check each agent
@@ -191,7 +191,7 @@ class HealthChecker:
             agent_health = {
                 "name": agent.name,
                 "active": agent.is_active,
-                "memory_size": len(agent.memory)
+                "memory_size": len(agent.memory),
             }
 
             # Check for issues
@@ -213,12 +213,7 @@ async def example_1_error_handling():
     print("\n=== Example 1: Error Handling ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = ResilientAgent(
-        name="resilient",
-        role="assistant",
-        llm_provider=llm,
-        max_retries=3
-    )
+    agent = ResilientAgent(name="resilient", role="assistant", llm_provider=llm, max_retries=3)
 
     print(f"Agent configured with {agent.max_retries} max retries")
     print("Implements exponential backoff for failures\n")
@@ -229,14 +224,11 @@ async def example_2_performance_monitoring():
     print("\n=== Example 2: Performance Monitoring ===\n")
 
     llm = OllamaProvider(model="llama3.2:3b")
-    agent = MonitoredAgent(
-        name="monitored",
-        role="assistant",
-        llm_provider=llm
-    )
+    agent = MonitoredAgent(name="monitored", role="assistant", llm_provider=llm)
 
     # Simulate some work
     from agentmind import Message
+
     for i in range(3):
         msg = Message(content=f"Test message {i+1}", sender="user", role="user")
         await agent.process_message(msg)
@@ -311,9 +303,9 @@ async def example_6_logging_best_practices():
 
     # Configure structured logging
     logger.info("System starting up")
-    logger.info("Configuration loaded", extra={
-        "config": {"model": "llama3.2:3b", "max_tokens": 1000}
-    })
+    logger.info(
+        "Configuration loaded", extra={"config": {"model": "llama3.2:3b", "max_tokens": 1000}}
+    )
 
     # Log different levels
     logger.debug("Debug information")
@@ -340,7 +332,7 @@ async def example_7_security_considerations():
         "Secure communication (HTTPS/TLS)",
         "Access control and authentication",
         "Data encryption at rest and in transit",
-        "Regular security updates"
+        "Regular security updates",
     ]
 
     print("Security Best Practices:")
@@ -357,23 +349,19 @@ async def example_8_scaling_strategies():
         "Horizontal Scaling": [
             "Multiple agent instances",
             "Load balancing",
-            "Distributed task queue"
+            "Distributed task queue",
         ],
         "Vertical Scaling": [
             "Increase resources per agent",
             "Optimize memory usage",
-            "Use faster models"
+            "Use faster models",
         ],
-        "Caching": [
-            "Cache LLM responses",
-            "Cache tool results",
-            "Memory optimization"
-        ],
+        "Caching": ["Cache LLM responses", "Cache tool results", "Memory optimization"],
         "Async Processing": [
             "Non-blocking operations",
             "Parallel agent execution",
-            "Background tasks"
-        ]
+            "Background tasks",
+        ],
     }
 
     print("Scaling Strategies:\n")

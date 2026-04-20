@@ -23,6 +23,7 @@ from agentmind.llm import OllamaProvider
 
 class DebatePosition(str, Enum):
     """Debate positions"""
+
     FOR = "for"
     AGAINST = "against"
     NEUTRAL = "neutral"
@@ -30,6 +31,7 @@ class DebatePosition(str, Enum):
 
 class ArgumentType(str, Enum):
     """Types of arguments"""
+
     OPENING = "opening"
     REBUTTAL = "rebuttal"
     EVIDENCE = "evidence"
@@ -45,7 +47,7 @@ class Argument:
         position: DebatePosition,
         argument_type: ArgumentType,
         content: str,
-        evidence: Optional[List[str]] = None
+        evidence: Optional[List[str]] = None,
     ):
         self.speaker = speaker
         self.position = position
@@ -53,9 +55,9 @@ class Argument:
         self.content = content
         self.evidence = evidence or []
         self.timestamp = datetime.now()
-        self.rebuttals: List['Argument'] = []
+        self.rebuttals: List["Argument"] = []
 
-    def add_rebuttal(self, rebuttal: 'Argument'):
+    def add_rebuttal(self, rebuttal: "Argument"):
         """Add a rebuttal to this argument"""
         self.rebuttals.append(rebuttal)
 
@@ -81,20 +83,16 @@ class DebateRound:
             "topic": self.topic,
             "arguments": len(self.arguments),
             "for_position": sum(1 for a in self.arguments if a.position == DebatePosition.FOR),
-            "against_position": sum(1 for a in self.arguments if a.position == DebatePosition.AGAINST)
+            "against_position": sum(
+                1 for a in self.arguments if a.position == DebatePosition.AGAINST
+            ),
         }
 
 
 class DebateAgent(Agent):
     """Agent specialized for debate participation"""
 
-    def __init__(
-        self,
-        *args,
-        position: DebatePosition,
-        expertise: List[str] = None,
-        **kwargs
-    ):
+    def __init__(self, *args, position: DebatePosition, expertise: List[str] = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.position = position
         self.expertise = expertise or []
@@ -102,10 +100,7 @@ class DebateAgent(Agent):
         self.rebuttals_made = 0
 
     async def make_argument(
-        self,
-        topic: str,
-        argument_type: ArgumentType,
-        context: Optional[str] = None
+        self, topic: str, argument_type: ArgumentType, context: Optional[str] = None
     ) -> Argument:
         """Make an argument on the topic"""
 
@@ -122,17 +117,14 @@ class DebateAgent(Agent):
             position=self.position,
             argument_type=argument_type,
             content=response.content,
-            evidence=self._extract_evidence(response.content)
+            evidence=self._extract_evidence(response.content),
         )
 
         self.arguments_made.append(argument)
         return argument
 
     def _construct_prompt(
-        self,
-        topic: str,
-        argument_type: ArgumentType,
-        context: Optional[str]
+        self, topic: str, argument_type: ArgumentType, context: Optional[str]
     ) -> str:
         """Construct debate prompt"""
         position_text = "in favor of" if self.position == DebatePosition.FOR else "against"
@@ -165,7 +157,7 @@ class DebateAgent(Agent):
             "position": self.position.value,
             "arguments_made": len(self.arguments_made),
             "rebuttals_made": self.rebuttals_made,
-            "expertise": self.expertise
+            "expertise": self.expertise,
         }
 
 
@@ -192,9 +184,7 @@ class Moderator(Agent):
         return response.content
 
     async def declare_winner(
-        self,
-        arguments_for: List[Argument],
-        arguments_against: List[Argument]
+        self, arguments_for: List[Argument], arguments_against: List[Argument]
     ) -> Dict[str, Any]:
         """Analyze arguments and provide assessment"""
         prompt = f"""Analyze these debate arguments and provide an assessment:
@@ -214,7 +204,7 @@ Evaluate based on:
         return {
             "assessment": response.content,
             "arguments_for": len(arguments_for),
-            "arguments_against": len(arguments_against)
+            "arguments_against": len(arguments_against),
         }
 
 
@@ -269,11 +259,7 @@ class DebateSystem:
         # Each participant makes an argument
         context = None
         for participant in self.participants:
-            argument = await participant.make_argument(
-                self.topic,
-                arg_type,
-                context
-            )
+            argument = await participant.make_argument(self.topic, arg_type, context)
             debate_round.add_argument(argument)
 
             print(f"{participant.name} ({participant.position.value}):")
@@ -308,10 +294,7 @@ class DebateSystem:
                     arguments_against.append(argument)
 
         # Get moderator assessment
-        assessment = await self.moderator.declare_winner(
-            arguments_for,
-            arguments_against
-        )
+        assessment = await self.moderator.declare_winner(arguments_for, arguments_against)
 
         print(f"Assessment: {assessment['assessment'][:300]}...\n")
         print(f"Total Arguments FOR: {assessment['arguments_for']}")
@@ -324,7 +307,7 @@ class DebateSystem:
             "rounds": len(self.rounds),
             "participants": len(self.participants),
             "total_arguments": sum(len(r.arguments) for r in self.rounds),
-            "participant_stats": [p.get_stats() for p in self.participants]
+            "participant_stats": [p.get_stats() for p in self.participants],
         }
 
 
@@ -335,17 +318,10 @@ async def example_1_simple_debate():
     llm = OllamaProvider(model="llama3.2:3b")
 
     # Create moderator
-    moderator = Moderator(
-        name="moderator",
-        role="moderator",
-        llm_provider=llm
-    )
+    moderator = Moderator(name="moderator", role="moderator", llm_provider=llm)
 
     # Create debate system
-    debate = DebateSystem(
-        topic="Should AI development be regulated?",
-        moderator=moderator
-    )
+    debate = DebateSystem(topic="Should AI development be regulated?", moderator=moderator)
 
     # Add participants
     proponent = DebateAgent(
@@ -353,7 +329,7 @@ async def example_1_simple_debate():
         role="debater",
         llm_provider=llm,
         position=DebatePosition.FOR,
-        expertise=["AI ethics", "policy"]
+        expertise=["AI ethics", "policy"],
     )
 
     opponent = DebateAgent(
@@ -361,7 +337,7 @@ async def example_1_simple_debate():
         role="debater",
         llm_provider=llm,
         position=DebatePosition.AGAINST,
-        expertise=["innovation", "technology"]
+        expertise=["innovation", "technology"],
     )
 
     debate.add_participant(proponent)
@@ -379,10 +355,7 @@ async def example_2_multi_perspective_debate():
 
     moderator = Moderator(name="moderator", role="moderator", llm_provider=llm)
 
-    debate = DebateSystem(
-        topic="Remote work vs. office work",
-        moderator=moderator
-    )
+    debate = DebateSystem(topic="Remote work vs. office work", moderator=moderator)
 
     # Multiple perspectives
     perspectives = [
@@ -392,11 +365,7 @@ async def example_2_multi_perspective_debate():
 
     for name, position, expertise in perspectives:
         agent = DebateAgent(
-            name=name,
-            role="debater",
-            llm_provider=llm,
-            position=position,
-            expertise=expertise
+            name=name, role="debater", llm_provider=llm, position=position, expertise=expertise
         )
         debate.add_participant(agent)
 
@@ -421,7 +390,7 @@ async def example_3_evidence_based_debate():
         role="researcher",
         llm_provider=llm,
         position=DebatePosition.FOR,
-        expertise=["research", "data analysis"]
+        expertise=["research", "data analysis"],
     )
 
     opponent = DebateAgent(
@@ -429,7 +398,7 @@ async def example_3_evidence_based_debate():
         role="researcher",
         llm_provider=llm,
         position=DebatePosition.AGAINST,
-        expertise=["research", "statistics"]
+        expertise=["research", "statistics"],
     )
 
     # Make evidence-based arguments

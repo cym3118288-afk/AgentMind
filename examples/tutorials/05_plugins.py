@@ -29,11 +29,7 @@ class CustomLLMProvider(LLMProvider):
         self.config = kwargs
 
     async def generate(
-        self,
-        messages: List[LLMMessage],
-        temperature: float = 0.7,
-        max_tokens: int = 1000,
-        **kwargs
+        self, messages: List[LLMMessage], temperature: float = 0.7, max_tokens: int = 1000, **kwargs
     ) -> LLMResponse:
         """Generate a response (mock implementation)"""
         # In a real plugin, this would call your custom LLM API
@@ -48,9 +44,9 @@ class CustomLLMProvider(LLMProvider):
             usage={
                 "prompt_tokens": len(last_message.split()),
                 "completion_tokens": len(response_text.split()),
-                "total_tokens": len(last_message.split()) + len(response_text.split())
+                "total_tokens": len(last_message.split()) + len(response_text.split()),
             },
-            metadata={"provider": "custom", "config": self.config}
+            metadata={"provider": "custom", "config": self.config},
         )
 
     async def generate_stream(self, messages: List[LLMMessage], **kwargs):
@@ -80,13 +76,9 @@ class CustomMemoryBackend:
 
         # Enforce max size
         if len(self.storage[agent_id]) > self.max_size:
-            self.storage[agent_id] = self.storage[agent_id][-self.max_size:]
+            self.storage[agent_id] = self.storage[agent_id][-self.max_size :]
 
-    async def retrieve(
-        self,
-        agent_id: str,
-        limit: Optional[int] = None
-    ) -> List[Dict[str, Any]]:
+    async def retrieve(self, agent_id: str, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """Retrieve messages from memory"""
         messages = self.storage.get(agent_id, [])
         if limit:
@@ -98,18 +90,10 @@ class CustomMemoryBackend:
         if agent_id in self.storage:
             self.storage[agent_id] = []
 
-    async def search(
-        self,
-        agent_id: str,
-        query: str,
-        limit: int = 10
-    ) -> List[Dict[str, Any]]:
+    async def search(self, agent_id: str, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         """Search memory (simple keyword search)"""
         messages = self.storage.get(agent_id, [])
-        results = [
-            msg for msg in messages
-            if query.lower() in str(msg.get("content", "")).lower()
-        ]
+        results = [msg for msg in messages if query.lower() in str(msg.get("content", "")).lower()]
         return results[:limit]
 
 
@@ -122,16 +106,13 @@ class WebScraperTool(Tool):
             name="web_scraper",
             description="Scrape content from web pages",
             parameters={
-                "url": {
-                    "type": "string",
-                    "description": "URL to scrape"
-                },
+                "url": {"type": "string", "description": "URL to scrape"},
                 "selector": {
                     "type": "string",
                     "description": "CSS selector for content",
-                    "default": "body"
-                }
-            }
+                    "default": "body",
+                },
+            },
         )
 
     async def execute(self, url: str, selector: str = "body") -> str:
@@ -149,7 +130,7 @@ class MetricsObserver:
             "messages_processed": 0,
             "agents_active": 0,
             "collaborations_started": 0,
-            "errors": 0
+            "errors": 0,
         }
 
     async def on_message_processed(self, agent_name: str, message: Any) -> None:
@@ -225,7 +206,7 @@ class PluginRegistry:
             "llm_providers": list(self.llm_providers.keys()),
             "memory_backends": list(self.memory_backends.keys()),
             "tools": list(self.tools.keys()),
-            "observers": list(self.observers.keys())
+            "observers": list(self.observers.keys()),
         }
 
 
@@ -237,11 +218,7 @@ async def example_1_custom_llm_provider():
     custom_llm = CustomLLMProvider(model="my-custom-model", api_key="test")
 
     # Create agent with custom provider
-    agent = Agent(
-        name="assistant",
-        role="assistant",
-        llm_provider=custom_llm
-    )
+    agent = Agent(name="assistant", role="assistant", llm_provider=custom_llm)
 
     print(f"Agent using custom LLM provider: {custom_llm.model}")
     print(f"Provider config: {custom_llm.config}\n")
@@ -280,10 +257,7 @@ async def example_3_custom_tool_plugin():
     registry.register_tool(scraper)
 
     # Test the tool
-    result = await scraper.execute(
-        url="https://example.com",
-        selector=".content"
-    )
+    result = await scraper.execute(url="https://example.com", selector=".content")
     print(f"Tool result: {result}\n")
 
 

@@ -51,7 +51,7 @@ async def example_2_memory_context():
         "Our Q1 revenue was $1M.",
         "Q2 revenue increased to $1.5M.",
         "Q3 revenue reached $2M.",
-        "What's the revenue growth trend?"
+        "What's the revenue growth trend?",
     ]
 
     for msg_content in messages:
@@ -75,18 +75,12 @@ async def example_3_memory_management():
         name="assistant",
         role="assistant",
         llm_provider=llm,
-        config={
-            "max_memory_size": 5  # Keep only last 5 messages
-        }
+        config={"max_memory_size": 5},  # Keep only last 5 messages
     )
 
     # Add many messages
     for i in range(10):
-        msg = Message(
-            content=f"Message number {i+1}",
-            sender="user",
-            role="user"
-        )
+        msg = Message(content=f"Message number {i+1}", sender="user", role="user")
         await agent.process_message(msg)
 
     print(f"Sent 10 messages, memory contains: {len(agent.memory)} messages")
@@ -105,9 +99,7 @@ async def example_4_shared_memory():
 
     # Researcher gathers information
     research_msg = Message(
-        content="Research the benefits of renewable energy.",
-        sender="user",
-        role="user"
+        content="Research the benefits of renewable energy.", sender="user", role="user"
     )
     research_result = await researcher.process_message(research_msg)
     print(f"Researcher: {research_result.content[:200]}...\n")
@@ -116,7 +108,7 @@ async def example_4_shared_memory():
     write_msg = Message(
         content=f"Based on this research: {research_result.content}\n\nWrite a brief summary.",
         sender="researcher",
-        role="user"
+        role="user",
     )
     article = await writer.process_message(write_msg)
     print(f"Writer: {article.content}\n")
@@ -138,8 +130,7 @@ async def example_5_memory_in_collaboration():
 
     # Collaboration builds shared context
     result = await mind.start_collaboration(
-        "Develop a strategy to enter the European market.",
-        max_rounds=2
+        "Develop a strategy to enter the European market.", max_rounds=2
     )
 
     print(f"Collaboration result:\n{result.final_output}\n")

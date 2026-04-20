@@ -17,6 +17,7 @@ from datetime import datetime
 import tempfile
 import os
 
+
 # Test Agent Designer Enhanced
 class TestAgentDesignerEnhanced:
     """Test suite for enhanced agent designer."""
@@ -26,8 +27,10 @@ class TestAgentDesignerEnhanced:
         """Create test client."""
         from fastapi.testclient import TestClient
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from agent_designer_enhanced import app
+
         return TestClient(app)
 
     def test_health_endpoint(self, client):
@@ -63,12 +66,8 @@ class TestAgentDesignerEnhanced:
             "model": "llama3.2",
             "max_rounds": 5,
             "agents": [
-                {
-                    "name": "TestAgent",
-                    "role": "tester",
-                    "system_prompt": "You are a test agent"
-                }
-            ]
+                {"name": "TestAgent", "role": "tester", "system_prompt": "You are a test agent"}
+            ],
         }
 
         response = client.post("/api/configs", json=config)
@@ -79,10 +78,7 @@ class TestAgentDesignerEnhanced:
 
     def test_save_invalid_config(self, client):
         """Test saving invalid configuration."""
-        config = {
-            "team_name": "",  # Invalid: empty name
-            "agents": []  # Invalid: no agents
-        }
+        config = {"team_name": "", "agents": []}  # Invalid: empty name  # Invalid: no agents
 
         response = client.post("/api/configs", json=config)
         assert response.status_code == 400
@@ -98,12 +94,7 @@ class TestAgentDesignerEnhanced:
 
     def test_validate_config(self, client):
         """Test configuration validation."""
-        valid_config = {
-            "team_name": "Valid Team",
-            "agents": [
-                {"name": "Agent1", "role": "test"}
-            ]
-        }
+        valid_config = {"team_name": "Valid Team", "agents": [{"name": "Agent1", "role": "test"}]}
 
         response = client.post("/api/validate", json=valid_config)
         assert response.status_code == 200
@@ -116,8 +107,8 @@ class TestAgentDesignerEnhanced:
             "team_name": "Test",
             "agents": [
                 {"name": "Agent1", "role": "test"},
-                {"name": "Agent1", "role": "test"}  # Duplicate name
-            ]
+                {"name": "Agent1", "role": "test"},  # Duplicate name
+            ],
         }
 
         response = client.post("/api/validate", json=invalid_config)
@@ -129,10 +120,7 @@ class TestAgentDesignerEnhanced:
     def test_export_config_json(self, client):
         """Test exporting configuration as JSON."""
         # First create a config
-        config = {
-            "team_name": "Export Test",
-            "agents": [{"name": "Agent1", "role": "test"}]
-        }
+        config = {"team_name": "Export Test", "agents": [{"name": "Agent1", "role": "test"}]}
         response = client.post("/api/configs", json=config)
         config_id = response.json()["config_id"]
 
@@ -142,10 +130,7 @@ class TestAgentDesignerEnhanced:
 
     def test_export_config_python(self, client):
         """Test exporting configuration as Python code."""
-        config = {
-            "team_name": "Python Export",
-            "agents": [{"name": "Agent1", "role": "test"}]
-        }
+        config = {"team_name": "Python Export", "agents": [{"name": "Agent1", "role": "test"}]}
         response = client.post("/api/configs", json=config)
         config_id = response.json()["config_id"]
 
@@ -161,8 +146,10 @@ class TestChatServerWave2:
     def client(self):
         """Create test client."""
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from chat_server_wave2 import app
+
         return app.test_client()
 
     def test_health_endpoint(self, client):
@@ -183,16 +170,13 @@ class TestChatServerWave2:
     def test_file_upload(self, client):
         """Test file upload functionality."""
         # Create a temporary test file
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".txt", delete=False) as f:
             f.write("Test content")
             temp_path = f.name
 
         try:
-            with open(temp_path, 'rb') as f:
-                response = client.post(
-                    "/api/upload",
-                    data={"file": (f, "test.txt")}
-                )
+            with open(temp_path, "rb") as f:
+                response = client.post("/api/upload", data={"file": (f, "test.txt")})
 
             assert response.status_code == 200
             data = json.loads(response.data)
@@ -203,16 +187,13 @@ class TestChatServerWave2:
 
     def test_file_upload_invalid_type(self, client):
         """Test uploading invalid file type."""
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.exe', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".exe", delete=False) as f:
             f.write("Invalid")
             temp_path = f.name
 
         try:
-            with open(temp_path, 'rb') as f:
-                response = client.post(
-                    "/api/upload",
-                    data={"file": (f, "test.exe")}
-                )
+            with open(temp_path, "rb") as f:
+                response = client.post("/api/upload", data={"file": (f, "test.exe")})
 
             assert response.status_code == 400
         finally:
@@ -242,8 +223,10 @@ class TestDashboardEnhanced:
         """Create test client."""
         from fastapi.testclient import TestClient
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from dashboard_enhanced import app
+
         return TestClient(app)
 
     def test_health_endpoint(self, client):
@@ -302,10 +285,7 @@ class TestDashboardEnhanced:
 
     def test_update_alert_config(self, client):
         """Test updating alert configuration."""
-        new_config = {
-            "response_time_threshold": 6000,
-            "error_rate_threshold": 0.1
-        }
+        new_config = {"response_time_threshold": 6000, "error_rate_threshold": 0.1}
 
         response = client.post("/api/alerts/config", json=new_config)
         assert response.status_code == 200
@@ -334,6 +314,7 @@ class TestWebSocketConnections:
         """Test agent designer WebSocket connection."""
         from fastapi.testclient import TestClient
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from agent_designer_enhanced import app
 
@@ -341,11 +322,13 @@ class TestWebSocketConnections:
 
         with client.websocket_connect("/ws/test") as websocket:
             # Send test agent request
-            websocket.send_json({
-                "action": "test_agent",
-                "agent": {"name": "TestAgent", "role": "test"},
-                "input": "Hello"
-            })
+            websocket.send_json(
+                {
+                    "action": "test_agent",
+                    "agent": {"name": "TestAgent", "role": "test"},
+                    "input": "Hello",
+                }
+            )
 
             # Receive response
             data = websocket.receive_json()
@@ -359,6 +342,7 @@ class TestWebSocketConnections:
         """Test dashboard WebSocket connection."""
         from fastapi.testclient import TestClient
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from dashboard_enhanced import app
 
@@ -378,6 +362,7 @@ class TestIntegration:
         """Test complete agent design workflow."""
         from fastapi.testclient import TestClient
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from agent_designer_enhanced import app
 
@@ -392,10 +377,7 @@ class TestIntegration:
             "team_name": "Integration Test Team",
             "llm_provider": "ollama",
             "model": "llama3.2",
-            "agents": [
-                {"name": "Agent1", "role": "test1"},
-                {"name": "Agent2", "role": "test2"}
-            ]
+            "agents": [{"name": "Agent1", "role": "test1"}, {"name": "Agent2", "role": "test2"}],
         }
 
         response = client.post("/api/configs", json=config)
@@ -418,6 +400,7 @@ class TestIntegration:
         """Test metrics collection and analysis flow."""
         from fastapi.testclient import TestClient
         import sys
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from dashboard_enhanced import app, metrics_store
 
@@ -425,14 +408,16 @@ class TestIntegration:
 
         # Add some test metrics
         for i in range(10):
-            metrics_store.add_request({
-                "agent": "TestAgent",
-                "duration": 1000 + i * 100,
-                "tokens": 500,
-                "cost": 0.01,
-                "success": True,
-                "timestamp": datetime.now().isoformat()
-            })
+            metrics_store.add_request(
+                {
+                    "agent": "TestAgent",
+                    "duration": 1000 + i * 100,
+                    "tokens": 500,
+                    "cost": 0.01,
+                    "success": True,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
 
         # Get summary
         response = client.get("/api/metrics/summary")
@@ -458,6 +443,7 @@ class TestPerformance:
         from fastapi.testclient import TestClient
         import sys
         import time
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from agent_designer_enhanced import app
 
@@ -465,7 +451,7 @@ class TestPerformance:
 
         config = {
             "team_name": "Performance Test",
-            "agents": [{"name": f"Agent{i}", "role": "test"} for i in range(10)]
+            "agents": [{"name": f"Agent{i}", "role": "test"} for i in range(10)],
         }
 
         start = time.time()
@@ -480,6 +466,7 @@ class TestPerformance:
         from fastapi.testclient import TestClient
         import sys
         import time
+
         sys.path.insert(0, str(Path(__file__).parent.parent))
         from dashboard_enhanced import app
 

@@ -35,8 +35,7 @@ async def example_1_round_robin():
     mind.add_agent(writer)
 
     result = await mind.start_collaboration(
-        "Research and write about quantum computing applications.",
-        max_rounds=3
+        "Research and write about quantum computing applications.", max_rounds=3
     )
 
     print(f"Result: {result.final_output[:300]}...\n")
@@ -61,8 +60,7 @@ async def example_2_broadcast():
     mind.add_agent(realist)
 
     result = await mind.start_collaboration(
-        "Should we invest in expanding to the Asian market?",
-        max_rounds=1
+        "Should we invest in expanding to the Asian market?", max_rounds=1
     )
 
     print("All agents provided their perspectives simultaneously")
@@ -89,8 +87,7 @@ async def example_3_hierarchical():
     mind.add_agent(qa)
 
     result = await mind.start_collaboration(
-        "Design and plan a new user authentication system.",
-        max_rounds=4
+        "Design and plan a new user authentication system.", max_rounds=4
     )
 
     print("Manager coordinated the team:")
@@ -118,8 +115,7 @@ async def example_4_consensus():
 
     # Simulate consensus building
     result = await mind.start_collaboration(
-        "Should we adopt microservices architecture? Provide yes/no with reasoning.",
-        max_rounds=1
+        "Should we adopt microservices architecture? Provide yes/no with reasoning.", max_rounds=1
     )
 
     print("Experts provided their opinions:")
@@ -145,8 +141,7 @@ async def example_5_dynamic_allocation():
 
     # Complex task requiring different skills
     result = await mind.start_collaboration(
-        "Build a customer churn prediction system with visualization dashboard.",
-        max_rounds=3
+        "Build a customer churn prediction system with visualization dashboard.", max_rounds=3
     )
 
     print("Task allocated based on agent specializations:")
@@ -165,8 +160,7 @@ async def example_6_mixed_strategies():
     # Phase 1: Broadcast for brainstorming
     print("Phase 1: Brainstorming (Broadcast)")
     brainstorm_agents = [
-        Agent(name=f"creative_{i}", role="creative", llm_provider=llm)
-        for i in range(3)
+        Agent(name=f"creative_{i}", role="creative", llm_provider=llm) for i in range(3)
     ]
 
     mind1 = AgentMind(strategy="broadcast")
@@ -174,8 +168,7 @@ async def example_6_mixed_strategies():
         mind1.add_agent(agent)
 
     ideas = await mind1.start_collaboration(
-        "Generate innovative product ideas for remote work.",
-        max_rounds=1
+        "Generate innovative product ideas for remote work.", max_rounds=1
     )
     print(f"Generated {len(ideas.conversation_history)} ideas\n")
 
@@ -184,7 +177,7 @@ async def example_6_mixed_strategies():
     refine_agents = [
         Agent(name="analyst", role="analyst", llm_provider=llm),
         Agent(name="designer", role="creative", llm_provider=llm),
-        Agent(name="engineer", role="developer", llm_provider=llm)
+        Agent(name="engineer", role="developer", llm_provider=llm),
     ]
 
     mind2 = AgentMind(strategy="round_robin")
@@ -192,8 +185,7 @@ async def example_6_mixed_strategies():
         mind2.add_agent(agent)
 
     refined = await mind2.start_collaboration(
-        f"Refine these ideas: {ideas.final_output[:200]}",
-        max_rounds=3
+        f"Refine these ideas: {ideas.final_output[:200]}", max_rounds=3
     )
     print(f"Refined through {len(refined.conversation_history)} rounds\n")
 

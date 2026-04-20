@@ -23,6 +23,7 @@ from agentmind.llm import OllamaProvider
 
 class ApprovalStatus(str, Enum):
     """Status of approval requests"""
+
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
@@ -31,6 +32,7 @@ class ApprovalStatus(str, Enum):
 
 class EscalationLevel(str, Enum):
     """Escalation levels"""
+
     NONE = "none"
     LOW = "low"
     MEDIUM = "medium"
@@ -47,7 +49,7 @@ class ApprovalRequest:
         agent_name: str,
         action: str,
         context: Dict[str, Any],
-        risk_level: EscalationLevel = EscalationLevel.LOW
+        risk_level: EscalationLevel = EscalationLevel.LOW,
     ):
         self.request_id = request_id
         self.agent_name = agent_name
@@ -71,7 +73,7 @@ class HumanFeedback:
         action: str,
         rating: int,  # 1-5
         comments: Optional[str] = None,
-        suggestions: Optional[str] = None
+        suggestions: Optional[str] = None,
     ):
         self.feedback_id = feedback_id
         self.agent_name = agent_name
@@ -121,12 +123,7 @@ class HumanInterface:
 
         return decision
 
-    async def get_feedback(
-        self,
-        agent_name: str,
-        action: str,
-        result: str
-    ) -> HumanFeedback:
+    async def get_feedback(self, agent_name: str, action: str, result: str) -> HumanFeedback:
         """Get human feedback on action"""
         print(f"\n{'='*60}")
         print(f"FEEDBACK REQUEST")
@@ -144,7 +141,7 @@ class HumanInterface:
             action=action,
             rating=4,  # Simulated rating
             comments="Good work, but could be more detailed",
-            suggestions="Add more examples"
+            suggestions="Add more examples",
         )
 
         self.feedback_history.append(feedback)
@@ -165,7 +162,7 @@ class HumanInterface:
             "total": total,
             "approved": approved,
             "rejected": rejected,
-            "approval_rate": approved / total if total > 0 else 0
+            "approval_rate": approved / total if total > 0 else 0,
         }
 
 
@@ -177,7 +174,7 @@ class HumanInLoopAgent(Agent):
         *args,
         human_interface: HumanInterface,
         require_approval_for: List[str] = None,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.human_interface = human_interface
@@ -189,14 +186,13 @@ class HumanInLoopAgent(Agent):
         self,
         action: str,
         context: Dict[str, Any],
-        risk_level: EscalationLevel = EscalationLevel.LOW
+        risk_level: EscalationLevel = EscalationLevel.LOW,
     ) -> Dict[str, Any]:
         """Execute action with human approval"""
 
         # Check if approval is required
-        needs_approval = (
-            risk_level in [EscalationLevel.HIGH, EscalationLevel.CRITICAL] or
-            any(keyword in action.lower() for keyword in self.require_approval_for)
+        needs_approval = risk_level in [EscalationLevel.HIGH, EscalationLevel.CRITICAL] or any(
+            keyword in action.lower() for keyword in self.require_approval_for
         )
 
         if needs_approval:
@@ -206,18 +202,14 @@ class HumanInLoopAgent(Agent):
                 agent_name=self.name,
                 action=action,
                 context=context,
-                risk_level=risk_level
+                risk_level=risk_level,
             )
 
             self.approval_requests += 1
             status = await self.human_interface.request_approval(request)
 
             if status == ApprovalStatus.REJECTED:
-                return {
-                    "success": False,
-                    "message": "Action rejected by human",
-                    "action": action
-                }
+                return {"success": False, "message": "Action rejected by human", "action": action}
             elif status == ApprovalStatus.MODIFIED:
                 action = request.modified_action or action
 
@@ -229,13 +221,10 @@ class HumanInLoopAgent(Agent):
             "success": True,
             "result": response.content,
             "action": action,
-            "approved": needs_approval
+            "approved": needs_approval,
         }
 
-    async def execute_with_feedback(
-        self,
-        action: str
-    ) -> Dict[str, Any]:
+    async def execute_with_feedback(self, action: str) -> Dict[str, Any]:
         """Execute action and collect human feedback"""
 
         # Execute action
@@ -243,11 +232,7 @@ class HumanInLoopAgent(Agent):
         response = await self.process_message(message)
 
         # Get human feedback
-        feedback = await self.human_interface.get_feedback(
-            self.name,
-            action,
-            response.content
-        )
+        feedback = await self.human_interface.get_feedback(self.name, action, response.content)
 
         self.feedback_received += 1
 
@@ -260,15 +245,15 @@ class HumanInLoopAgent(Agent):
             "feedback": {
                 "rating": feedback.rating,
                 "comments": feedback.comments,
-                "suggestions": feedback.suggestions
-            }
+                "suggestions": feedback.suggestions,
+            },
         }
 
     def get_interaction_stats(self) -> Dict[str, Any]:
         """Get human interaction statistics"""
         return {
             "approval_requests": self.approval_requests,
-            "feedback_received": self.feedback_received
+            "feedback_received": self.feedback_received,
         }
 
 
@@ -284,14 +269,14 @@ async def example_1_approval_workflow():
         role="assistant",
         llm_provider=llm,
         human_interface=human_interface,
-        require_approval_for=["delete", "modify", "send"]
+        require_approval_for=["delete", "modify", "send"],
     )
 
     # Execute action requiring approval
     result = await agent.execute_with_approval(
         action="Delete old user records",
         context={"records": 100, "age": "90 days"},
-        risk_level=EscalationLevel.HIGH
+        risk_level=EscalationLevel.HIGH,
     )
 
     print(f"Action result: {result['success']}")
@@ -306,10 +291,7 @@ async def example_2_risk_based_escalation():
     human_interface = HumanInterface()
 
     agent = HumanInLoopAgent(
-        name="security_agent",
-        role="security",
-        llm_provider=llm,
-        human_interface=human_interface
+        name="security_agent", role="security", llm_provider=llm, human_interface=human_interface
     )
 
     # Test different risk levels
@@ -317,15 +299,13 @@ async def example_2_risk_based_escalation():
         ("Read system logs", EscalationLevel.LOW),
         ("Modify firewall rules", EscalationLevel.MEDIUM),
         ("Grant admin access", EscalationLevel.HIGH),
-        ("Shutdown production server", EscalationLevel.CRITICAL)
+        ("Shutdown production server", EscalationLevel.CRITICAL),
     ]
 
     for action, risk_level in actions:
         print(f"Action: {action} (Risk: {risk_level.value})")
         result = await agent.execute_with_approval(
-            action=action,
-            context={"timestamp": datetime.now().isoformat()},
-            risk_level=risk_level
+            action=action, context={"timestamp": datetime.now().isoformat()}, risk_level=risk_level
         )
         print(f"  Approved: {result.get('approved', False)}\n")
 
@@ -338,16 +318,11 @@ async def example_3_feedback_loop():
     human_interface = HumanInterface()
 
     agent = HumanInLoopAgent(
-        name="writer",
-        role="writer",
-        llm_provider=llm,
-        human_interface=human_interface
+        name="writer", role="writer", llm_provider=llm, human_interface=human_interface
     )
 
     # Execute with feedback
-    result = await agent.execute_with_feedback(
-        "Write a brief introduction to machine learning"
-    )
+    result = await agent.execute_with_feedback("Write a brief introduction to machine learning")
 
     print(f"Feedback rating: {result['feedback']['rating']}/5")
     print(f"Comments: {result['feedback']['comments']}\n")
@@ -361,10 +336,7 @@ async def example_4_collaborative_refinement():
     human_interface = HumanInterface()
 
     agent = HumanInLoopAgent(
-        name="designer",
-        role="creative",
-        llm_provider=llm,
-        human_interface=human_interface
+        name="designer", role="creative", llm_provider=llm, human_interface=human_interface
     )
 
     print("Iterative refinement with human feedback:\n")
@@ -386,25 +358,18 @@ async def example_5_approval_statistics():
     human_interface = HumanInterface()
 
     agent = HumanInLoopAgent(
-        name="operator",
-        role="operator",
-        llm_provider=llm,
-        human_interface=human_interface
+        name="operator", role="operator", llm_provider=llm, human_interface=human_interface
     )
 
     # Execute multiple actions
     actions = [
         ("Action 1", EscalationLevel.LOW),
         ("Action 2", EscalationLevel.MEDIUM),
-        ("Action 3", EscalationLevel.LOW)
+        ("Action 3", EscalationLevel.LOW),
     ]
 
     for action, risk in actions:
-        await agent.execute_with_approval(
-            action=action,
-            context={},
-            risk_level=risk
-        )
+        await agent.execute_with_approval(action=action, context={}, risk_level=risk)
 
     # Get statistics
     stats = human_interface.get_approval_stats()

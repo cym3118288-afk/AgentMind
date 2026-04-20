@@ -20,6 +20,7 @@ from agentmind.llm import OllamaProvider
 
 class ProcessType(str, Enum):
     """CrewAI-style process types"""
+
     SEQUENTIAL = "sequential"
     HIERARCHICAL = "hierarchical"
     CONSENSUS = "consensus"
@@ -31,9 +32,9 @@ class Task:
     def __init__(
         self,
         description: str,
-        agent: Optional['CrewAgent'] = None,
+        agent: Optional["CrewAgent"] = None,
         expected_output: Optional[str] = None,
-        context: Optional[List['Task']] = None
+        context: Optional[List["Task"]] = None,
     ):
         self.description = description
         self.agent = agent
@@ -69,13 +70,7 @@ class CrewAgent(Agent):
     """AgentMind agent with CrewAI-style interface"""
 
     def __init__(
-        self,
-        *args,
-        role: str,
-        goal: str,
-        backstory: str,
-        verbose: bool = False,
-        **kwargs
+        self, *args, role: str, goal: str, backstory: str, verbose: bool = False, **kwargs
     ):
         super().__init__(*args, role=role, **kwargs)
         self.goal = goal
@@ -103,7 +98,7 @@ class CrewAgent(Agent):
             "role": self.role,
             "goal": self.goal,
             "backstory": self.backstory,
-            "tasks_completed": self.tasks_completed
+            "tasks_completed": self.tasks_completed,
         }
 
 
@@ -115,7 +110,7 @@ class Crew:
         agents: List[CrewAgent],
         tasks: List[Task],
         process: ProcessType = ProcessType.SEQUENTIAL,
-        verbose: bool = False
+        verbose: bool = False,
     ):
         self.agents = agents
         self.tasks = tasks
@@ -157,7 +152,7 @@ class Crew:
             "process": self.process.value,
             "tasks_completed": len(self.tasks),
             "final_output": self.results[-1] if self.results else "",
-            "all_outputs": self.results
+            "all_outputs": self.results,
         }
 
     async def _hierarchical_process(self) -> Dict[str, Any]:
@@ -178,7 +173,7 @@ class Crew:
             "manager": manager.name,
             "workers": [w.name for w in workers],
             "tasks_completed": len(self.tasks),
-            "final_output": self.results[-1] if self.results else ""
+            "final_output": self.results[-1] if self.results else "",
         }
 
     async def _consensus_process(self) -> Dict[str, Any]:
@@ -198,7 +193,7 @@ class Crew:
         return {
             "process": self.process.value,
             "consensus_rounds": len(self.tasks),
-            "final_output": self.results[-1] if self.results else ""
+            "final_output": self.results[-1] if self.results else "",
         }
 
 
@@ -215,7 +210,7 @@ async def example_1_basic_crew():
         goal="Research and gather information",
         backstory="Expert researcher with years of experience",
         llm_provider=llm,
-        verbose=True
+        verbose=True,
     )
 
     writer = CrewAgent(
@@ -224,7 +219,7 @@ async def example_1_basic_crew():
         goal="Write compelling content",
         backstory="Professional writer with strong communication skills",
         llm_provider=llm,
-        verbose=True
+        verbose=True,
     )
 
     # Create tasks
@@ -232,13 +227,13 @@ async def example_1_basic_crew():
         Task(
             description="Research the benefits of renewable energy",
             agent=researcher,
-            expected_output="Comprehensive research summary"
+            expected_output="Comprehensive research summary",
         ),
         Task(
             description="Write an article based on the research",
             agent=writer,
-            expected_output="Well-written article"
-        )
+            expected_output="Well-written article",
+        ),
     ]
 
     # Link tasks
@@ -246,10 +241,7 @@ async def example_1_basic_crew():
 
     # Create crew
     crew = Crew(
-        agents=[researcher, writer],
-        tasks=tasks,
-        process=ProcessType.SEQUENTIAL,
-        verbose=True
+        agents=[researcher, writer], tasks=tasks, process=ProcessType.SEQUENTIAL, verbose=True
     )
 
     # Execute
@@ -269,7 +261,7 @@ async def example_2_hierarchical_crew():
         role="project_manager",
         goal="Coordinate team and ensure quality",
         backstory="Experienced project manager",
-        llm_provider=llm
+        llm_provider=llm,
     )
 
     developer = CrewAgent(
@@ -277,7 +269,7 @@ async def example_2_hierarchical_crew():
         role="developer",
         goal="Write high-quality code",
         backstory="Senior software developer",
-        llm_provider=llm
+        llm_provider=llm,
     )
 
     tester = CrewAgent(
@@ -285,14 +277,14 @@ async def example_2_hierarchical_crew():
         role="qa_engineer",
         goal="Ensure software quality",
         backstory="Quality assurance specialist",
-        llm_provider=llm
+        llm_provider=llm,
     )
 
     # Create tasks
     tasks = [
         Task(description="Design the system architecture"),
         Task(description="Implement the core features"),
-        Task(description="Test the implementation")
+        Task(description="Test the implementation"),
     ]
 
     # Create hierarchical crew
@@ -300,7 +292,7 @@ async def example_2_hierarchical_crew():
         agents=[manager, developer, tester],
         tasks=tasks,
         process=ProcessType.HIERARCHICAL,
-        verbose=True
+        verbose=True,
     )
 
     result = await crew.kickoff()
@@ -320,7 +312,7 @@ async def example_3_task_dependencies():
         role="analyst",
         goal="Analyze data and trends",
         backstory="Data analyst",
-        llm_provider=llm
+        llm_provider=llm,
     )
 
     strategist = CrewAgent(
@@ -328,26 +320,19 @@ async def example_3_task_dependencies():
         role="strategist",
         goal="Develop strategies",
         backstory="Business strategist",
-        llm_provider=llm
+        llm_provider=llm,
     )
 
     # Create dependent tasks
-    task1 = Task(
-        description="Analyze market trends",
-        agent=analyst
-    )
+    task1 = Task(description="Analyze market trends", agent=analyst)
 
     task2 = Task(
         description="Develop market entry strategy",
         agent=strategist,
-        context=[task1]  # Depends on task1
+        context=[task1],  # Depends on task1
     )
 
-    crew = Crew(
-        agents=[analyst, strategist],
-        tasks=[task1, task2],
-        process=ProcessType.SEQUENTIAL
-    )
+    crew = Crew(agents=[analyst, strategist], tasks=[task1, task2], process=ProcessType.SEQUENTIAL)
 
     result = await crew.kickoff()
     print(f"Completed workflow with {result['tasks_completed']} dependent tasks\n")
@@ -366,15 +351,11 @@ async def example_4_crewai_to_agentmind():
             role="researcher",
             goal="Research topics",
             backstory="Researcher",
-            llm_provider=llm
+            llm_provider=llm,
         ),
         CrewAgent(
-            name="agent2",
-            role="writer",
-            goal="Write content",
-            backstory="Writer",
-            llm_provider=llm
-        )
+            name="agent2", role="writer", goal="Write content", backstory="Writer", llm_provider=llm
+        ),
     ]
 
     # Use with AgentMind orchestration
@@ -382,10 +363,7 @@ async def example_4_crewai_to_agentmind():
     for agent in crew_agents:
         mind.add_agent(agent)
 
-    result = await mind.start_collaboration(
-        "Research and write about AI trends",
-        max_rounds=2
-    )
+    result = await mind.start_collaboration("Research and write about AI trends", max_rounds=2)
 
     print("Using AgentMind orchestration with CrewAI-style agents:")
     print(f"Result: {result.final_output[:200]}...\n")
@@ -404,7 +382,7 @@ async def example_5_crew_profiles():
             role="specialist",
             goal="Provide expert analysis",
             backstory="Domain expert with 10 years experience",
-            llm_provider=llm
+            llm_provider=llm,
         )
     ]
 

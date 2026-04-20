@@ -1,19 +1,46 @@
 """
 Agent Designer - Visual drag-and-drop interface for designing multi-agent systems.
 
-Enhanced version with better UX and more features.
+Wave 2 Enhanced Features:
+- Drag-and-drop workflow builder
+- Visual plugin configuration
+- Real-time agent testing panel
+- Template gallery with previews
+- Export/import agent definitions
 """
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, UploadFile, File
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import json
 import asyncio
 from datetime import datetime
 from typing import List, Dict, Optional
 import os
+import sys
+import uuid
+from pathlib import Path
 
-app = FastAPI(title="AgentMind Agent Designer", version="0.3.0")
+sys.path.append(os.path.join(os.path.dirname(__file__), "src"))
+
+app = FastAPI(title="AgentMind Agent Designer", version="0.4.0")
+
+# CORS middleware for security
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Storage for agent configurations
+CONFIGS_DIR = Path("./agent_configs")
+CONFIGS_DIR.mkdir(exist_ok=True)
+
+# WebSocket connections for real-time testing
+active_connections: List[WebSocket] = []
 
 
 @app.get("/designer", response_class=HTMLResponse)

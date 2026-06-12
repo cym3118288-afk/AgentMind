@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgentMind - Mission Control</title>
+<style>
+/* ============================================================
+   SPACEX DESIGN SYSTEM - CSS CUSTOM PROPERTIES
+   ============================================================ */
+:root {
+  --bg-void: #000000;
+  --bg-deep: #050510;
+  --bg-panel: #0a0a1a;
+  --bg-card: #0d0d20;
+  --bg-elevated: #111128;
+  --bg-hover: #16163a;
+  --bg-glass: rgba(10, 10, 30, 0.75);
+  --bg-glass-hover: rgba(20, 20, 50, 0.85);
+
+  --border-dim: rgba(255, 255, 255, 0.06);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --border-accent: rgba(0, 180, 255, 0.3);
+  --border-glow: rgba(0, 212, 255, 0.5);
+
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-tertiary: rgba(255, 255, 255, 0.4);
+  --text-dim: rgba(255, 255, 255, 0.25);
+
+  --accent-blue: #005288;
+  --accent-cyan: #00d4ff;
+  --accent-cyan-dim: rgba(0, 212, 255, 0.15);
+  --accent-green: #00ff88;
+  --accent-green-dim: rgba(0, 255, 136, 0.15);
+  --accent-red: #ff3366;
+  --accent-red-dim: rgba(255, 51, 102, 0.15);
+  --accent-orange: #ff8800;
+  --accent-orange-dim: rgba(255, 136, 0, 0.15);
+  --accent-purple: #8855ff;
+  --accent-purple-dim: rgba(136, 85, 255, 0.15);
+  --accent-yellow: #ffcc00;
+
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3);
+  --glow-green: 0 0 20px rgba(0, 255, 136, 0.3);
+  --glow-red: 0 0 20px rgba(255, 51, 102, 0.3);
+  --glow-blue: 0 0 20px rgba(0, 82, 136, 0.4);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', 'Cascadia Code', monospace;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  font-family: var(--font-sans);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: var(--accent-cyan); color: #000; }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-medium); }
+
+/* ============================================================
+   STARFIELD CANVAS
+   ============================================================ */
+#starfield {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+
+/* ============================================================
+   APP LAYOUT
+   ============================================================ */
+#app {
+  position: relative; z-index: 1;
+  display: flex; height: 100vh;
+}
+
+/* ============================================================
+   SIDEBAR NAVIGATION
+   ============================================================ */
+.sidebar {
+  width: 72px; height: 100vh;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-dim);
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  width: 42px; height: 42px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+
+.sidebar-logo svg { width: 32px; height: 32px; }
+
+.sidebar-logo::after {
+  content: '';
+  position: absolute; bottom: -12px; left: 50%;
+  transform: translateX(-50%);
+  width: 32px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+}
+
+.nav-items {
+  display: flex; flex-direction: column;
+  gap: 4px; width: 100%;
+  padding: 0 8px;
+  flex: 1;
+}
+
+.nav-item {
+  width: 56px; height: 52px;
+  border-radius: var(--radius-md);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: 1px solid transparent;
+  position: relative;
+  color: var(--text-tertiary);
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+
+.nav-item.active {
+  background: var(--accent-cyan-dim);
+  border-color: var(--border-accent);
+  color: var(--accent-cyan);
+}
+
+.nav-item.active::before {
+  content: '';
+  position: absolute; left: -8px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 20px;
+  background: var(--accent-cyan);
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-item svg { width: 20px; height: 20px; }
+
+.nav-item span {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.sidebar-footer {
+  padding: 12px 8px;
+  width: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 8px;
+}
+
+.status-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--accent-green);
+  box-shadow: var(--glow-green);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.page {
+  display: none;
+  min-height: 100vh;
+  padding: 32px;
+  animation: fadeIn 0.3s ease;
+}
+
+.page.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.page-title small {
+  display: block;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.page-actions {
+  display: flex; gap: 12px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center; gap: 8px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+
+.btn svg { width: 16px; height: 16px; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-blue), #0077cc);
+  color: var(--text-primary);
+  border-color: rgba(0, 150, 255, 0.3);
+  box-shadow: var(--glow-blue);
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0066aa, #0088dd);
+  box-shadow: 0 0 30px rgba(0, 82, 136, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-cyan {
+  background: linear-gradient(135deg, #006688, #0099cc);
+  color: var(--text-primary);
+  border-color: var(--border-accent);
+  box-shadow: var(--glow-cyan);
+}
+.btn-cyan:hover {
+  background: linear-gradient(135deg, #0077aa, #00aadd);
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border-subtle);
+}
+.btn-ghost:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-medium);
+  color: var(--text-primary);
+}
+
+.btn-danger {
+  background: rgba(255, 51, 102, 0.1);
+  color: var(--accent-red);
+  border-color: rgba(255, 51, 102, 0.2);
+}
+.btn-danger:hover {
+  background: rgba(255, 51, 102, 0.2);
+  box-shadow: var(--glow-red);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #005533, #00884d);
+  color: var(--text-primary);
+  border-color: rgba(0, 255, 136, 0.2);
+}
+.btn-success:hover {
+  box-shadow: var(--glow-green);
+  transform: translateY(-1px);
+}
+
+.btn-sm { padding: 6px 14px; font-size: 11px; }
+.btn-lg { padding: 14px 32px; font-size: 15px; }
+
+.btn:disabled {
+  opacity: 0.4; cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ============================================================
+   CARDS & PANELS
+   ============================================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: all var(--transition-base);
+}
+
+.card:hover {
+  border-color: var(--border-subtle);
+  background: var(--bg-elevated);
+}
+
+.card-glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.card-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+}
+
+.card-value {
+  font-size: 32px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: -1px;
+}
+
+/* ============================================================
+   GRID LAYOUTS
+   ============================================================ */
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  transition: all var(--transition-base);
+  outline: none;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-dim), var(--glow-cyan);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='rgba(255,255,255,0.4)' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+.form-select option { background: var(--bg-panel); color: var(--text-primary); }
+
+.range-container {
+  display: flex; align-items: center; gap: 16px;
+}
+
+.range-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--accent-cyan);
+  min-width: 36px;
+  text-align: center;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  flex: 1;
+  height: 4px;
+  background: var(--bg-hover);
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+  cursor: pointer;
+  box-shadow: var(--glow-cyan);
+  border: 2px solid var(--bg-void);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 44px; height: 24px;
+  cursor: pointer;
+}
+
+.toggle-switch input { display: none; }
+
+.toggle-slider {
+  position: absolute; inset: 0;
+  background: var(--bg-hover);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  transition: all var(--transition-base);
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  left: 2px; top: 2px;
+  background: var(--text-tertiary);
+  border-radius: 50%;
+  transition: all var(--transition-base);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: var(--accent-cyan-dim);
+  border-color: var(--accent-cyan);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(20px);
+  background: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+/* ============================================================
+   STATUS BADGES
+   ============================================================ */
+.badge {
+  display: inline-flex;
+  align-items: center; gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-green {
+  background: var(--accent-green-dim);
+  color: var(--accent-green);
+  border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.badge-cyan {
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+}
+
+.badge-red {
+  background: var(--accent-red-dim);
+  color: var(--accent-red);
+  border: 1px solid rgba(255, 51, 102, 0.2);
+}
+
+.badge-orange {
+  background: var(--accent-orange-dim);
+  color: var(--accent-orange);
+  border: 1px solid rgba(255, 136, 0, 0.2);
+}
+
+.badge-purple {
+  background: var(--accent-purple-dim);
+  color: var(--accent-purple);
+  border: 1px solid rgba(136, 85, 255, 0.2);
+}
+
+.badge-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* ============================================================
+   TELEMETRY READOUTS
+   ============================================================ */
+.telemetry-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.telemetry-row:last-child { border-bottom: none; }
+
+.telemetry-label {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.telemetry-value {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--accent-cyan);
+}
+
+/* ============================================================
+   PROGRESS BARS
+   ============================================================ */
+.progress-bar {
+  width: 100%; height: 4px;
+  background: var(--bg-hover);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* ============================================================
+   MISSION CONTROL PAGE
+   ============================================================ */
+.hero-section {
+  text-align: center;
+  padding: 48px 0 40px;
+  position: relative;
+}
+
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-cyan) 50%, var(--accent-blue) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
+
+.hero-subtitle {
+  font-size: 14px;
+  color: var(--text-tertiary);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+}
+
+.hero-status {
+  display: inline-flex;
+  align-items: center; gap: 10px;
+  padding: 8px 20px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  backdrop-filter: blur(8px);
+}
+
+.hero-status .status-dot {
+  width: 6px; height: 6px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  text-align: center;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.stat-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+}
+
+.stat-card:hover::before { opacity: 1; }
+
+.stat-icon {
+  width: 40px; height: 40px;
+  margin: 0 auto 12px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
+}
+
+.stat-icon svg { width: 20px; height: 20px; }
+
+.stat-number {
+  font-size: 36px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  letter-spacing: -2px;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center; gap: 8px;
+}
+
+.section-title::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--border-dim);
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+}
+
+.timeline-item {
+  display: flex; gap: 16px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-base);
+  cursor: pointer;
+}
+
+.timeline-item:hover { background: var(--bg-hover); }
+
+.timeline-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.timeline-dot.green { background: var(--accent-green); box-shadow: var(--glow-green); }
+.timeline-dot.cyan { background: var(--accent-cyan); box-shadow: var(--glow-cyan); }
+.timeline-dot.red { background: var(--accent-red); box-shadow: var(--glow-red); }
+.timeline-dot.orange { background: var(--accent-orange); }
+
+.timeline-content { flex: 1; }
+
+.timeline-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.timeline-meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex; gap: 16px;
+}
+
+/* ============================================================
+   LAUNCH PAGE
+   ============================================================ */
+.launch-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.launch-config { display: flex; flex-direction: column; gap: 20px; }
+
+.agent-team-list {
+  display: flex; flex-direction: column;
+  gap: 8px;
+}
+
+.agent-team-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.agent-team-item:hover { border-color: var(--border-subtle); }
+
+.agent-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+  flex-shrink: 0;
+}
+
+.agent-team-item .form-input,
+.agent-team-item .form-select {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.agent-team-item .btn-danger {
+  padding: 6px 10px;
+  flex-shrink: 0;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.mode-card {
+  padding: 14px 10px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary);
+}
+
+.mode-card:hover {
+  border-color: var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.mode-card.active {
+  background: var(--accent-cyan-dim);
+  border-color: var(--accent-cyan);
+  color: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.mode-card .mode-icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.launch-output {
+  display: flex; flex-direction: column;
+  gap: 20px;
+}
+
+/* Launch Button */
+.launch-btn-container {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+
+.btn-launch {
+  padding: 16px 48px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, #003366, var(--accent-blue), #0077cc);
+  border: 2px solid rgba(0, 150, 255, 0.4);
+  box-shadow: 0 0 40px rgba(0, 82, 136, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
+  border-radius: var(--radius-lg);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-sans);
+}
+
+.btn-launch:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 60px rgba(0, 82, 136, 0.6), 0 0 120px rgba(0, 150, 255, 0.2), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+.btn-launch:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.btn-launch.launching {
+  animation: launchPulse 0.5s ease infinite;
+}
+
+@keyframes launchPulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(0, 82, 136, 0.4); }
+  50% { box-shadow: 0 0 80px rgba(0, 212, 255, 0.6); }
+}
+
+/* Countdown Overlay */
+.countdown-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.countdown-overlay.active { display: flex; }
+
+.countdown-number {
+  font-size: 200px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--accent-cyan);
+  text-shadow: 0 0 60px rgba(0, 212, 255, 0.5), 0 0 120px rgba(0, 212, 255, 0.3);
+  animation: countPulse 1s ease;
+}
+
+@keyframes countPulse {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Streaming Output */
+.output-panel {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-height: 400px;
+  display: flex; flex-direction: column;
+}
+
+.output-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-dim);
+  background: var(--bg-card);
+}
+
+.output-header-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-tertiary);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.output-body {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.output-message {
+  padding: 12px;
+  margin-bottom: 8px;
+  border-radius: var(--radius-md);
+  border-left: 3px solid var(--accent-cyan);
+  background: rgba(0, 212, 255, 0.03);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.output-message .msg-agent {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.output-message .msg-text {
+  color: var(--text-secondary);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.output-empty {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  height: 100%; min-height: 300px;
+  color: var(--text-dim);
+  gap: 12px;
+}
+
+.output-empty svg { width: 48px; height: 48px; opacity: 0.3; }
+
+/* ============================================================
+   FLEET PAGE
+   ============================================================ */
+.fleet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.fleet-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.fleet-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.fleet-card-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px;
+}
+
+.fleet-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 700;
+  flex-shrink: 0;
+  border: 2px solid transparent;
+}
+
+.fleet-card-info h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.fleet-card-info .role {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.fleet-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-dim);
+}
+
+.fleet-metric {
+  text-align: center;
+}
+
+.fleet-metric-value {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent-cyan);
+}
+
+.fleet-metric-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* Create Agent Modal */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center; justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  padding: 32px;
+  width: 100%; max-width: 480px;
+  animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.modal-close {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-hover);
+  color: var(--text-tertiary);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all var(--transition-fast);
+  font-size: 18px;
+}
+
+.modal-close:hover {
+  background: var(--accent-red-dim);
+  color: var(--accent-red);
+}
+
+.modal-actions {
+  display: flex; gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+/* ============================================================
+   TELEMETRY PAGE
+   ============================================================ */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.chart-container {
+  position: relative;
+  height: 200px;
+  padding: 16px 0;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 100%;
+  padding: 0 8px;
+}
+
+.bar {
+  flex: 1;
+  background: linear-gradient(to top, var(--accent-blue), var(--accent-cyan));
+  border-radius: 2px 2px 0 0;
+  min-height: 2px;
+  transition: height 0.5s ease;
+  position: relative;
+}
+
+.bar:hover { opacity: 0.8; }
+
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+}
+
+.activity-cell {
+  aspect-ratio: 1;
+  border-radius: 2px;
+  background: var(--bg-hover);
+  transition: all var(--transition-fast);
+}
+
+.activity-cell.l1 { background: rgba(0, 212, 255, 0.15); }
+.activity-cell.l2 { background: rgba(0, 212, 255, 0.3); }
+.activity-cell.l3 { background: rgba(0, 212, 255, 0.5); }
+.activity-cell.l4 { background: var(--accent-cyan); }
+
+.health-indicators {
+  display: flex; flex-direction: column;
+  gap: 12px;
+}
+
+.health-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+}
+
+.health-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.health-dot.ok { background: var(--accent-green); box-shadow: var(--glow-green); }
+.health-dot.warn { background: var(--accent-orange); }
+.health-dot.error { background: var(--accent-red); box-shadow: var(--glow-red); }
+
+.health-name {
+  flex: 1;
+  font-size: 13px;
+}
+
+.health-status {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--text-tertiary);
+}
+
+/* ============================================================
+   COMMS PAGE (CHAT)
+   ============================================================ */
+.chat-container {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 20px;
+  height: calc(100vh - 140px);
+}
+
+.chat-main {
+  display: flex; flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex; flex-direction: column;
+  gap: 16px;
+}
+
+.chat-message {
+  display: flex; gap: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+.chat-msg-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700;
+  flex-shrink: 0;
+}
+
+.chat-msg-body { flex: 1; }
+
+.chat-msg-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 4px;
+}
+
+.chat-msg-name {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chat-msg-role {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chat-msg-time {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+
+.chat-msg-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.chat-msg-text pre {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.chat-input-area {
+  padding: 16px;
+  border-top: 1px solid var(--border-dim);
+  display: flex; gap: 12px;
+  align-items: flex-end;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  outline: none;
+  resize: none;
+  max-height: 120px;
+  transition: border-color var(--transition-base);
+}
+
+.chat-input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-dim);
+}
+
+.chat-sidebar {
+  display: flex; flex-direction: column;
+  gap: 16px;
+}
+
+.chat-agents-list {
+  display: flex; flex-direction: column;
+  gap: 6px;
+}
+
+.chat-agent-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.chat-agent-item:hover {
+  border-color: var(--border-subtle);
+  background: var(--bg-elevated);
+}
+
+.chat-agent-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+
+.chat-agent-name {
+  font-size: 13px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.chat-agent-status {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   CARGO PAGE (TOOLS & PLUGINS)
+   ============================================================ */
+.cargo-tabs {
+  display: flex; gap: 4px;
+  margin-bottom: 24px;
+  background: var(--bg-panel);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+.cargo-tab {
+  padding: 8px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  transition: all var(--transition-fast);
+  border: none;
+  background: none;
+  font-family: var(--font-sans);
+}
+
+.cargo-tab:hover { color: var(--text-secondary); }
+
+.cargo-tab.active {
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
+}
+
+.tool-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  display: flex; align-items: flex-start; gap: 16px;
+  transition: all var(--transition-base);
+}
+
+.tool-card:hover {
+  border-color: var(--border-subtle);
+}
+
+.tool-icon {
+  width: 44px; height: 44px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.tool-info { flex: 1; }
+
+.tool-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.tool-desc {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+.tool-toggle { margin-left: auto; flex-shrink: 0; }
+
+/* ============================================================
+   AGENT COLORS
+   ============================================================ */
+.agent-color-1 { background: #1a3a5c; color: #4da6ff; border-color: #4da6ff; }
+.agent-color-2 { background: #1a4a3a; color: #4dffaa; border-color: #4dffaa; }
+.agent-color-3 { background: #3a1a4a; color: #bb66ff; border-color: #bb66ff; }
+.agent-color-4 { background: #4a3a1a; color: #ffaa44; border-color: #ffaa44; }
+.agent-color-5 { background: #4a1a2a; color: #ff6688; border-color: #ff6688; }
+.agent-color-6 { background: #1a3a3a; color: #44dddd; border-color: #44dddd; }
+
+/* ============================================================
+   ADVANCED SETTINGS COLLAPSIBLE
+   ============================================================ */
+.collapsible-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  cursor: pointer;
+  color: var(--text-tertiary);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  transition: color var(--transition-fast);
+}
+
+.collapsible-header:hover { color: var(--text-secondary); }
+
+.collapsible-header .arrow {
+  transition: transform var(--transition-base);
+  font-size: 10px;
+}
+
+.collapsible-header.open .arrow {
+  transform: rotate(90deg);
+}
+
+.collapsible-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.collapsible-body.open {
+  max-height: 500px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1200px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .launch-grid { grid-template-columns: 1fr; }
+  .telemetry-grid { grid-template-columns: 1fr; }
+  .chat-container { grid-template-columns: 1fr; }
+  .chat-sidebar { display: none; }
+  .mode-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .page { padding: 16px; }
+  .hero-title { font-size: 32px; }
+  .grid-4, .grid-3 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- STARFIELD BACKGROUND -->
+<canvas id="starfield"></canvas>
+
+<!-- APP -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L4 28h6l2-5h8l2 5h6L16 2zm0 10l3 8h-6l3-8z" fill="currentColor" opacity="0.9"/>
+        <circle cx="16" cy="10" r="2" fill="var(--accent-cyan)"/>
+      </svg>
+    </div>
+
+    <div class="nav-items">
+      <a class="nav-item active" data-page="mission-control" onclick="navigate('mission-control')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>Control</span>
+      </a>
+      <a class="nav-item" data-page="launch" onclick="navigate('launch')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 3 0 3 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-3 0-3"/></svg>
+        <span>Launch</span>
+      </a>
+      <a class="nav-item" data-page="fleet" onclick="navigate('fleet')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        <span>Fleet</span>
+      </a>
+      <a class="nav-item" data-page="telemetry" onclick="navigate('telemetry')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <span>Telemetry</span>
+      </a>
+      <a class="nav-item" data-page="comms" onclick="navigate('comms')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span>Comms</span>
+      </a>
+      <a class="nav-item" data-page="cargo" onclick="navigate('cargo')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        <span>Cargo</span>
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="status-dot" title="System Online"></div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- ==================== MISSION CONTROL ==================== -->
+    <div id="page-mission-control" class="page active">
+      <div class="hero-section">
+        <h1 class="hero-title">AGENTMIND</h1>
+        <p class="hero-subtitle">Multi-Agent Mission Control</p>
+        <div class="hero-status">
+          <span class="status-dot"></span>
+          <span>All systems nominal</span>
+          <span style="color: var(--text-dim)">|</span>
+          <span id="uptime-display" style="font-family: var(--font-mono); color: var(--accent-cyan);">T+ 00:00:00</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div class="stat-number" id="stat-agents">0</div>
+          <div class="stat-label">Agents Online</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--accent-green-dim); color: var(--accent-green);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="stat-number" id="stat-missions">0</div>
+          <div class="stat-label">Missions Complete</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--accent-purple-dim); color: var(--accent-purple);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="stat-number" id="stat-tokens">0</div>
+          <div class="stat-label">Tokens Processed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--accent-orange-dim); color: var(--accent-orange);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg>
+          </div>
+          <div class="stat-number" id="stat-latency">0<small style="font-size: 14px; color: var(--text-tertiary)">ms</small></div>
+          <div class="stat-label">Avg Latency</div>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 32px;">
+        <button class="btn btn-cyan btn-lg" onclick="navigate('launch')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/></svg>
+          Launch New Mission
+        </button>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="section-title">Recent Missions</div>
+          <div class="timeline" id="missions-timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot green"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">API Architecture Design</div>
+                <div class="timeline-meta">
+                  <span>3 agents</span><span>5 rounds</span><span>2.3s</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot green"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Code Review: auth module</div>
+                <div class="timeline-meta">
+                  <span>4 agents</span><span>3 rounds</span><span>1.8s</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot cyan"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Data Pipeline Analysis</div>
+                <div class="timeline-meta">
+                  <span>2 agents</span><span>4 rounds</span><span>3.1s</span>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot orange"></div>
+              <div class="timeline-content">
+                <div class="timeline-title">Security Audit Draft</div>
+                <div class="timeline-meta">
+                  <span>5 agents</span><span>7 rounds</span><span>4.5s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="section-title">System Telemetry</div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">CPU Usage</span>
+            <span class="telemetry-value" id="tel-cpu">12%</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">Memory</span>
+            <span class="telemetry-value" id="tel-memory">45 MB</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">Active Sessions</span>
+            <span class="telemetry-value" id="tel-sessions">0</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">Tokens / sec</span>
+            <span class="telemetry-value" id="tel-tps">0</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">Uptime</span>
+            <span class="telemetry-value" id="tel-uptime">99.9%</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">LLM Provider</span>
+            <span class="telemetry-value" style="color: var(--accent-green);">Ollama</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">Model</span>
+            <span class="telemetry-value">llama3.2</span>
+          </div>
+          <div class="telemetry-row">
+            <span class="telemetry-label">API Status</span>
+            <span class="telemetry-value"><span class="badge badge-green"><span class="badge-dot"></span>Online</span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== LAUNCH PAGE ==================== -->
+    <div id="page-launch" class="page">
+      <div class="page-header">
+        <div class="page-title">
+          Launch Mission
+          <small>Configure and deploy agent collaboration</small>
+        </div>
+      </div>
+
+      <div class="launch-grid">
+        <div class="launch-config">
+          <!-- Task -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Mission Objective</span>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <textarea id="task-input" class="form-textarea" placeholder="Describe your mission objective..." rows="4"></textarea>
+            </div>
+          </div>
+
+          <!-- Agent Team -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Agent Team</span>
+              <button class="btn btn-ghost btn-sm" onclick="addAgent()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Agent
+              </button>
+            </div>
+            <div class="agent-team-list" id="agent-team-list">
+              <!-- Agent items rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Orchestration Mode -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Orchestration Mode</span>
+            </div>
+            <div class="mode-grid" id="mode-grid">
+              <div class="mode-card active" data-mode="sequential" onclick="selectMode(this)">
+                <span class="mode-icon">&#x2192;</span>
+                Sequential
+              </div>
+              <div class="mode-card" data-mode="hierarchical" onclick="selectMode(this)">
+                <span class="mode-icon">&#x25B3;</span>
+                Hierarchical
+              </div>
+              <div class="mode-card" data-mode="debate" onclick="selectMode(this)">
+                <span class="mode-icon">&#x2694;</span>
+                Debate
+              </div>
+              <div class="mode-card" data-mode="consensus" onclick="selectMode(this)">
+                <span class="mode-icon">&#x2714;</span>
+                Consensus
+              </div>
+              <div class="mode-card" data-mode="swarm" onclick="selectMode(this)">
+                <span class="mode-icon">&#x2726;</span>
+                Swarm
+              </div>
+              <div class="mode-card" data-mode="graph" onclick="selectMode(this)">
+                <span class="mode-icon">&#x2B21;</span>
+                Graph
+              </div>
+              <div class="mode-card" data-mode="hybrid" onclick="selectMode(this)">
+                <span class="mode-icon">&#x2B2A;</span>
+                Hybrid
+              </div>
+              <div class="mode-card" data-mode="broadcast" onclick="selectMode(this)">
+                <span class="mode-icon">&#x25CE;</span>
+                Broadcast
+              </div>
+            </div>
+          </div>
+
+          <!-- LLM Configuration -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">LLM Configuration</span>
+            </div>
+            <div class="grid-3" style="gap: 12px;">
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Provider</label>
+                <select id="llm-provider" class="form-select" onchange="updateModelOptions()">
+                  <option value="ollama">Ollama (Local)</option>
+                  <option value="openai">OpenAI</option>
+                  <option value="anthropic">Anthropic</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Model</label>
+                <select id="llm-model" class="form-select">
+                  <option value="llama3.2">llama3.2</option>
+                  <option value="mistral">mistral</option>
+                  <option value="codellama">codellama</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">Temperature</label>
+                <div class="range-container">
+                  <input type="range" id="temperature" min="0" max="2" step="0.1" value="0.7" oninput="document.getElementById('temp-val').textContent = this.value">
+                  <span class="range-value" id="temp-val">0.7</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Advanced Settings -->
+            <div style="margin-top: 16px;">
+              <div class="collapsible-header" onclick="toggleCollapsible(this)">
+                <span class="arrow">&#x25B6;</span>
+                Advanced Settings
+              </div>
+              <div class="collapsible-body">
+                <div class="grid-2" style="gap: 12px; padding-top: 12px;">
+                  <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">Max Rounds</label>
+                    <input type="number" id="max-rounds" class="form-input" value="5" min="1" max="20">
+                  </div>
+                  <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">Consensus Threshold</label>
+                    <div class="range-container">
+                      <input type="range" id="consensus-threshold" min="0" max="100" step="5" value="70" oninput="document.getElementById('threshold-val').textContent = this.value + '%'">
+                      <span class="range-value" id="threshold-val">70%</span>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="enable-guardrails" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Enable Guardrails</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="enable-tracing" checked>
+                      <span class="toggle-slider"></span>
+                    </label>
+                    <span style="font-size: 13px; color: var(--text-secondary);">Enable Tracing</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Launch Button -->
+          <div class="launch-btn-container">
+            <button class="btn-launch" id="launch-btn" onclick="launchMission()">
+              Launch Mission
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Panel -->
+        <div class="launch-output">
+          <div class="output-panel">
+            <div class="output-header">
+              <span class="output-header-title">
+                <span class="badge-dot" id="output-status-dot" style="width:6px;height:6px;border-radius:50%;background:var(--text-dim);"></span>
+                Mission Output
+              </span>
+              <span id="output-timer" style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);">T+ 00:00</span>
+            </div>
+            <div class="output-body" id="output-body">
+              <div class="output-empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 00-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 012-3.95A12.88 12.88 0 0122 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 01-4 2z"/></svg>
+                <span>Configure your mission and hit launch</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== FLEET PAGE ==================== -->
+    <div id="page-fleet" class="page">
+      <div class="page-header">
+        <div class="page-title">
+          Agent Fleet
+          <small>Manage your agent workforce</small>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-cyan" onclick="openCreateAgentModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            New Agent
+          </button>
+        </div>
+      </div>
+
+      <div class="fleet-grid" id="fleet-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <!-- ==================== TELEMETRY PAGE ==================== -->
+    <div id="page-telemetry" class="page">
+      <div class="page-header">
+        <div class="page-title">
+          Telemetry
+          <small>Real-time system monitoring</small>
+        </div>
+        <div class="page-actions">
+          <span class="badge badge-green"><span class="badge-dot"></span>Live</span>
+        </div>
+      </div>
+
+      <div class="stats-grid" style="margin-bottom: 24px;">
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--accent-cyan);" id="tel-total-tokens">24,580</div>
+          <div class="stat-label">Total Tokens</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--accent-green);" id="tel-success-rate">98.5<small style="font-size:14px;color:var(--text-tertiary)">%</small></div>
+          <div class="stat-label">Success Rate</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--accent-purple);" id="tel-avg-time">1.8<small style="font-size:14px;color:var(--text-tertiary)">s</small></div>
+          <div class="stat-label">Avg Response</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--accent-orange);" id="tel-cost">$0.00</div>
+          <div class="stat-label">Total Cost</div>
+        </div>
+      </div>
+
+      <div class="telemetry-grid">
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Token Usage (Last 24 Bars)</span>
+            </div>
+            <div class="chart-container">
+              <div class="bar-chart" id="token-chart">
+                <!-- Rendered by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Agent Activity Map</span>
+            </div>
+            <div class="activity-grid" id="activity-grid">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">System Health</span>
+            </div>
+            <div class="health-indicators">
+              <div class="health-item">
+                <div class="health-dot ok"></div>
+                <span class="health-name">LLM Provider</span>
+                <span class="health-status">Connected</span>
+              </div>
+              <div class="health-item">
+                <div class="health-dot ok"></div>
+                <span class="health-name">API Server</span>
+                <span class="health-status">Running</span>
+              </div>
+              <div class="health-item">
+                <div class="health-dot warn"></div>
+                <span class="health-name">Redis</span>
+                <span class="health-status">Fallback</span>
+              </div>
+              <div class="health-item">
+                <div class="health-dot ok"></div>
+                <span class="health-name">Memory</span>
+                <span class="health-status">45 MB</span>
+              </div>
+              <div class="health-item">
+                <div class="health-dot ok"></div>
+                <span class="health-name">Tracing</span>
+                <span class="health-status">Active</span>
+              </div>
+              <div class="health-item">
+                <div class="health-dot ok"></div>
+                <span class="health-name">Guardrails</span>
+                <span class="health-status">Enabled</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Cost Breakdown</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Input Tokens</span>
+              <span class="telemetry-value">$0.00</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Output Tokens</span>
+              <span class="telemetry-value">$0.00</span>
+            </div>
+            <div class="telemetry-row">
+              <span class="telemetry-label">Total Cost</span>
+              <span class="telemetry-value" style="color: var(--accent-green);">$0.00</span>
+            </div>
+            <div style="margin-top: 12px;">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 0%;"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 6px;">
+                <span style="font-size: 11px; color: var(--text-dim);">$0.00</span>
+                <span style="font-size: 11px; color: var(--text-dim);">Budget: $10.00</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== COMMS PAGE ==================== -->
+    <div id="page-comms" class="page">
+      <div class="page-header">
+        <div class="page-title">
+          Communications
+          <small>Multi-agent conversation interface</small>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-ghost btn-sm" onclick="exportChat()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export
+          </button>
+        </div>
+      </div>
+
+      <div class="chat-container">
+        <div class="chat-main">
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-message">
+              <div class="chat-msg-avatar agent-color-1">SY</div>
+              <div class="chat-msg-body">
+                <div class="chat-msg-header">
+                  <span class="chat-msg-name">System</span>
+                  <span class="chat-msg-role" style="background: var(--accent-cyan-dim); color: var(--accent-cyan);">System</span>
+                  <span class="chat-msg-time">now</span>
+                </div>
+                <div class="chat-msg-text">Welcome to AgentMind Communications. Launch a mission to start a conversation with your agent team.</div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input-area">
+            <textarea class="chat-input" id="chat-input" placeholder="Send a message to the agent team..." rows="1" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage()}"></textarea>
+            <button class="btn btn-cyan btn-sm" onclick="sendChatMessage()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-sidebar">
+          <div class="card" style="padding: 16px;">
+            <div class="section-title" style="margin-bottom: 12px;">Active Agents</div>
+            <div class="chat-agents-list" id="chat-agents-list">
+              <div class="chat-agent-item">
+                <div class="chat-agent-dot" style="background: var(--accent-green); box-shadow: var(--glow-green);"></div>
+                <span class="chat-agent-name">Analyst</span>
+                <span class="chat-agent-status">Idle</span>
+              </div>
+              <div class="chat-agent-item">
+                <div class="chat-agent-dot" style="background: var(--accent-green); box-shadow: var(--glow-green);"></div>
+                <span class="chat-agent-name">Creative</span>
+                <span class="chat-agent-status">Idle</span>
+              </div>
+              <div class="chat-agent-item">
+                <div class="chat-agent-dot" style="background: var(--accent-green); box-shadow: var(--glow-green);"></div>
+                <span class="chat-agent-name">Technical</span>
+                <span class="chat-agent-status">Idle</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="padding: 16px;">
+            <div class="section-title" style="margin-bottom: 12px;">Session Info</div>
+            <div class="telemetry-row" style="padding: 6px 0;">
+              <span class="telemetry-label" style="font-size:11px">Messages</span>
+              <span class="telemetry-value" style="font-size:13px" id="chat-msg-count">1</span>
+            </div>
+            <div class="telemetry-row" style="padding: 6px 0;">
+              <span class="telemetry-label" style="font-size:11px">Duration</span>
+              <span class="telemetry-value" style="font-size:13px" id="chat-duration">00:00</span>
+            </div>
+            <div class="telemetry-row" style="padding: 6px 0; border-bottom: none;">
+              <span class="telemetry-label" style="font-size:11px">Tokens</span>
+              <span class="telemetry-value" style="font-size:13px" id="chat-tokens">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== CARGO PAGE ==================== -->
+    <div id="page-cargo" class="page">
+      <div class="page-header">
+        <div class="page-title">
+          Cargo Bay
+          <small>Tools & plugin management</small>
+        </div>
+      </div>
+
+      <div class="cargo-tabs">
+        <button class="cargo-tab active" onclick="switchCargoTab(this, 'tools')">Tools</button>
+        <button class="cargo-tab" onclick="switchCargoTab(this, 'plugins')">Plugins</button>
+      </div>
+
+      <div id="cargo-tools" class="cargo-content">
+        <div class="grid-2" style="gap: 12px;">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <div id="cargo-plugins" class="cargo-content" style="display:none;">
+        <div class="grid-2" style="gap: 12px;">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app -->
+
+<!-- CREATE AGENT MODAL -->
+<div class="modal-overlay" id="create-agent-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Create Agent</h2>
+      <button class="modal-close" onclick="closeCreateAgentModal()">&times;</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Agent Name</label>
+      <input type="text" id="new-agent-name" class="form-input" placeholder="e.g. Researcher-1">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Role</label>
+      <select id="new-agent-role" class="form-select">
+        <option value="analyst">Analyst</option>
+        <option value="creative">Creative</option>
+        <option value="coordinator">Coordinator</option>
+        <option value="technical">Technical</option>
+        <option value="researcher">Researcher</option>
+        <option value="strategist">Strategist</option>
+        <option value="designer">Designer</option>
+        <option value="developer">Developer</option>
+        <option value="marketer">Marketer</option>
+        <option value="philosopher">Philosopher</option>
+        <option value="scientist">Scientist</option>
+        <option value="entrepreneur">Entrepreneur</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">System Prompt (Optional)</label>
+      <textarea id="new-agent-prompt" class="form-textarea" placeholder="Custom instructions for this agent..." rows="3"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeCreateAgentModal()">Cancel</button>
+      <button class="btn btn-cyan" onclick="createAgent()">Create Agent</button>
+    </div>
+  </div>
+</div>
+
+<!-- COUNTDOWN OVERLAY -->
+<div class="countdown-overlay" id="countdown-overlay">
+  <div class="countdown-number" id="countdown-number">3</div>
+</div>
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+<script>
+// ============================================================
+// CONFIGURATION
+// ============================================================
+const API_BASE = 'http://localhost:8000';
+const AGENT_COLORS = ['agent-color-1','agent-color-2','agent-color-3','agent-color-4','agent-color-5','agent-color-6'];
+const ROLES = ['analyst','creative','coordinator','technical','researcher','strategist','designer','developer','marketer','philosopher','scientist','entrepreneur'];
+const MODEL_OPTIONS = {
+  ollama: ['llama3.2', 'mistral', 'codellama', 'phi3', 'gemma2', 'qwen2'],
+  openai: ['gpt-4', 'gpt-4-turbo', 'gpt-3.5-turbo', 'gpt-4o'],
+  anthropic: ['claude-3-opus', 'claude-3-sonnet', 'claude-3-haiku', 'claude-4-sonnet']
+};
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  currentPage: 'mission-control',
+  agents: [
+    { id: 1, name: 'Analyst', role: 'analyst', status: 'idle', missions: 12, successRate: 96, avgTime: 1.4 },
+    { id: 2, name: 'Creative', role: 'creative', status: 'idle', missions: 8, successRate: 94, avgTime: 1.8 },
+    { id: 3, name: 'Technical', role: 'technical', status: 'idle', missions: 15, successRate: 98, avgTime: 1.2 },
+  ],
+  launchTeam: [
+    { name: 'Agent-1', role: 'analyst' },
+    { name: 'Agent-2', role: 'creative' },
+  ],
+  selectedMode: 'sequential',
+  missions: [],
+  chatMessages: [],
+  missionRunning: false,
+  totalTokens: 24580,
+  totalMissions: 7,
+  startTime: Date.now(),
+};
+
+// ============================================================
+// STARFIELD
+// ============================================================
+function initStarfield() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  const STAR_COUNT = 200;
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function createStars() {
+    stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 1.5 + 0.5,
+        speed: Math.random() * 0.3 + 0.05,
+        opacity: Math.random() * 0.8 + 0.2,
+        twinkle: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Subtle gradient background
+    const grad = ctx.createRadialGradient(
+      canvas.width / 2, canvas.height / 2, 0,
+      canvas.width / 2, canvas.height / 2, canvas.width * 0.7
+    );
+    grad.addColorStop(0, 'rgba(5, 5, 25, 0.3)');
+    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    for (const star of stars) {
+      star.twinkle += 0.02;
+      star.y += star.speed;
+      if (star.y > canvas.height) {
+        star.y = 0;
+        star.x = Math.random() * canvas.width;
+      }
+
+      const flicker = Math.sin(star.twinkle) * 0.3 + 0.7;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(180, 210, 255, ${star.opacity * flicker})`;
+      ctx.fill();
+    }
+
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', () => { resize(); createStars(); });
+  resize();
+  createStars();
+  draw();
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function navigate(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+
+  state.currentPage = page;
+  window.location.hash = page;
+}
+
+// ============================================================
+// UPTIME TIMER
+// ============================================================
+function updateUptime() {
+  const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
+  const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+  const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+  const s = String(elapsed % 60).padStart(2, '0');
+  const display = `T+ ${h}:${m}:${s}`;
+  const el = document.getElementById('uptime-display');
+  if (el) el.textContent = display;
+}
+
+// ============================================================
+// DASHBOARD STATS
+// ============================================================
+function updateDashboardStats() {
+  document.getElementById('stat-agents').textContent = state.agents.length;
+  document.getElementById('stat-missions').textContent = state.totalMissions;
+  document.getElementById('stat-tokens').textContent = state.totalTokens.toLocaleString();
+}
+
+// ============================================================
+// LAUNCH PAGE - AGENT TEAM
+// ============================================================
+function renderAgentTeam() {
+  const container = document.getElementById('agent-team-list');
+  container.innerHTML = state.launchTeam.map((agent, i) => `
+    <div class="agent-team-item">
+      <div class="agent-avatar ${AGENT_COLORS[i % AGENT_COLORS.length]}">${agent.name.charAt(0)}</div>
+      <input type="text" class="form-input" value="${agent.name}" style="flex:1;"
+        onchange="state.launchTeam[${i}].name = this.value">
+      <select class="form-select" style="width: 140px;"
+        onchange="state.launchTeam[${i}].role = this.value">
+        ${ROLES.map(r => `<option value="${r}" ${r === agent.role ? 'selected' : ''}>${r.charAt(0).toUpperCase() + r.slice(1)}</option>`).join('')}
+      </select>
+      <button class="btn btn-danger btn-sm" onclick="removeAgent(${i})" ${state.launchTeam.length <= 1 ? 'disabled' : ''}>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function addAgent() {
+  const n = state.launchTeam.length + 1;
+  state.launchTeam.push({ name: `Agent-${n}`, role: ROLES[n % ROLES.length] });
+  renderAgentTeam();
+}
+
+function removeAgent(index) {
+  if (state.launchTeam.length > 1) {
+    state.launchTeam.splice(index, 1);
+    renderAgentTeam();
+  }
+}
+
+// ============================================================
+// ORCHESTRATION MODE
+// ============================================================
+function selectMode(el) {
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  state.selectedMode = el.dataset.mode;
+}
+
+// ============================================================
+// LLM MODEL OPTIONS
+// ============================================================
+function updateModelOptions() {
+  const provider = document.getElementById('llm-provider').value;
+  const modelSelect = document.getElementById('llm-model');
+  const models = MODEL_OPTIONS[provider] || [];
+  modelSelect.innerHTML = models.map(m => `<option value="${m}">${m}</option>`).join('');
+}
+
+// ============================================================
+// COLLAPSIBLE
+// ============================================================
+function toggleCollapsible(header) {
+  header.classList.toggle('open');
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+// ============================================================
+// LAUNCH MISSION
+// ============================================================
+async function launchMission() {
+  const task = document.getElementById('task-input').value.trim();
+  if (!task) {
+    document.getElementById('task-input').style.borderColor = 'var(--accent-red)';
+    document.getElementById('task-input').focus();
+    setTimeout(() => { document.getElementById('task-input').style.borderColor = ''; }, 2000);
+    return;
+  }
+
+  if (state.missionRunning) return;
+  state.missionRunning = true;
+
+  const btn = document.getElementById('launch-btn');
+  btn.classList.add('launching');
+  btn.disabled = true;
+
+  // Countdown
+  const overlay = document.getElementById('countdown-overlay');
+  const countEl = document.getElementById('countdown-number');
+  overlay.classList.add('active');
+
+  for (let i = 3; i >= 1; i--) {
+    countEl.textContent = i;
+    countEl.style.animation = 'none';
+    void countEl.offsetHeight;
+    countEl.style.animation = 'countPulse 0.8s ease';
+    await sleep(800);
+  }
+  countEl.textContent = 'GO';
+  countEl.style.color = 'var(--accent-green)';
+  countEl.style.textShadow = '0 0 60px rgba(0,255,136,0.5), 0 0 120px rgba(0,255,136,0.3)';
+  await sleep(500);
+  overlay.classList.remove('active');
+  countEl.style.color = '';
+  countEl.style.textShadow = '';
+
+  // Setup output
+  const outputBody = document.getElementById('output-body');
+  const statusDot = document.getElementById('output-status-dot');
+  outputBody.innerHTML = '';
+  statusDot.style.background = 'var(--accent-cyan)';
+  statusDot.style.boxShadow = 'var(--glow-cyan)';
+
+  const missionStart = Date.now();
+  const timerEl = document.getElementById('output-timer');
+  const timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - missionStart) / 1000);
+    const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+    const s = String(elapsed % 60).padStart(2, '0');
+    timerEl.textContent = `T+ ${m}:${s}`;
+  }, 1000);
+
+  // Build request
+  const request = {
+    task: task,
+    agents: state.launchTeam.map(a => ({ name: a.name, role: a.role })),
+    max_rounds: parseInt(document.getElementById('max-rounds').value) || 5,
+    llm_provider: document.getElementById('llm-provider').value,
+    llm_model: document.getElementById('llm-model').value,
+    temperature: parseFloat(document.getElementById('temperature').value),
+    stream: true,
+    enable_guardrails: document.getElementById('enable-guardrails').checked,
+    enable_tracing: document.getElementById('enable-tracing').checked,
+  };
+
+  addOutputMessage('SYSTEM', 'Mission initiated: ' + task, 'var(--accent-cyan)');
+  addOutputMessage('SYSTEM', `Team: ${request.agents.map(a => a.name + ' (' + a.role + ')').join(', ')}`, 'var(--text-dim)');
+  addOutputMessage('SYSTEM', `Mode: ${state.selectedMode} | Provider: ${request.llm_provider} | Model: ${request.llm_model}`, 'var(--text-dim)');
+
+  try {
+    const response = await fetch(`${API_BASE}/collaborate/stream`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer demo-token',
+      },
+      body: JSON.stringify(request),
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const text = decoder.decode(value, { stream: true });
+      const lines = text.split('\n').filter(l => l.startsWith('data: '));
+
+      for (const line of lines) {
+        try {
+          const data = JSON.parse(line.slice(6).replace(/'/g, '"'));
+          if (data.event === 'agent_added') {
+            addOutputMessage(data.agent, `Agent ${data.agent} (${data.role}) joined the mission`, 'var(--accent-green)');
+          } else if (data.event === 'collaboration_start') {
+            addOutputMessage('SYSTEM', 'Collaboration started...', 'var(--accent-cyan)');
+          } else if (data.event === 'completed') {
+            addOutputMessage('RESULT', data.result || 'Mission completed successfully', 'var(--accent-green)');
+          } else if (data.event === 'error') {
+            addOutputMessage('ERROR', data.message, 'var(--accent-red)');
+          }
+        } catch (e) {
+          // Skip unparseable lines
+        }
+      }
+    }
+
+    missionComplete(true, missionStart);
+  } catch (err) {
+    addOutputMessage('ERROR', `Connection failed: ${err.message}`, 'var(--accent-red)');
+    addOutputMessage('SYSTEM', 'Tip: Make sure the API server is running (uvicorn api_server_enhanced:app --reload)', 'var(--text-dim)');
+
+    // Demo mode - simulate collaboration
+    addOutputMessage('SYSTEM', 'Running in demo mode...', 'var(--accent-orange)');
+    await simulateMission(request);
+    missionComplete(true, missionStart);
+  }
+
+  clearInterval(timerInterval);
+  btn.classList.remove('launching');
+  btn.disabled = false;
+  state.missionRunning = false;
+  statusDot.style.background = 'var(--accent-green)';
+  statusDot.style.boxShadow = 'var(--glow-green)';
+}
+
+async function simulateMission(request) {
+  const responses = [
+    { agent: request.agents[0]?.name || 'Agent-1', text: `Analyzing the task: "${request.task}"\n\nKey considerations:\n1. Scope and requirements analysis\n2. Resource assessment\n3. Risk evaluation\n\nProceeding with detailed analysis...` },
+    { agent: request.agents[1]?.name || 'Agent-2', text: `Building on the analysis, here are creative approaches:\n\n- Approach A: Incremental implementation with iterative feedback\n- Approach B: Parallel workstreams with synchronization points\n- Approach C: Prototype-first with rapid iteration\n\nRecommendation: Approach A provides the best balance of speed and quality.` },
+  ];
+
+  for (const resp of responses) {
+    await sleep(1500);
+    const colorIdx = request.agents.findIndex(a => a.name === resp.agent);
+    const color = ['var(--accent-cyan)', 'var(--accent-green)', 'var(--accent-purple)', 'var(--accent-orange)'][colorIdx % 4];
+    addOutputMessage(resp.agent, resp.text, color);
+  }
+
+  await sleep(1000);
+  addOutputMessage('RESULT', `Mission completed successfully.\n\nThe team reached consensus on the optimal approach for: "${request.task}"\n\nKey deliverables have been documented and are ready for review.`, 'var(--accent-green)');
+}
+
+function missionComplete(success, startTime) {
+  const duration = ((Date.now() - startTime) / 1000).toFixed(1);
+  state.totalMissions++;
+  state.totalTokens += Math.floor(Math.random() * 2000) + 500;
+  updateDashboardStats();
+
+  // Add to timeline
+  const task = document.getElementById('task-input').value.trim();
+  addTimelineItem(task, state.launchTeam.length, parseInt(document.getElementById('max-rounds').value), duration, success);
+}
+
+function addOutputMessage(agent, text, color) {
+  const outputBody = document.getElementById('output-body');
+  const msg = document.createElement('div');
+  msg.className = 'output-message';
+  msg.style.borderLeftColor = color;
+  msg.innerHTML = `
+    <div class="msg-agent" style="color: ${color};">${agent}</div>
+    <div class="msg-text">${escapeHtml(text)}</div>
+  `;
+  outputBody.appendChild(msg);
+  outputBody.scrollTop = outputBody.scrollHeight;
+}
+
+function addTimelineItem(title, agents, rounds, duration, success) {
+  const timeline = document.getElementById('missions-timeline');
+  const item = document.createElement('div');
+  item.className = 'timeline-item';
+  item.innerHTML = `
+    <div class="timeline-dot ${success ? 'green' : 'red'}"></div>
+    <div class="timeline-content">
+      <div class="timeline-title">${escapeHtml(title.substring(0, 50))}${title.length > 50 ? '...' : ''}</div>
+      <div class="timeline-meta">
+        <span>${agents} agents</span><span>${rounds} rounds</span><span>${duration}s</span>
+      </div>
+    </div>
+  `;
+  timeline.insertBefore(item, timeline.firstChild);
+}
+
+// ============================================================
+// FLEET PAGE
+// ============================================================
+function renderFleet() {
+  const grid = document.getElementById('fleet-grid');
+  grid.innerHTML = state.agents.map((agent, i) => `
+    <div class="fleet-card">
+      <div class="fleet-card-header">
+        <div class="fleet-avatar ${AGENT_COLORS[i % AGENT_COLORS.length]}" style="border-color: currentColor;">
+          ${agent.name.charAt(0)}${agent.name.charAt(agent.name.length > 1 ? 1 : 0)}
+        </div>
+        <div class="fleet-card-info">
+          <h3>${escapeHtml(agent.name)}</h3>
+          <span class="role">${agent.role}</span>
+        </div>
+        <span class="badge badge-green"><span class="badge-dot"></span>${agent.status}</span>
+      </div>
+      <div style="margin: 12px 0;">
+        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+          ${getAgentStateIcons(agent.status)}
+        </div>
+      </div>
+      <div class="fleet-metrics">
+        <div class="fleet-metric">
+          <div class="fleet-metric-value">${agent.missions}</div>
+          <div class="fleet-metric-label">Missions</div>
+        </div>
+        <div class="fleet-metric">
+          <div class="fleet-metric-value">${agent.successRate}%</div>
+          <div class="fleet-metric-label">Success</div>
+        </div>
+        <div class="fleet-metric">
+          <div class="fleet-metric-value">${agent.avgTime}s</div>
+          <div class="fleet-metric-label">Avg Time</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function getAgentStateIcons(currentState) {
+  const states = ['idle', 'thinking', 'executing', 'waiting', 'delegating'];
+  return states.map(s => {
+    const isActive = s === currentState;
+    const color = isActive ? 'var(--accent-cyan)' : 'var(--text-dim)';
+    return `<span style="font-size:10px; padding:2px 6px; border-radius:4px; background:${isActive ? 'var(--accent-cyan-dim)' : 'var(--bg-hover)'}; color:${color}; text-transform:uppercase; letter-spacing:0.5px;">${s}</span>`;
+  }).join('');
+}
+
+function openCreateAgentModal() {
+  document.getElementById('create-agent-modal').classList.add('active');
+  document.getElementById('new-agent-name').focus();
+}
+
+function closeCreateAgentModal() {
+  document.getElementById('create-agent-modal').classList.remove('active');
+}
+
+function createAgent() {
+  const name = document.getElementById('new-agent-name').value.trim();
+  const role = document.getElementById('new-agent-role').value;
+  if (!name) return;
+
+  state.agents.push({
+    id: state.agents.length + 1,
+    name, role,
+    status: 'idle',
+    missions: 0,
+    successRate: 100,
+    avgTime: 0,
+  });
+
+  renderFleet();
+  updateDashboardStats();
+  closeCreateAgentModal();
+  document.getElementById('new-agent-name').value = '';
+  document.getElementById('new-agent-prompt').value = '';
+}
+
+// ============================================================
+// TELEMETRY PAGE
+// ============================================================
+function renderTokenChart() {
+  const chart = document.getElementById('token-chart');
+  const bars = [];
+  for (let i = 0; i < 24; i++) {
+    const height = Math.random() * 80 + 10;
+    bars.push(`<div class="bar" style="height: ${height}%" title="${Math.floor(height * 30)} tokens"></div>`);
+  }
+  chart.innerHTML = bars.join('');
+}
+
+function renderActivityGrid() {
+  const grid = document.getElementById('activity-grid');
+  const cells = [];
+  for (let i = 0; i < 84; i++) {
+    const level = Math.random();
+    let cls = '';
+    if (level > 0.8) cls = 'l4';
+    else if (level > 0.6) cls = 'l3';
+    else if (level > 0.4) cls = 'l2';
+    else if (level > 0.2) cls = 'l1';
+    cells.push(`<div class="activity-cell ${cls}"></div>`);
+  }
+  grid.innerHTML = cells.join('');
+}
+
+// ============================================================
+// COMMS PAGE
+// ============================================================
+function sendChatMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  addChatMessage('You', 'user', text, 'var(--accent-blue)');
+  input.value = '';
+
+  // Simulate agent response
+  setTimeout(() => {
+    const agent = state.agents[Math.floor(Math.random() * state.agents.length)];
+    addChatMessage(agent.name, agent.role, `I'll analyze your request: "${text}"\n\nProcessing and generating response based on my ${agent.role} expertise...`, getAgentColor(state.agents.indexOf(agent)));
+  }, 1000);
+}
+
+function addChatMessage(name, role, text, color) {
+  const container = document.getElementById('chat-messages');
+  const initials = name.substring(0, 2).toUpperCase();
+  const colorClass = AGENT_COLORS[Math.floor(Math.random() * AGENT_COLORS.length)];
+  const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+  const msg = document.createElement('div');
+  msg.className = 'chat-message';
+  msg.innerHTML = `
+    <div class="chat-msg-avatar ${colorClass}">${initials}</div>
+    <div class="chat-msg-body">
+      <div class="chat-msg-header">
+        <span class="chat-msg-name">${escapeHtml(name)}</span>
+        <span class="chat-msg-role" style="background: ${color}22; color: ${color};">${role}</span>
+        <span class="chat-msg-time">${time}</span>
+      </div>
+      <div class="chat-msg-text">${escapeHtml(text)}</div>
+    </div>
+  `;
+  container.appendChild(msg);
+  container.scrollTop = container.scrollHeight;
+
+  const countEl = document.getElementById('chat-msg-count');
+  countEl.textContent = parseInt(countEl.textContent) + 1;
+}
+
+function exportChat() {
+  const messages = document.getElementById('chat-messages');
+  const text = messages.innerText;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'agentmind-chat-export.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function getAgentColor(index) {
+  const colors = ['var(--accent-cyan)', 'var(--accent-green)', 'var(--accent-purple)', 'var(--accent-orange)', 'var(--accent-red)', '#44dddd'];
+  return colors[index % colors.length];
+}
+
+// ============================================================
+// CARGO PAGE
+// ============================================================
+function renderTools() {
+  const tools = [
+    { name: 'Calculator', desc: 'Mathematical calculations and expressions', icon: '&#x1F4CA;', color: 'var(--accent-cyan-dim)', enabled: true },
+    { name: 'Code Executor', desc: 'Execute Python code in sandboxed environment', icon: '&#x1F4BB;', color: 'var(--accent-green-dim)', enabled: true },
+    { name: 'Web Search', desc: 'Search the web for information and research', icon: '&#x1F310;', color: 'var(--accent-purple-dim)', enabled: true },
+    { name: 'API Client', desc: 'Make HTTP requests to external APIs', icon: '&#x1F517;', color: 'var(--accent-orange-dim)', enabled: false },
+    { name: 'File Manager', desc: 'Read, write, and manage files on the system', icon: '&#x1F4C1;', color: 'var(--accent-cyan-dim)', enabled: false },
+    { name: 'Database Query', desc: 'Execute SQL queries against databases', icon: '&#x1F5C4;', color: 'var(--accent-red-dim)', enabled: false },
+  ];
+
+  const container = document.querySelector('#cargo-tools .grid-2');
+  container.innerHTML = tools.map(t => `
+    <div class="tool-card">
+      <div class="tool-icon" style="background: ${t.color}; font-size: 22px;">${t.icon}</div>
+      <div class="tool-info">
+        <div class="tool-name">${t.name}</div>
+        <div class="tool-desc">${t.desc}</div>
+      </div>
+      <div class="tool-toggle">
+        <label class="toggle-switch">
+          <input type="checkbox" ${t.enabled ? 'checked' : ''}>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderPlugins() {
+  const plugins = [
+    { name: 'Slack Integration', desc: 'Connect agents to Slack workspaces', status: 'Available', color: 'badge-cyan' },
+    { name: 'Discord Bot', desc: 'Deploy agents as Discord bots', status: 'Available', color: 'badge-cyan' },
+    { name: 'Webhook', desc: 'Generic webhook integration for events', status: 'Active', color: 'badge-green' },
+    { name: 'ChromaDB Memory', desc: 'Vector-based long-term memory storage', status: 'Available', color: 'badge-cyan' },
+    { name: 'Ray Distributed', desc: 'Distributed computing with Ray backend', status: 'Not Installed', color: 'badge-orange' },
+    { name: 'Celery Tasks', desc: 'Distributed task queue processing', status: 'Not Installed', color: 'badge-orange' },
+  ];
+
+  const container = document.querySelector('#cargo-plugins .grid-2');
+  container.innerHTML = plugins.map(p => `
+    <div class="tool-card">
+      <div class="tool-icon" style="background: var(--bg-hover); font-size: 18px;">&#x1F9E9;</div>
+      <div class="tool-info">
+        <div class="tool-name">${p.name}</div>
+        <div class="tool-desc">${p.desc}</div>
+      </div>
+      <span class="badge ${p.color}"><span class="badge-dot"></span>${p.status}</span>
+    </div>
+  `).join('');
+}
+
+function switchCargoTab(el, tab) {
+  document.querySelectorAll('.cargo-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.cargo-content').forEach(c => c.style.display = 'none');
+  document.getElementById('cargo-' + tab).style.display = 'block';
+}
+
+// ============================================================
+// UTILITIES
+// ============================================================
+function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// ============================================================
+// LIVE DATA SIMULATION
+// ============================================================
+function startLiveUpdates() {
+  setInterval(() => {
+    // Update telemetry values
+    const cpu = (Math.random() * 20 + 5).toFixed(0);
+    const mem = (Math.random() * 20 + 35).toFixed(0);
+    const tps = (Math.random() * 50).toFixed(0);
+    document.getElementById('tel-cpu').textContent = cpu + '%';
+    document.getElementById('tel-memory').textContent = mem + ' MB';
+    document.getElementById('tel-tps').textContent = tps;
+
+    // Update latency
+    const latency = Math.floor(Math.random() * 300 + 100);
+    document.getElementById('stat-latency').innerHTML = latency + '<small style="font-size: 14px; color: var(--text-tertiary)">ms</small>';
+  }, 3000);
+}
+
+// ============================================================
+// INITIALIZATION
+// ============================================================
+function init() {
+  initStarfield();
+  renderAgentTeam();
+  renderFleet();
+  renderTokenChart();
+  renderActivityGrid();
+  renderTools();
+  renderPlugins();
+  updateDashboardStats();
+  startLiveUpdates();
+
+  setInterval(updateUptime, 1000);
+
+  // Hash routing
+  const hash = window.location.hash.slice(1);
+  if (hash && document.getElementById('page-' + hash)) {
+    navigate(hash);
+  }
+
+  window.addEventListener('hashchange', () => {
+    const h = window.location.hash.slice(1);
+    if (h && document.getElementById('page-' + h)) navigate(h);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

@@ -1,17 +1,19 @@
-# Multi-Modal Support
+# 🎨 Multi-Modal Support
 
 AgentMind provides comprehensive multi-modal capabilities, allowing agents to process and generate various types of media including images, audio, and documents.
 
-## Overview
+## 📋 Overview
 
 The multi-modal module (`agentmind.multimodal`) includes:
 
-- **Image Processing**: Load, resize, convert, and analyze images
-- **Audio Processing**: Speech-to-text, text-to-speech, audio format conversion
-- **Document Processing**: Extract text from PDF, DOCX, and other formats
-- **Vision-Language Models**: Integration with GPT-4V, Claude 3, and other vision-capable LLMs
+- 🖼️ **Image Processing**: Load, resize, convert, and analyze images
+- 🎤 **Audio Processing**: Speech-to-text, text-to-speech, audio format conversion
+- 📄 **Document Processing**: Extract text from PDF, DOCX, and other formats
+- 👁️ **Vision-Language Models**: Integration with GPT-4V, Claude 3, and other vision-capable LLMs
 
-## Installation
+---
+
+## 📦 Installation
 
 Install the required dependencies for multi-modal support:
 
@@ -29,7 +31,9 @@ pip install PyPDF2 python-docx
 pip install Pillow SpeechRecognition pydub gTTS PyPDF2 python-docx
 ```
 
-## Image Processing
+---
+
+## 🖼️ Image Processing
 
 ### Basic Usage
 
@@ -95,7 +99,9 @@ answer = await vision_llm.answer_about_image(
 )
 ```
 
-## Audio Processing
+---
+
+## 🎤 Audio Processing
 
 ### Speech-to-Text
 
@@ -169,7 +175,9 @@ result = await mind.collaborate(question, max_rounds=1)
 audio_processor.text_to_speech(result.final_output, "response.mp3")
 ```
 
-## Document Processing
+---
+
+## 📄 Document Processing
 
 ### Extract Text from Documents
 
@@ -244,7 +252,9 @@ result = await mind.collaborate(
 )
 ```
 
-## Advanced Use Cases
+---
+
+## 🚀 Advanced Use Cases
 
 ### Multi-Modal Research Assistant
 
@@ -339,59 +349,56 @@ result = await mind.collaborate(
 )
 ```
 
-## Supported Formats
+---
 
-### Images
-- PNG
-- JPEG/JPG
-- WEBP
-- GIF
+## 📁 Supported Formats
 
-### Audio
-- WAV
-- MP3
-- OGG
-- FLAC
-- M4A
+| Category | Formats |
+|----------|---------|
+| 🖼️ **Images** | PNG, JPEG/JPG, WEBP, GIF |
+| 🎤 **Audio** | WAV, MP3, OGG, FLAC, M4A |
+| 📄 **Documents** | PDF, DOCX, TXT, MD (Markdown) |
 
-### Documents
-- PDF
-- DOCX
-- TXT
-- MD (Markdown)
+---
 
-## Vision-Capable Models
+## 👁️ Vision-Capable Models
 
 AgentMind supports various vision-language models:
 
-- **GPT-4 Vision** (`gpt-4-vision-preview`)
-- **Claude 3 Opus** (`claude-3-opus-20240229`)
-- **Claude 3 Sonnet** (`claude-3-sonnet-20240229`)
-- **Gemini Pro Vision** (`gemini-pro-vision`)
+| Model | ID |
+|-------|-----|
+| GPT-4 Vision | `gpt-4-vision-preview` |
+| Claude 3 Opus | `claude-3-opus-20240229` |
+| Claude 3 Sonnet | `claude-3-sonnet-20240229` |
+| Gemini Pro Vision | `gemini-pro-vision` |
 
-## Best Practices
+---
 
-### Image Processing
+## ✅ Best Practices
+
+### 🖼️ Image Processing
 - Resize large images before sending to LLMs to reduce costs
 - Use appropriate image formats (PNG for quality, JPEG for size)
 - Create thumbnails for preview purposes
 
-### Audio Processing
+### 🎤 Audio Processing
 - Use WAV format for best transcription quality
 - Adjust for ambient noise when recording from microphone
 - Consider using Whisper for better accuracy with multiple languages
 
-### Document Processing
+### 📄 Document Processing
 - Chunk long documents to fit within LLM context limits
 - Extract metadata for better document organization
 - Use specific page extraction for large PDFs to reduce processing time
 
-### Performance
+### ⚡ Performance
 - Process media files asynchronously for better performance
 - Cache processed results to avoid redundant operations
 - Use batch processing for multiple files
 
-## Error Handling
+---
+
+## ⚠️ Error Handling
 
 ```python
 from agentmind.multimodal import ImageProcessor
@@ -406,15 +413,21 @@ except Exception as e:
     print(f"Error processing image: {e}")
 ```
 
-## Examples
+---
+
+## 💡 Examples
 
 See the `examples/` directory for complete examples:
 
-- `multimodal_image_example.py` - Image processing and vision agents
-- `multimodal_audio_example.py` - Audio transcription and voice assistants
-- `multimodal_document_example.py` - Document analysis and Q&A
+| Example | Description |
+|---------|-------------|
+| `multimodal_image_example.py` | Image processing and vision agents |
+| `multimodal_audio_example.py` | Audio transcription and voice assistants |
+| `multimodal_document_example.py` | Document analysis and Q&A |
 
-## API Reference
+---
+
+## 📚 API Reference
 
 ### ImageProcessor
 
@@ -451,7 +464,9 @@ See the `examples/` directory for complete examples:
 - `answer_about_image(image, question)` - Image Q&A
 - `create_vision_message(text, images)` - Create multi-modal message
 
-## Troubleshooting
+---
+
+## 🔧 Troubleshooting
 
 ### Import Errors
 
@@ -478,12 +493,14 @@ If PDF text extraction fails, try alternative libraries:
 pip install pdfplumber  # Alternative to PyPDF2
 ```
 
-## Future Enhancements
+---
+
+## 🔮 Future Enhancements
 
 Planned features for multi-modal support:
 
-- Video processing (frame extraction, analysis)
-- Real-time streaming for audio/video
-- Advanced OCR with layout preservation
-- Multi-modal embeddings for semantic search
-- Support for more document formats (Excel, PowerPoint)
+- 🎬 Video processing (frame extraction, analysis)
+- 📡 Real-time streaming for audio/video
+- 🔍 Advanced OCR with layout preservation
+- 🧠 Multi-modal embeddings for semantic search
+- 📊 Support for more document formats (Excel, PowerPoint)

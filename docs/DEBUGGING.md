@@ -1,8 +1,8 @@
-# Debugging Guide
+# 🐛 Debugging Guide
 
 Comprehensive guide to debugging AgentMind applications.
 
-## Table of Contents
+## 📋 Table of Contents
 
 1. [Debug Mode](#debug-mode)
 2. [Interactive Debugging](#interactive-debugging)
@@ -12,7 +12,9 @@ Comprehensive guide to debugging AgentMind applications.
 6. [Common Issues](#common-issues)
 7. [Tools & Utilities](#tools--utilities)
 
-## Debug Mode
+---
+
+## 🔍 Debug Mode
 
 ### Enable Debug Mode
 
@@ -68,7 +70,9 @@ debug.export_events("debug_log.json")
 debug.clear()
 ```
 
-## Interactive Debugging
+---
+
+## 🎮 Interactive Debugging
 
 ### Interactive Debugger
 
@@ -123,7 +127,9 @@ for agent in mind.agents:
         print(f"  Last message: {agent.memory[-1].content[:100]}")
 ```
 
-## Logging
+---
+
+## 📝 Logging
 
 ### Structured Logging
 
@@ -183,7 +189,9 @@ logger = logging.getLogger("agentmind")
 logger.addHandler(handler)
 ```
 
-## Profiling
+---
+
+## ⚡ Profiling
 
 ### Performance Profiler
 
@@ -258,7 +266,9 @@ lp.disable()
 lp.print_stats()
 ```
 
-## Memory Debugging
+---
+
+## 💾 Memory Debugging
 
 ### Memory Leak Detection
 
@@ -338,7 +348,9 @@ agent.memory = await optimizer.optimize(agent.memory)
 print(f"After optimization: {get_memory_usage():.2f} MB")
 ```
 
-## Common Issues
+---
+
+## ⚠️ Common Issues
 
 ### Issue: Agent Not Responding
 
@@ -485,7 +497,9 @@ key2 = cache._generate_key(messages)
 print(f"Keys match: {key1 == key2}")
 ```
 
-## Tools & Utilities
+---
+
+## 🛠️ Tools & Utilities
 
 ### Development Environment Setup
 
@@ -616,7 +630,9 @@ async def process_with_trace(agent, message):
     return await agent.process_message(message)
 ```
 
-## Debugging Checklist
+---
+
+## ✅ Debugging Checklist
 
 When debugging issues, check:
 
@@ -632,7 +648,9 @@ When debugging issues, check:
 - [ ] Correct message format
 - [ ] Tool registry is configured (if using tools)
 
-## Next Steps
+---
+
+## 🚀 Next Steps
 
 - [Testing Guide](TESTING.md) - Testing best practices
 - [Performance Guide](PERFORMANCE.md) - Optimization techniques
